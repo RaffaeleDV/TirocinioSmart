@@ -79,7 +79,7 @@ p{
 }
 
 #obiettivi {
-	width:100%;
+	width:98%;
 	height:100px;
 }
 
@@ -95,6 +95,12 @@ select {
 
 #azienda {
 	width:100%;
+}
+
+span {
+	color:white;
+	padding:10px;
+	border-radius:10px;
 }
 
 
