@@ -78,6 +78,25 @@ p{
 	font-family:sans-serif;
 }
 
+#obiettivi {
+	width:100%;
+	height:100px;
+}
+
+select {
+	padding:10px;
+	width:32%;
+	border-radius:5px;
+}
+
+#luogo {
+	width:89%;
+}
+
+#azienda {
+	width:100%;
+}
+
 
 
 
