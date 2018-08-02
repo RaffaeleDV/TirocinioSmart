@@ -1,0 +1,34 @@
+<section id="registr-tirocinio">
+    <div id="wrap-registro-tirocinio">
+        <span id="reg-tirocinio">
+            <label id="wrap-reg-tirocinio">
+                <p id="registr-id">
+                    <%= ((RegistroAttivita)request.
+                            getAttribute("registro-tirocinio")).
+                            getId();
+                    %>
+                </p>
+                <p id="registro-nome">
+                    <%= ((RegistroAttivita)request.
+                            getAttribute("registro-tirocinio")).
+                            getNome();
+                    %>
+                </p>
+                <p id="registro-descrizione">
+                    <%= ((RegistroAttivita)request.
+                            getAttribute("registro-tirocinio")).
+                            getDescrizione();
+                    %>
+                </p>
+            </label>
+            <label id="wrap-ts-input">
+                <input class="ts-button" name="vis-reg-tirocinio"
+                    type="button" value="Visualizza"/>
+                <input class="ts-button" name="modifica-reg-tirocinio"
+                    type="button" value="Modifica"/>
+                <input class="ts-button" name="consegna-reg-tirocinio"
+                    type="button" value="Consegna"/>
+            </label>
+        </span>
+    </div>
+</section>

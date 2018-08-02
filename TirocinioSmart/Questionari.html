@@ -1,0 +1,33 @@
+<section id="tutor-questionari">
+    <h1>Questionari</h1>
+    <div id="wrap-tutor-questionari">
+        <!-- Lista di questionari -->
+        <div id="wrap-questionari">
+            <%
+                Questionari questionari = 
+                    (Questionari)request.getAttribute("questionari");
+                for(int i = 0; i < questionari.size(); i++){
+                    Questionario questionario = questionari.getQuestionario(i);
+            %>
+                    <div id="wrap-questionario">
+                        <p id="questionario-id"> <%= questionario.getId() %></p>
+                        <p id="questionario-info"> <%= questionario.getInfo() %></p>
+                    </div>
+            <%
+                }
+            %>
+        </div>
+    </div>
+    <span id="new-questionario">
+        <textarea id="tutor-quest" placeholder="Questionario Tirocinante"
+            rows="40" cols="100">
+        
+        </textarea>
+        <label id="wrap-ts-input">
+            <input class="ts-button" name="compila-quest" 
+                type="button" value="Compila"/>
+            <input class="ts-button" name="invio-quest" 
+                type="invio" value="Invio"/>
+        </label>
+    </span>
+</section>
