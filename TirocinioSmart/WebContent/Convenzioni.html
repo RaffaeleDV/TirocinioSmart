@@ -1,20 +1,8 @@
 <section id="tutor-convenzioni">
     <h1>Convenzioni</h1>
     <div id="wrap-tutor-convenzioni">
-        <!-- Lista di convenzioni -->
         <div id="wrap-convenzioni">
-            <%
-                Convenzioni convenzioni = (Convenzioni)request.getAttribute("convenzioni");
-                for(int i = 0; i < convenzioni.size(); i++){
-                    Convenzione convenzione = convenzioni.getConvenzione(i);
-            %>
-                    <div id="wrap-convenzione">
-                        <p id="convenzione-id"> <%= convenzione.getId() %></p>
-                        <p id="convenzione-info"> <%= convenzione.getInfo() %></p>
-                    </div>
-            <%
-                }
-            %>
+            <!-- Lista di convenzioni -->
         </div>
     </div>
     <span id="registra-convenzione">

@@ -1,21 +1,8 @@
 <section id="tutor-questionari">
     <h1>Questionari</h1>
     <div id="wrap-tutor-questionari">
-        <!-- Lista di questionari -->
         <div id="wrap-questionari">
-            <%
-                Questionari questionari = 
-                    (Questionari)request.getAttribute("questionari");
-                for(int i = 0; i < questionari.size(); i++){
-                    Questionario questionario = questionari.getQuestionario(i);
-            %>
-                    <div id="wrap-questionario">
-                        <p id="questionario-id"> <%= questionario.getId() %></p>
-                        <p id="questionario-info"> <%= questionario.getInfo() %></p>
-                    </div>
-            <%
-                }
-            %>
+            <!-- Lista Quesionari -->
         </div>
     </div>
     <span id="new-questionario">
