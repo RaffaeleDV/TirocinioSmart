@@ -1,18 +1,24 @@
-<section id="registr-tirocinio">
-    <div id="wrap-registro-tirocinio">
+<section id="registro-tirocinio" align="center" >
+    <div id="wrap-registro-tirocinio" align="center" >
+    	<div align="center" style="padding-top:50px;">
+    		<h3 style="color:black;">Registro Del Tirocinio(Tutor)</h1>
+    	</div>
+    	</br>
+    	</br>
+    	</br>
         <span id="reg-tirocinio">
             <label id="wrap-reg-tirocinio">
-                <p id="registr-id">
-                    <!-- Registro AttivitÃ  id -->
+                <p class="registro-info">
+                	Registro Attività Id:
+                    <!-- Registro Attività  id -->
                 </p>
-                <p id="registro-nome">
-                    <!-- Registro AttivitÃ  nome -->
-                </p>
-                <p id="registro-descrizione">
-                    <!-- Registro AttivitÃ  descrizione -->
+                <p class="registro-info">
+                	Registro Attività Nome:
+                    <!-- Registro Attività  nome -->
                 </p>
             </label>
-            <label id="wrap-ts-input">
+            <input type="color" style="visibility: hidden;"/>
+            <label id="wrap-ts-input-reg">
                 <input class="ts-button" name="vis-reg-tirocinio"
                     type="button" value="Visualizza"/>
                 <input class="ts-button" name="modifica-reg-tirocinio"

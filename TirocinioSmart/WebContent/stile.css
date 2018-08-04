@@ -107,15 +107,15 @@ span {
 	background-color:white;
 }
 
+
 #tutor-header{
-	margin-left:-10px;
-	margin-right:-100px;
 	margin-top:-10px;
+	margin-left:-10px;
+	margin-right:-8px;
 	display:flex;
-	flex-direction:column;
+	flex-direction: column;
 	background-color:#261263;
 	height:140px;
-	width:101.4%;
 }
 
 #wrap-ts-mark{
@@ -141,14 +141,18 @@ span {
 
 #tirocinio-smart-mark{
 	letter-spacing:3px;
-	word-spacing:15px;
+	word-spacing:8px;
 	padding-left:10px;
 	font-size:28px;
+	overflow: hidden;
+	z-index:-100;
 }
 
 #wrapaccount-tutor{
+	padding:10px;
 	float:right;
-	
+	box-shadow:-5px 5px 5px 1px #3465a4;
+	padding-bottom:25px;
 }
 
 #user-logo{
@@ -158,7 +162,6 @@ span {
 
 #user-info{
 	float:right;
-	padding:5px;
 }
 
 #user-name{
@@ -166,21 +169,23 @@ span {
 }
 
 #header-logout{
+	color:white;
 	text-decoration:none;
 	font-size:14px;
 	padding:5px;
-	background-color:#FFFEA9;
+	background-color:#3A56BFBB;
 	margin-left:5px;
 	border-radius:8px;
 }
 
 #header-signout{
+	color:white;
 	text-decoration:none;
 	font-size:14px;
 	padding:5px;
-	background-color:#FFFEA9;
+	background-color:#3FF6BFBB;
 	margin-right:15px;
-	border-radius:8px;
+	border-radius:3px;
 }
 
 #wrapnav-tutor{
@@ -191,6 +196,8 @@ span {
 #nav-tutor{
 	display:flex;
 	flex-direction:row-reverse;
+	overflow:hidden;
+	z-index:100;
 }
 
 #nav-list{
@@ -218,7 +225,7 @@ li > a:hover{
 
 #nav-list{
 	padding-bottom:-40px;
-	padding-right:180px;
+	padding-right:240px;
 }
 
 #tutor-questionari{
@@ -251,7 +258,7 @@ li > a:hover{
 }
 
 #wrap-ts-input{
-	
+	padding:8px;
 }
 
 #tutor-convenzioni{
@@ -279,7 +286,7 @@ li > a:hover{
 }
 
 #wrap-ts-input{
-
+	padding:35px;
 }
 
 #conv-heading{
@@ -287,22 +294,22 @@ li > a:hover{
 }
 
 #tutor-footer{
-	
-	background-color:#8080ff;
+	background-color: #6D81AA;
 	margin-left:-10px;
 	margin-right:-8px;
-	margin-bottom:-10px;
+	margin-bottom:-40px;
 }
 
 #wrapup-footer{
-	height:30px;
-	background-color:#362272;
-	
-	
+	height:40px;
+	background-color:#555753;
 }
 
 #scroll-up{
-	;
+	width:40px;
+	height:40px;
+	opacity:0.7;
+	color:white;
 }
 
 #wrapfooter-links{
@@ -326,11 +333,71 @@ ul > li{
 }
 
 #wrapfooter-info{
-
+	margin-bottom:-25px;
+	padding:25px;
 }
 
+#registro-tirocinio{
+	background-color: #E2E3FF;
+	border-radius:10px;
+	padding:30px;
+	margin-top:15px;
+	margin-bottom:25px;
+}
 
+#wrap-registro-tirocinio{
+}
 
+#wrap-ts-input-reg{
+	float:right;
+}
 
+#reg-tirocinio{
+	padding:35px;
+}
 
+#wrap-reg-tirocinio{
+	padding:25px;
+}
 
+.registro-info{
+	font-size:18px;
+	color:black;
+}
+
+#tutor-tirocinio{
+	margin-top:35px;
+	border-radius:15px;
+	margin-bottom:35px;
+	background-color:white;
+	width:100%;
+	height:100%;
+}
+
+#wrap-tutor-tirocinio{
+	
+}
+
+#wrap-tirocinio-info{
+	
+}
+
+.tirocinio-info{
+	color:#2e3436;
+}
+
+#prog-formativo{
+	background-color:white;
+	padding:15px;
+	margin-top:25px;
+	margin-bottom:25px;
+	border-radius:15px;
+}
+
+#wrap-prog-formativo-info{
+	
+}
+
+.prog-formativo-info{
+	color:black;
+}

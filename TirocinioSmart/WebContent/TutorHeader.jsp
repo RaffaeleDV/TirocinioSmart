@@ -1,4 +1,4 @@
-<header id="tutor-header">
+<section id="tutor-header">
 	<div id="wrap-ts-mark">
 		<label id="wrap-ts-logo" class="wrapper">
 	        <img id="ts-logo" src="images/logo.png"/>
@@ -7,8 +7,7 @@
 	    		</b> 
 	    </label>
 	    <label id="wrapaccount-tutor" class="wrapper">
-	        <img id="user-logo" src="images/user-logo.png" 
-	        	width="30px" height="30px"/>
+	        
 	        <label id="user-info">
 		        <p id="user-name"> Username:<!-- username --> </p>
 		        <a id="header-logout" href="">
@@ -38,4 +37,4 @@
             </ul>
         </nav>
     </div>
-</header>
+</section>

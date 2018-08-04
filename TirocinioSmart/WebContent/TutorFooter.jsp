@@ -1,7 +1,7 @@
 <footer id="tutor-footer">
-    <div id="wrapup-footer">
+    <div id="wrapup-footer" align="center">
         <a href="#tutor-header">
-        	<img id="scroll-up" src="up.png"/>
+        	<img id="scroll-up" src="images/scroll-up.png"/>
         </a>
     </div>
     <div id="wrapfooter-links">
