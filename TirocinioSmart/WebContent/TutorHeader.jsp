@@ -1,27 +1,40 @@
-<header id="ts-header">
-    <div id="" class="">
-        <img id="ts-logo" src="images/logo.png" 
-            width="130px" height="130px"/>
-        <label id="tirocinio-smart">
-            <p>Tirocinio Smart</p>
-        </label>
-    </div>
-    <div id="wrapaccount-tutor" class="">
-        <img id="user-logo" src="images/user-logo.png" width="80px" height="80px"/>
-        </br>
-        <p id="user-name"> Username:<%= tutorNome() %> </p>
-        <input id="" class="" name="Logout" 
-            type="button" value="Logout"/>
-        <input id="" class="" name="Signout" 
-            type="button" value="Signout"/>
-    </div>
-    <div id="wrapheader-tutor">
+<header id="tutor-header">
+	<div id="wrap-ts-mark">
+		<label id="wrap-ts-logo" class="wrapper">
+	        <img id="ts-logo" src="images/logo.png"/>
+	    	   	<b id="tirocinio-smart-mark">
+	            	Tirocinio Smart
+	    		</b> 
+	    </label>
+	    <label id="wrapaccount-tutor" class="wrapper">
+	        <img id="user-logo" src="images/user-logo.png" 
+	        	width="30px" height="30px"/>
+	        <label id="user-info">
+		        <p id="user-name"> Username:<!-- username --> </p>
+		        <a id="header-logout" href="">
+		        	Logout
+		        </a>
+		        <a id="header-signout" href="">
+		        	Signout
+		        </a>
+	        </label>
+	    </label>
+	</div>
+    <div id="wrapnav-tutor">
         <nav id="nav-tutor">
-            <ul>
-                <li>Home</li>
-                <li>Tirocinio</li>
-                <li>Registro Del Tirocinio</li>
-                <li>Progetto Formativo</li>
+            <ul id="nav-list">
+                <li class="nav-li">
+                	<a href="TutorHomePage.jsp">Home</a>
+               	</li>
+                <li class="nav-li">
+                	<a href="TutorTirocinio.jsp">Tirocinio</a>
+                </li>
+                <li class="nav-li">
+                	<a href="TutorRegistroTirocinio.jsp">Registro Del Tirocinio</a>
+                </li>
+                <li class="nav-li">
+                	<a href="TutorProgettoFormativo.jsp">Progetto Formativo</a>
+                </li>
             </ul>
         </nav>
     </div>

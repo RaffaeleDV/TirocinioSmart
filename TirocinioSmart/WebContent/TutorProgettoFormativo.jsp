@@ -3,12 +3,12 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
-	<%@ include file="TutorHead.html" %>
+	<%@ include file="TutorHead.jsp" %>
 </head>
 <body>
-	<%@ include file="direttive_tuttor.txt" %>
-	<jsp:include page="TutorHeader.html" />
-	<jsp:include page="ProgettoFormativo.html" />
-	<jsp:include page="TutorFooter.html" />
+	<!-- direttive -->
+	<jsp:include page="TutorHeader.jsp" />
+	<jsp:include page="ProgettoFormativo.jsp" />
+	<jsp:include page="TutorFooter.jsp" />
 </body>
 </html>

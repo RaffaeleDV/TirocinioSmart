@@ -103,8 +103,231 @@ span {
 	border-radius:10px;
 }
 
+#tutor-homepage{
+	background-color:white;
+}
+
+#tutor-header{
+	margin-left:-10px;
+	margin-right:-100px;
+	margin-top:-10px;
+	display:flex;
+	flex-direction:column;
+	background-color:#261263;
+	height:140px;
+	width:101.4%;
+}
+
+#wrap-ts-mark{
+	color:white;
+	font-size:14px;
+	font-family:Helvetica;
+	float:left;
+	display:inline-block;
+	max-height:90px;
+	
+}
+
+#wrap-ts-logo{
+	
+}
+
+#ts-logo{
+	margin-left:-30px;
+	margin-top:-20px;
+	width:200px;
+	height:160x;
+}
+
+#tirocinio-smart-mark{
+	letter-spacing:3px;
+	word-spacing:15px;
+	padding-left:10px;
+	font-size:28px;
+}
+
+#wrapaccount-tutor{
+	float:right;
+	
+}
+
+#user-logo{
+	padding:15px;
+	float:left;
+}
+
+#user-info{
+	float:right;
+	padding:5px;
+}
+
+#user-name{
+	font-size:14px;
+}
+
+#header-logout{
+	text-decoration:none;
+	font-size:14px;
+	padding:5px;
+	background-color:#FFFEA9;
+	margin-left:5px;
+	border-radius:8px;
+}
+
+#header-signout{
+	text-decoration:none;
+	font-size:14px;
+	padding:5px;
+	background-color:#FFFEA9;
+	margin-right:15px;
+	border-radius:8px;
+}
+
+#wrapnav-tutor{
+	padding:5px;
+	margin:0px;
+}
+
+#nav-tutor{
+	display:flex;
+	flex-direction:row-reverse;
+}
+
+#nav-list{
+	
+}
+
+nav > ul > li{
+	list-style-type:none;
+	display:inline;
+	padding-left:15px;
+}
+
+li > a{
+	color:#E6F1F2;
+	text-decoration:none;
+	font-size:15px;
+}
+
+li > a:hover{
+	color:white;
+	background-color:#E97A19;
+	padding:12px;
+	border-radius:3px;
+}
+
+#nav-list{
+	padding-bottom:-40px;
+	padding-right:180px;
+}
+
+#tutor-questionari{
+	color:black;
+}
+
+#quest-heading{
+	color:black;
+}
 
 
+
+#new-questionario{
+	
+}
+
+#wrap-questionari{
+
+}
+
+#tutor-quest{
+}
+
+#wrap-tutor-questionari{
+	
+}
+
+#new-questionario{
+	
+}
+
+#wrap-ts-input{
+	
+}
+
+#tutor-convenzioni{
+
+}
+
+#wrap-tutor-convenzioni{
+
+}
+
+#wrap-convenzioni{
+
+}
+
+#registra-convenzioni{
+
+}
+
+#new-convenzione{
+
+}
+
+#tutor-conv{
+	
+}
+
+#wrap-ts-input{
+
+}
+
+#conv-heading{
+	color:black;
+}
+
+#tutor-footer{
+	
+	background-color:#8080ff;
+	margin-left:-10px;
+	margin-right:-8px;
+	margin-bottom:-10px;
+}
+
+#wrapup-footer{
+	height:30px;
+	background-color:#362272;
+	
+	
+}
+
+#scroll-up{
+	;
+}
+
+#wrapfooter-links{
+	
+}
+
+#wrapfooter-links > ul{
+	list-style-type:none;
+}
+
+ul{
+	display:flex;
+	flex-direction:row;
+}
+
+ul > li{
+	padding-left:15px;
+}
+
+#wrapfooter-links > ul > li > a:hover{
+}
+
+#wrapfooter-info{
+
+}
 
 
 

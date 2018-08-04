@@ -4,12 +4,13 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
-	<%@ include file="TutorHead.html" %>
+	<%@ include file="TutorHead.jsp" %>
 </head>
-<body>
-	<%@ inlcude file="direttive_tutor.txt" %>
-	<jsp:include page="TutorHeader.html""></jsp:include>
-	<jsp:include page="Questionari.html"></jsp:include>
-	<jsp:include page="TutorFooter.html"></jsp:include>
+<body id="tutor-homepage">
+	<!-- direttive -->
+	<jsp:include page="TutorHeader.jsp"></jsp:include>
+	<jsp:include page="Questionari.jsp"></jsp:include>
+	<jsp:include page="Convenzioni.jsp"></jsp:include>
+	<jsp:include page="TutorFooter.jsp"></jsp:include>
 </body>
 </html>
