@@ -5,13 +5,13 @@
         </a>
     </div>
     <div id="wrapfooter-links">
-        <ul>
+       	<ol>
         	<li><a href="">Home Page</a></li>
 	        <li><a href="">Tirocinio</a></li>
 	        <li><a href="">Registro Del Tirocinio</a></li>
 	        <li><a href="">Progetto Formativo</a></li>
 	        <li><a href="">Logout</a></li>
-	  	</ul>
+	  	</ol>
     </div>
     <div id="wrapfooter-info">
         <span id="">

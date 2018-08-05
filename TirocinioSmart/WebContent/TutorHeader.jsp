@@ -1,24 +1,12 @@
-<section id="tutor-header">
+<header id="tutor-header">
 	<div id="wrap-ts-mark">
 		<label id="wrap-ts-logo" class="wrapper">
 	        <img id="ts-logo" src="images/logo.png"/>
-	    	   	<b id="tirocinio-smart-mark">
-	            	Tirocinio Smart
-	    		</b> 
-	    </label>
-	    <label id="wrapaccount-tutor" class="wrapper">
 	        
-	        <label id="user-info">
-		        <p id="user-name"> Username:<!-- username --> </p>
-		        <a id="header-logout" href="">
-		        	Logout
-		        </a>
-		        <a id="header-signout" href="">
-		        	Signout
-		        </a>
-	        </label>
 	    </label>
+	    
 	</div>
+	<b id="tirocinio-smart-mark">Tirocinio Smart</b> 
     <div id="wrapnav-tutor">
         <nav id="nav-tutor">
             <ul id="nav-list">
@@ -37,4 +25,15 @@
             </ul>
         </nav>
     </div>
-</section>
+    <div id="wrapaccount-tutor" class="wrapper"> 
+        <label id="user-info">
+	        <p id="user-name"> Username:<!-- username --> </p>
+	        <a id="header-logout" href="">
+	        	Logout
+	        </a>
+	        <a id="header-signout" href="">
+	        	Signout
+	        </a>
+        </label>
+	</div>
+</header>
