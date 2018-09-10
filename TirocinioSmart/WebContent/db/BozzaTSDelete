@@ -1,0 +1,125 @@
+
+Delete per la tablella convenzione
+
+DELETE FROM convenzione AS c
+WHERE c.id = ?;
+
+DELETE FROM convenzione AS c
+WHERE c.info LIKE '%?%';
+
+DELETE FROM convenzione AS c
+WHERE c.info = ?;
+-------------------------------------------------------------
+
+Delete per la tabella registro
+
+DELETE FROM registro AS r
+WHERE r.id = ?;
+
+DELETE FROM registro AS r
+WHERE r.nome LIKE '%?%';
+
+DELETE FROM registro AS r
+WHERE r.nome = ?;
+
+DELETE FROM registro AS r
+WHERE r.descrizione LIKE '%?%';
+
+DELETE FROM regsitro AS r
+WHERE r.descrizione = ?;
+-------------------------------------------------------------
+
+Delete per la tabella tutor
+
+DELETE FROM tutor AS t
+WHERE t.id = ?;
+
+DELETE FROM tutor AS t
+WHERE t.nome LIKE '%?%';
+
+DELETE FROM tutor AS t
+WHERE t.nome = ?;
+
+DELETE FROM tutor AS t
+WHERE t.pass LIKE '%?%';
+
+DELETE FROM tutor AS t
+WHERE t.pass = ?;
+
+DELETE FROM tutor AS t
+WHERE t.tipo LIKE '%?%';
+
+DELETE FROM tutor AS t
+WHERE t.tipo = ?;
+-------------------------------------------------------------
+
+Delete per la tablella prog_form
+
+DELETE FROM prog_form AS p
+WHERE p.id = ?;
+
+DELETE FROM prog_form AS p
+WHERE p.info LIKE '%?%';
+
+DELETE FROM prog_form AS p
+WHERE p.info = ?;
+
+DELETE FROM prog_form AS p
+WHERE p.approvazione LIKE '%?%';
+
+DELETE FROM prog_form AS p
+WHERE p.approvazione = ?;
+-------------------------------------------------------------
+
+Delete per la tablella studente
+
+DELETE FROM studente AS s
+WHERE s.matricola LIKE '%?%';
+
+DELETE FROM studente AS s
+WHERE s.matricola = '?';
+
+DELETE FROM studente AS s
+WHERE s.nome LIKE '%?%';
+
+DELETE FROM studente AS s
+WHERE s.nome = '?';
+
+DELETE FROM studente AS s
+WHERE s.cfu LIKE '%?%';
+
+DELETE FROM studente AS s
+WHERE s.cfu = '?';
+
+DELETE FROM studente AS s
+WHERE s.tutorAccID = ?;
+
+
+DELETE FROM studente AS s
+WHERE s.tutorAzID = ?;
+
+DELETE FROM studente AS s
+WHERE s.tirocinio = ?;
+
+DELETE FROM studente AS s
+WHERE s.registro = ?;
+-------------------------------------------------------------
+
+
+Delete per la tabella ufficio
+
+DELETE FROM ufficio AS s
+WHERE s.id = ?;
+
+DELETE FROM ufficio AS s
+WHERE s.nome LIKE '%?%';
+
+DELETE FROM ufficio AS s
+WHERE s.nome = '?';
+
+DELETE FROM ufficio AS s
+WHERE s.pass = '?';
+
+DELETE FROM ufficio AS s
+WHERE s.pass = '?';
+

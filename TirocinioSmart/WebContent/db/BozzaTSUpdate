@@ -1,0 +1,255 @@
+Codice per l' update della tabella convenzione
+
+UPDATE convenzione AS c
+SET c.id = ?
+WHERE c.id = ?;
+
+UPDATE convenzione AS c
+SET c.info = '?'
+WHERE c.id = ?;
+
+UPDATE convenzione AS c
+SET c.info = '?'
+WHERE c.info = '?';
+-------------------------------------------------------------
+
+Codice per l' update della tabella registro
+
+UDPATE registro AS r
+SET r.id = ?
+WHERE r.id = ?;
+
+UPDATE registro AS r
+SET r.nome = '?'
+WHERE r.nome = '?';
+
+UPDATE registro AS r
+SET r.nome = '?'
+WHERE r.nome LIKE '%?%';
+
+UPDATE registro AS r
+SET r.descrizione = '?'
+WHERE r.descrizione = '?';
+
+UPDATE registro AS r
+SET r.descrizione = '?'
+WHERE r.descrizione LIKE '%?%';
+
+UPDATE registro AS r
+SET r.nome = '?'
+WHERE r.id = ?;
+
+UPDATE registro AS r
+SET r.descrizione = '?'
+WHERE r.id = ?;
+-------------------------------------------------------------
+
+Codice per l' update della tabella tutor
+
+UPDATE tutor AS t
+SET t.id = ?
+WHERE t.id = ?;
+
+UPDATE tutor AS t
+SET t.nome = '?'
+WHERE t.nome = '?';
+
+UPDATE tutor AS t
+SET t.nome = '?'
+WHERE t.id = ?;
+
+UPDATE tutor AS t
+SET t.nome = '?'
+WHERE t.nome LIKE '%?%';
+
+UPDATE tutor AS t
+SET t.pass = '?'
+WHERE t.pass = '?';
+
+UPDATE tutor AS t
+SET t.pass = '?'
+WHERE t.id = ?;
+
+UPDATE tutor AS t
+SET t.pass = '?'
+WHERE t.pass LIKE '%?%';
+
+UPDATE tutor AS t
+SET t.tipo = '?'
+WHERE t.tipo = '?';
+
+UPDATE tutor AS t
+SET t.tipo = '?'
+WHERE t.id = ?;
+
+UPDATE tutor AS t
+SET t.tipo = '?'
+WHERE t.tipo LIKE '%?%';
+
+UPDATE tutor AS t
+SET t.convenzioneID = ?
+WHERE t.convenzioneID = ?;
+
+UPDATE tutor AS t
+SET t.convenzioneID = ?
+WHERE t.id = ?;
+-------------------------------------------------------------
+
+Codice per l' update della tabella prog_form
+
+UPDATE prog_form AS p
+SET p.id = ?
+WHERE p.id = ?;
+
+UPDATE prog_form AS p
+SET p.info = '?'
+WHERE p.info = '?';
+
+UPDATE prog_form AS p
+SET p.info = '?'
+WHERE p.id LIKE '%?%';
+
+UPDATE prog_form AS p
+SET p.approvazione = ?
+WHERE p.approvazione = ?;
+
+
+UPDATE prog_form AS p
+SET p.info = '?'
+WHERE p.id = ?;
+
+UPDATE prog_form AS p
+SET p.approvazione = ?
+WHERE p.id = ?;
+-------------------------------------------------------------
+
+Codice per l' update della tabella studente
+
+UPDATE studente AS s
+SET s.matricola = '?'
+WHERE s.matricola = '?';
+
+UPDATE studente AS s
+SET s.matricola = '?'
+WHERE s.id = ?;
+
+UPDATE studente AS s
+SET s.matricola = '?'
+WHERE s.matricola LIKE '%?%';
+
+UPDATE studente AS s
+SET s.nome = '?'
+WHERE s.nome = '?';
+
+UPDATE studente AS s
+SET s.nome = '?'
+WHERE s.id = ?;
+
+UPDATE studente AS s
+SET s.nome = '?'
+WHERE s.nome LIKE '%?%';
+
+UPDATE studente AS s
+SET s.cfu = '?'
+WHERE s.cfu = '?';
+
+UPDATE studente AS s
+SET s.cfu = '?'
+WHERE s.id = ?;
+
+UPDATE studente AS s
+SET s.cfu = '?'
+WHERE s.cfu LIKE '%?%';
+
+UPDATE studente AS s
+SET s.tutorAccId = ?
+WHERE s.tutorAccId = ?
+
+UPDATE studente AS s
+SET s.tutorAccId = ?
+WHERE s.id = ?
+
+UPDATE studente AS s
+SET s.tutorAzId = ?
+WHERE s.tutorAzId = ?;
+
+UPDATE studente AS s
+SET s.tutorAzId = ?
+WHERE s.id = ?;
+
+UPDATE studente AS s
+SET s.tirocinio = ?
+WHERE s.tirocinio = ?;
+
+UPDATE studente AS s
+SET s.tirocinio = ?
+WHERE s.id = ?;
+
+UPDATE studente AS s
+SET s.registro = ?
+WHERE s.registro = ?;
+
+UPDATE studente AS s
+SET s.registro = ?
+WHERE s.id = ?;
+
+UPDATE studente AS s
+SET s.pass = '?'
+WHERE s.pass = '?';
+
+UPDATE studente AS s
+SET s.pass = '?'
+WHERE s.id = ?;
+
+UPDATE studente AS s
+SET s.pass = '?'
+WHERE s.pass LIKE '%?%';
+-------------------------------------------------------------
+
+Codice per l' update della tabella ufficio
+
+UPDATE ufficio AS u
+SET u.id = ?
+WHERE u.id = ?;
+
+UPDATE ufficio AS u
+SET u.nome = '?'
+WHERE u.nome = '?';
+
+UPDATE ufficio AS u
+SET u.nome = '?'
+WHERE u.id = ?;
+
+PDATE ufficio AS u
+SET u.nome = '?'
+WHERE u.nome LIKE '%?%';
+
+UPDATE ufficio AS u
+SET u.pass = '?'
+WHERE u.pass = '?';
+
+UPDATE ufficio AS u
+SET u.pass = '?'
+WHERE u.id = ?;
+
+UPDATE ufficio AS u
+SET u.pass = '?'
+WHERE u.pass LIKE '%?%';
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
