@@ -4,17 +4,17 @@ USE dbtirocinio;
 
 DROP TABLE IF EXISTS convenzione;
 CREATE TABLE IF NOT EXISTS convenzione(
-	id					 varchar(20) not null auto_increment,
+	id					 int not null auto_increment,
 	info				 varchar(25) not null,		
 	primary key (id)
 );
 
 DROP TABLE IF EXISTS tutor;
 CREATE TABLE IF NOT EXISTS tutor(
-	id					 varchar(20) not null auto_increment,
+	id					 int not null auto_increment,
 	nome				 varchar(25) not null,
 	tipo				varchar(10) not null,	
-	convenzioneID		varchar(25),
+	convenzioneID		int,
 	foreign key (convenzioneID) references convenzione(id)
 				ON DELETE CASCADE ON UPDATE CASCADE,	
 	primary key (id)
@@ -22,27 +22,29 @@ CREATE TABLE IF NOT EXISTS tutor(
 
 DROP TABLE IF EXISTS registro;
 CREATE TABLE IF NOT EXISTS registro(
-	id					 varchar(20) not null auto_increment,
+	id					 int not null auto_increment,
 	nome				 varchar(25) not null,
-	descrizione				varchar(50) not null
+	descrizione				varchar(50) not null,
+    primary key(id)
 );
 
 DROP TABLE IF EXISTS prog_form;
 CREATE TABLE IF NOT EXISTS prog_form(
-	id					 varchar(20) not null auto_increment,
+	id					 int not null auto_increment,
 	info				 varchar(50) not null,
-	approvazione		boolean not null
+	approvazione		boolean not null,
+    primary key(id)
 );
 
 DROP TABLE IF EXISTS studente;
 CREATE TABLE IF NOT EXISTS studente(
-	matricola					 varchar(20) not null,
+	matricola			 varchar(20) not null,
 	nome				 varchar(25) not null,	
 	cfu 				 varchar(5) not null,	
-	tutorAccID			varchar(20) not null,				
-	tutorAzID			varchar(20) not null,
-	tirocinio			varchar(20) not null,
-	registro			varchar(20) not null,
+	tutorAccID			int not null,				
+	tutorAzID			int not null,
+	tirocinio			int not null,
+	registro			int not null,
 	foreign key (tutorAccID) references tutor(id)
 				ON DELETE CASCADE ON UPDATE CASCADE,
 	foreign key (tutorAzID) references tutor(id)
