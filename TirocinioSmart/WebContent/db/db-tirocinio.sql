@@ -13,6 +13,7 @@ DROP TABLE IF EXISTS tutor;
 CREATE TABLE IF NOT EXISTS tutor(
 	id					 int not null auto_increment,
 	nome				 varchar(25) not null,
+	pass				 varchar(50) not null,
 	tipo				varchar(10) not null,	
 	convenzioneID		int,
 	foreign key (convenzioneID) references convenzione(id)
@@ -45,6 +46,7 @@ CREATE TABLE IF NOT EXISTS studente(
 	tutorAzID			int not null,
 	tirocinio			int not null,
 	registro			int not null,
+	pass				 varchar(50) not null,
 	foreign key (tutorAccID) references tutor(id)
 				ON DELETE CASCADE ON UPDATE CASCADE,
 	foreign key (tutorAzID) references tutor(id)
@@ -54,4 +56,12 @@ CREATE TABLE IF NOT EXISTS studente(
 	foreign key (registro) references registro(id)
 				ON DELETE CASCADE ON UPDATE CASCADE,			
 	primary key (matricola)
+);
+
+DROP TABLE IF EXISTS ufficio;
+CREATE TABLE IF NOT EXISTS ufficio(
+	id					 int not null auto_increment,
+	nome				 varchar(25) not null,
+	pass				 varchar(50) not null,
+    primary key(id)
 );
