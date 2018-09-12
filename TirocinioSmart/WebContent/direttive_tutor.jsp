@@ -1,14 +1,12 @@
-<%! 
-    public String tutorNome(){
+<%!public String tutorNome(){
         String tNome = null;
         
         synchronize(session){
-            tNome = (String)(((Tutor)session.getAttribute("Tutor")).getNome());
+            tNome = (String)(((TutorBean)session.getAttribute("Tutor")).getNome());
         }
         
         return tNome;
-    }
-%>
+    }%>
 <%!
     public String email(){
         String email = null;
