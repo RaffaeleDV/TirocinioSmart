@@ -41,12 +41,13 @@ DROP TABLE IF EXISTS studente;
 CREATE TABLE IF NOT EXISTS studente(
 	matricola			 varchar(20) not null,
 	nome				 varchar(25) not null,	
-	cfu 				 varchar(5) not null,	
-	tutorAccID			int not null,				
-	tutorAzID			int not null,
-	tirocinio			int not null,
-	registro			int not null,
+	cfu 				 varchar(5) not null,
 	pass				 varchar(50) not null,
+	tutorAccID			int,				
+	tutorAzID			int,
+	tirocinio			int,
+	registro			int, 
+	
 	foreign key (tutorAccID) references tutor(id)
 				ON DELETE CASCADE ON UPDATE CASCADE,
 	foreign key (tutorAzID) references tutor(id)
