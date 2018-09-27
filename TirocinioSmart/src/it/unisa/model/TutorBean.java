@@ -54,6 +54,10 @@ public class TutorBean extends AbstractBean implements Serializable {
     return id;
   }
 
+  public void setId(int id) {
+    this.id = id;
+  }
+
   @Override
   public String toString() {
     return "TutorBean [id=" + id + ", nome=" + nome + ", pass=" + pass + ", tipo=" + tipo
