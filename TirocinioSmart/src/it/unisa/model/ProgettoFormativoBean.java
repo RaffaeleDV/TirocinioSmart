@@ -22,6 +22,10 @@ public class ProgettoFormativoBean extends AbstractBean implements Serializable,
     this.approvazione = approvazione;
   }
 
+  public void setId(int id) {
+    this.id = id;
+  }
+  
   public int getId() {
     return id;
   }

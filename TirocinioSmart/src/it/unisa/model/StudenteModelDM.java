@@ -16,7 +16,7 @@ public class StudenteModelDM {
     Connection connection = null;
     PreparedStatement ps = null;
 
-    String selectSQL = "SELECT * FROM" + TABLE_NAME + "WHERE matricola = ?";
+    String selectSQL = "SELECT * FROM " + TABLE_NAME + " WHERE matricola = ?";
 
     try {
       connection = DriverManagerConnectionPool.getConnection();
@@ -60,7 +60,7 @@ public class StudenteModelDM {
 
     stud.setMatricola(matricola);
 
-    String selectSQL = "SELECT * FROM" + TABLE_NAME + "WHERE matricola = ?";
+    String selectSQL = "SELECT * FROM " + TABLE_NAME + " WHERE matricola = ?";
 
     try {
       connection = DriverManagerConnectionPool.getConnection();
@@ -113,7 +113,7 @@ public class StudenteModelDM {
     Connection connection = null;
     PreparedStatement ps = null;
 
-    String selectSQL = "INSERT INTO" + TABLE_NAME + "VALUES (?,?,?,?,?,?,?,?)";
+    String selectSQL = "INSERT INTO " + TABLE_NAME + " VALUES (?,?,?,?,?,?,?,?)";
 
     try {
       connection = DriverManagerConnectionPool.getConnection();

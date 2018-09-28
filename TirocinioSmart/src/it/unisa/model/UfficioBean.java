@@ -22,6 +22,10 @@ public class UfficioBean extends AbstractBean implements Serializable, Cloneable
     this.password = password;
   }
 
+  public void setId(int id) {
+    this.id = id;
+  }
+  
   public int getId() {
     return id;
   }

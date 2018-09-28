@@ -22,6 +22,10 @@ public class RegistroBean extends AbstractBean implements Serializable, Cloneabl
     this.descrizione = descrizione;
   }
 
+  public void setId(int id) {
+    this.id = id;
+  }
+  
   public int getId() {
     return id;
   }

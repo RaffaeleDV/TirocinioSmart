@@ -53,7 +53,7 @@ public class TutorModelDM {
 
     tutor.setId(id);
 
-    String selectSQL = "SELECT * FROM" + TABLE_NAME + "WHERE id = ?";
+    String selectSQL = "SELECT * FROM " + TABLE_NAME + " WHERE id = ?";
 
     try {
       connection = DriverManagerConnectionPool.getConnection();
@@ -100,7 +100,7 @@ public class TutorModelDM {
     Connection connection = null;
     PreparedStatement ps = null;
 
-    String selectSQL = "INSERT INTO" + TABLE_NAME + "VALUES (?,?,?,?,?)";
+    String selectSQL = "INSERT INTO " + TABLE_NAME + " VALUES (?,?,?,?,?)";
 
     try {
       connection = DriverManagerConnectionPool.getConnection();

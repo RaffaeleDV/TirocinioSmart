@@ -20,6 +20,10 @@ public class ConvenzioneBean extends AbstractBean implements Serializable, Clone
     this.info = info;
   }
 
+  public void setId(int id) {
+    this.id = id;
+  }
+  
   public int getId() {
     return id;
   }
