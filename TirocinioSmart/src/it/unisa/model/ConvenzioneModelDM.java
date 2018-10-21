@@ -8,9 +8,9 @@ import it.unisa.database.DriverManagerConnectionPool;
 
 public class ConvenzioneModelDM {
 
-  private static final String TABLE_NAME= "convenzione";
+  private static final String TABLE_NAME = "convenzione";
 
-  public static void loadInfo(ConvenzioneBean conv) throws SQLException{
+  public static void loadInfo(ConvenzioneBean conv) throws SQLException {
     Connection connection = null;
     PreparedStatement ps = null;
 
@@ -24,7 +24,7 @@ public class ConvenzioneModelDM {
 
       ResultSet rs = ps.executeQuery();
 
-      while(rs.next()) {
+      while (rs.next()) {
         conv.setInfo(rs.getString("info"));
       }
     } finally {
@@ -36,7 +36,7 @@ public class ConvenzioneModelDM {
       }
     }
   }
-	
+
 
   public static ConvenzioneBean loadConvenzione(int id) throws SQLException {
 
@@ -50,44 +50,44 @@ public class ConvenzioneModelDM {
       ps = connection.prepareStatement(selectSQL);
       ps.setInt(1, id);
       ResultSet rs = ps.executeQuery();
-      while(rs.next()) {
-        conv.setId(rs.getString("info"));
+      while (rs.next()) {
+        conv.setInfo(rs.getString("info"));
       }
-    }finally {
+    } finally {
       try {
         if (ps != null)
           ps.close();
       } finally {
         DriverManagerConnectionPool.releaseConnection(connection);
       }
-	}
-	return conv;
-	
-  }
-	
+    }
+    return conv;
 
-  public static void saveConvenzione(ConvenzioneBean conv) throws SQLException{
+  }
+
+
+  public static void saveConvenzione(ConvenzioneBean conv) throws SQLException {
 
     int id;
     String info;
-    
+
     id = conv.getId();
     info = conv.getInfo();
-    
+
     Connection connection = null;
     PreparedStatement ps = null;
-    
+
     String selectSQL = "INSERT INTO " + TABLE_NAME + " VALUES (?,?)";
-    
+
     try {
       connection = DriverManagerConnectionPool.getConnection();
-      ps = connection.prepareStament(selectSQL);
-      
+      ps = connection.prepareStatement(selectSQL);
+
       ps.setInt(1, id);
       ps.setString(2, info);
-      
+
       System.out.println(ps.toString());
-      
+
       ps.executeUpdate();
       connection.commit();
 
@@ -95,9 +95,9 @@ public class ConvenzioneModelDM {
       try {
         if (ps != null)
           ps.close();
-      }finally {
-        DriverManagerConnectionPool.realeaseConnection(connection);
+      } finally {
+        DriverManagerConnectionPool.releaseConnection(connection);
       }
-	}
+    }
   }
 }
