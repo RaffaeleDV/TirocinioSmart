@@ -10,7 +10,7 @@ public class TutorBean extends AbstractBean implements Serializable {
   private static final long serialVersionUID = 7743978606183893973L;
   private int id;
   private String nome;
-  private String pass;
+  private String password;
   private String tipo;
   private int convenzioneID;
 
@@ -22,12 +22,12 @@ public class TutorBean extends AbstractBean implements Serializable {
     this.nome = nome;
   }
 
-  public String getPass() {
-    return pass;
+  public String getPassword() {
+    return password;
   }
 
-  public void setPass(String pass) {
-    this.pass = pass;
+  public void setPassword(String pass) {
+    this.password = pass;
   }
 
   public String getTipo() {
@@ -60,7 +60,7 @@ public class TutorBean extends AbstractBean implements Serializable {
 
   @Override
   public String toString() {
-    return "TutorBean [id=" + id + ", nome=" + nome + ", pass=" + pass + ", tipo=" + tipo
+    return "TutorBean [id=" + id + ", nome=" + nome + ", pass=" + password + ", tipo=" + tipo
         + ", convenzioneID=" + convenzioneID + "]";
   }
 

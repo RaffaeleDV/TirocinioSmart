@@ -1,22 +1,22 @@
+<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
+    pageEncoding="ISO-8859-1"%>
 <!DOCTYPE html>
 <html>
 <head>
-<meta charset="ISO-8859-1">
-<title>Progetto Formativo</title>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>Richiesta convenzione</title>
 <link rel = "stylesheet" href = "stile.css">
 </head>
 <body>
-
-<p id = "introduzione"> Compila il progetto formativo riempendo tutti i campi del form
-ed invia la richiesta di tirocinio. </p>
+<p id = "introduzione"> Compila la richiesta di convenzione inserendo tutti i dati
+del richiedente e selezionando l'azienda desiderata ed invia la richiesta </p>
 <div class = "wrap">
 	<h2>Compila tutti i campi</h2>
 		<input type = "text" name = "nome" placeholder = "Nome">  <input type = "text" name = "cognome" placeholder = "Cognome">
 		<input type = "number" name = "matricola" placeholder = "Matricola">
 		<input type = "text" name = "CF" placeholder = "Codice fiscale">
 		<input id ="luogo" type = "text" name = "luogo di nascita" placeholder = "Luogo di nascita"> <br>
-		<span> Residente in via:</span>
-		<input type = "text" name = "via" > <br>
+		Residente in via: <input type = "text" name = "via" > <br>
 		<span> Data di nascita :</span> <br>
 			<select name = "mese">
 				<option> Gennaio </option>
@@ -87,23 +87,16 @@ ed invia la richiesta di tirocinio. </p>
 			</select>
 			
 		<input id ="input" type = "email" name = "e-mail" placeholder = "E-mail"> <br>
-		<span> Portatore di Handicap? </span>
-		<input type = "radio" name = "si"> Si
-		<input type = "radio" name = "no"> No <br>
-		<input type = "text" name = "tutor" placeholder = "Tutor accademico">
-		<input type = "text" name = "tutor" placeholder = "Tutor aziendale">
-		<span> Scegli l'azienda (tra queste convenzionate) con cui svolgere il tirocinio </span>
-		
+		<span> Scegli l'azienda  </span>
 		<br> <select id="azienda" name = "azienda">
-				<option> Dipartimento di Informatica UNISA (Salerno)</option>
-				<option> C.T.A. LIFE S.R.L. (Trapani) </option>
-				<option> Limacorporate Spa (Udine) </option>
-				<option> MANITALIDEA SPA (Torino) </option>
+				<option> ARCA ENERGIA S.R.L. (Castelvetrano)</option>
+				<option> Mediterraneo Marketing Srls (Roma) </option>
+				<option> ITALFONDIARIO SPA (Roma) </option>
+				<option> SERTEC SRL (Torino) </option>
 				<option> ADVANCED COMPOSITES SOLUTIONS SRL (Teramo) </option>
-				<option> A.S.D. PANTANELLI SPORT (Siracusa) </option>
-				<option> MAGNETI MARELLI SpA - POWERTRAIN (Bologna)</option>
+				<option> ITALFONDIARIO SPA (Roma) </option>
+				<option> BRAINCARE S.R.L (Padova)</option>
 			</select> <br> <br>
-	
 	<textarea id ="obiettivi" name ="obiettivi" placeholder = "Obiettivi formativi"></textarea>
 	<br> <br> <input id ="submit" type = "submit" value = "Invia richiesta">
 

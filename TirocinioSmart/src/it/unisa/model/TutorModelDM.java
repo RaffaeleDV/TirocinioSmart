@@ -29,7 +29,7 @@ public class TutorModelDM {
       while (rs.next()) {
 
         tutor.setNome(rs.getString("nome"));
-        tutor.setPass(rs.getString("pass"));
+        tutor.setPassword(rs.getString("pass"));
         tutor.setTipo(rs.getString("tipo"));
         tutor.setConvenzioneID(rs.getInt("convenzioneID"));
       }
@@ -65,7 +65,7 @@ public class TutorModelDM {
       while (rs.next()) {
 
         tutor.setNome(rs.getString("nome"));
-        tutor.setPass(rs.getString("pass"));
+        tutor.setPassword(rs.getString("pass"));
         tutor.setTipo(rs.getString("tipo"));
         tutor.setConvenzioneID(rs.getInt("convenzioneID"));
       }
@@ -91,7 +91,7 @@ public class TutorModelDM {
     int id, convenzioneID;
 
     nome = tutor.getNome();
-    pass = tutor.getPass();
+    pass = tutor.getPassword();
     tipo = tutor.getTipo();
     id = tutor.getId();
     convenzioneID = tutor.getConvenzioneID();
