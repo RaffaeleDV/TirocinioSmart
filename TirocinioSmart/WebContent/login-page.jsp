@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=ISO-8859-1"
     pageEncoding="ISO-8859-1"%>
-<!DOCTYPE>
+<!DOCTYPE html>
 <html>
 <head>
 	<%@ include file = "general-head.jsp"  %>
@@ -15,31 +15,30 @@
 	compilare il form di registrazione, per registrarsi al nostro sistema
 	o di login se si è gia registrati. </p>
 	
-	<form action="">
+	<form class="wrap">
 	  <input type="radio" class="radiob" id="radio_stud" name="tipo" value="studente"> Studente<br>
 	  <input type="radio" class="radiob" id="radio_tut" name="tipo" value="tutor"> Tutor<br>
-	  <input type="radio" class="radiob" id="radio_uff" name="tipo" value="ufficio"> Ufficio
+	  <input type="radio" class="radiob" id="radio_uff" name="tipo" value="ufficio"> Ufficio Tirocinio
 	</form>
 	
 	<div class = "wrap" id="login-container">
 		<div id="login-studente-container" style="display: none;">
 			<form method="post" action="LoginServletStudente"  > 
 				<h2>Entra nel nostro sistema</h2>
-					<input type = "email" name = "e-mail" placeholder = "E-mail">
-					<input type = "password" name = "password" placeholder = "Password">
+					<input type = "text" name = "login-nome" placeholder = "Nome">
+					<input type = "password" name = "login-password" placeholder = "Password">
 					<input type = "submit" value = "Login">
 					<p> Non sei registrato? </p>
 					<a href="signup-page.jsp">
 						<input type = "button" value = "Registrati">
-					</a>
-					
+					</a>					
 			</form>
 		</div>
 		<div id="login-tutor-container" style="display: none;">
 			<form method="post" action="LoginServletTutor"> 
 				<h2>Entra nel nostro sistema</h2>
-					<input type = "email" name = "e-mail" placeholder = "E-mail">
-					<input type = "password" name = "password" placeholder = "Password">
+					<input type = "email" name = "login-nome" placeholder = "Nome">
+					<input type = "password" name = "login-password" placeholder = "Password">
 					<input type = "submit" value = "Login">
 					<p> Non sei registrato? </p>
 					<a href="signup-page.jsp">
@@ -50,8 +49,8 @@
 		<div id="login-ufficio-container" style="display: none;">
 			<form method="post" action="LoginServletUfficio" > 
 				<h2>Entra nel nostro sistema</h2>
-					<input type = "email" name = "e-mail" placeholder = "E-mail">
-					<input type = "password" name = "password" placeholder = "Password">
+					<input type = "text" name = "login-nome" placeholder = "Nome">
+					<input type = "password" name = "login-password" placeholder = "Password">
 					<input type = "submit" value = "Login">
 					<p> Non sei registrato? </p>
 					<a href="signup-page.jsp">
