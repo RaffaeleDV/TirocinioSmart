@@ -6,6 +6,7 @@ DROP TABLE IF EXISTS convenzione;
 CREATE TABLE IF NOT EXISTS convenzione(
 	id					 int not null auto_increment,
 	info				 varchar(25) not null,		
+	azienda              varchar(25) not null,
 	primary key (id)
 );
 
@@ -26,7 +27,10 @@ DROP TABLE IF EXISTS registro;
 CREATE TABLE IF NOT EXISTS registro(
 	id					 int not null auto_increment,
 	nome				 varchar(25) not null,
-	descrizione				varchar(50) not null,
+	descrizione		     varchar(50) not null,
+	consegna             boolean not null,
+	confermaTutorAcc     boolean not null,
+	confermaTutorAz      boolean not null,
     primary key(id)
 );
 

@@ -10,14 +10,15 @@ public class ConvenzioneBean extends AbstractBean implements Serializable, Clone
   private static final long serialVersionUID = 2768300536554372790L;
   private int id;
   private String info;
-
+  private String azienda;
   public ConvenzioneBean() {
 
   }
 
-  public ConvenzioneBean(int id, String info) {
+  public ConvenzioneBean(int id, String info, String azienda) {
     this.id = id;
     this.info = info;
+    this.azienda = azienda;
   }
 
   public void setId(int id) {
@@ -66,5 +67,13 @@ public class ConvenzioneBean extends AbstractBean implements Serializable, Clone
       e.printStackTrace();
     }
     return other;
+  }
+  
+  public String getAzienda() {
+    return azienda;
+  }
+  
+  public void setAzienda(String azienda) {
+    this.azienda = azienda;
   }
 }

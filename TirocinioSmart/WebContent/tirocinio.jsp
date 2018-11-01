@@ -7,9 +7,16 @@
     		<span id="wrap-tirocinio-info">
     			<p class="tirocinio-info" style="color:#2e3436;">
     				Nome Tirocinio:
+    				<%= tirocinioBean.getNome(); %>
     			</p>
-    			<input type="button" value="Visualizza Info"/>
+    			<input id="vis-info-tiro" type="button" value="Visualizza Info"/>
     		</span>
+    	</div>
+    	<div>
+        	<%@include file="tirocinio-info.jsp" %>
+    	</div>
+    	<div>
+    	    <input id="registri-tirocinio" type="button" value="Registri" />
     	</div>
     </div>
 </section>

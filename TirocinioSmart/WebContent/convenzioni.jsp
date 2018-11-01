@@ -2,11 +2,11 @@
     <h1 id="conv-heading">Convenzioni</h1>
     <div id="wrap-tutor-convenzioni">
         <div id="wrap-convenzioni">
-            <!-- Lista di convenzioni -->
+            <%@ include file="lista-convenzioni.jsp" %>
         </div>
     </div>
     <span id="registra-convenzione">
-        <input class="ts-button" name="" type="button" 
+        <input class="ts-button" name="nuova-convenzione" type="button" 
             value="Registra Nuova Convenzione"/>
     </span>
     </br>

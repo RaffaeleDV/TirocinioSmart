@@ -4,14 +4,14 @@ import java.io.Serializable;
 
 public class RegistroBean extends AbstractBean implements Serializable, Cloneable {
 
-  /**
-  * 
-  */
   private static final long serialVersionUID = -2505094168799389057L;
+  private boolean consegna; 
+  private boolean confermaTutorAcc; 
+  private boolean confermaTutorAz;
   private int id;
   private String nome;
   private String descrizione;
-
+  
   public RegistroBean() {
 
   }
@@ -79,5 +79,29 @@ public class RegistroBean extends AbstractBean implements Serializable, Cloneabl
       e.printStackTrace();
     }
     return other;
+  }
+  
+  public boolean getConsegna() {
+    return consegna;
+  }
+  
+  public boolean getConfermaTutorAcc() {
+    return confermaTutorAcc;
+  }
+  
+  public boolean getConfermaTutorAz() {
+    return confermaTutorAz;
+  }
+  
+  public void setConsegna(boolean consegna) {
+    this.consegna = consegna;
+  }
+  
+  public void setConfermaTutorAcc(boolean confermaTutorAcc) {
+    this.confermaTutorAcc;
+  }
+  
+  public void setConfermaTutorAz(boolean confermaTutorAz) {
+    this.confermaTutorAz = confermaTutorAz;
   }
 }
