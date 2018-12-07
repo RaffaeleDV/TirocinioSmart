@@ -16,10 +16,13 @@ public class RegistroBean extends AbstractBean implements Serializable, Cloneabl
 
   }
 
-  public RegistroBean(int id, String nome, String descrizione) {
+  public RegistroBean(int id, String nome, String descrizione, boolean consegna, boolean confermaTutorAcc, boolean confermaTutorAz) {
     this.id = id;
     this.nome = nome;
     this.descrizione = descrizione;
+    this.consegna  = consegna;
+    this.confermaTutorAcc = confermaTutorAcc;
+    this.confermaTutorAz = confermaTutorAz;
   }
 
   public void setId(int id) {
@@ -53,7 +56,10 @@ public class RegistroBean extends AbstractBean implements Serializable, Cloneabl
     str.append(getClass().getName() + "[");
     str.append("id=" + id + ", ");
     str.append("nome=" + nome + ", ");
-    str.append("descrizione=" + descrizione);
+    str.append("descrizione=" + descrizione + ", ");
+    str.append("consegna =" + consegna + ", ");
+    str.append("confermaTutorAcc=" + confermaTutorAcc + ", ");
+    str.append("confermaTutorAz=" + confermaTutorAz + "]");
     return str.toString();
   }
 
@@ -65,7 +71,9 @@ public class RegistroBean extends AbstractBean implements Serializable, Cloneabl
       return false;
     RegistroBean registroBean = (RegistroBean) other;
     if (id == registroBean.getId() && nome.equals(registroBean.getNome())
-        && descrizione.equals(registroBean.getDescrizione()))
+        && descrizione.equals(registroBean.getDescrizione()) &&
+        consegna == registroBean.getConsegna() && confermaTutorAcc == registroBean.getConfermaTutorAcc() &&
+        confermaTutorAz == registroBean.getConfermaTutorAz())
       return true;
     return false;
   }
@@ -98,7 +106,7 @@ public class RegistroBean extends AbstractBean implements Serializable, Cloneabl
   }
   
   public void setConfermaTutorAcc(boolean confermaTutorAcc) {
-    this.confermaTutorAcc;
+    this.confermaTutorAcc = confermaTutorAcc;
   }
   
   public void setConfermaTutorAz(boolean confermaTutorAz) {

@@ -5,10 +5,11 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import it.unisa.database.DriverManagerConnectionPool;
-
+import it.unisa.sql.TSTutorSQL;
+import java.util.ArrayList;
 public class TutorModelDM {
 
-  private static final String TABLE_NAME = "tutor";
+  public static final String TABLE_NAME = "tutor";
 
 
   public static void loadInfo(TutorBean tutor) throws SQLException {
@@ -127,15 +128,12 @@ public class TutorModelDM {
     }
   }
 
-
-
   
   
-  
-  public static ArrayList<TirocinioBean> loadTirocini(TutorBean tutor) throws SQLException {
+  public static ArrayList<ProgettoFormativoBean> loadTirociniTutor(TutorBean tutor) throws SQLException {
     Connection connection = null;
     PreparedStatement ps = null;
-    ArrayList<TirocinioBean> tirocini = new ArrayList<TirocinioBean>();
+    ArrayList<ProgettoFormativoBean> tirocini = new ArrayList<ProgettoFormativoBean>();
     String tipo = tutor.getTipo();
     String selectSQL = null;
     
@@ -157,11 +155,7 @@ public class TutorModelDM {
     
     try {
       connection = DriverManagerConnectionPool.getConnection();
-      if (selectSQL != null) {
-        ps = connection.prepareStatement(selectSQL);
-      } else {
-        //throw an exception
-      }
+      ps = connection.prepareStatement(selectSQL);
       
       /*
        * ps set dei valori
@@ -170,15 +164,11 @@ public class TutorModelDM {
       ResultSet rs = ps.executeQuery();      
       while (rs.next()) {
         System.out.println("TutorTrovato");
-        TirocinioBean tirocinio = new TirocinioBean();
-        tirocinio.setCfu(rs.getInt("cfu"));
-        tirocinio.setId(rs.getInt("id"));
-        tirocinio.setMatricolaStudente(rs.getString("matricola"));
-        tirocinio.setNome(rs.getString("nome"));
-        tirocinio.setProgettoFormativoId(rs.getInt("progetto_formativo"));
-        tirocinio.setRegistroId(rs.getInt("id"));
-        tirocinio.setUfficioId(rs.getInt("ufficio"));
-        tirocini.add(tirocinio);
+        ProgettoFormativoBean progetto = new ProgettoFormativoBean();
+        progetto.setApprovazione(rs.getBoolean("approvazione"));
+        progetto.setId(rs.getInt("id"));
+        progetto.setInfo(rs.getString("info"));
+        tirocini.add(progetto);
       }
     } finally {
       try {
@@ -195,7 +185,7 @@ public class TutorModelDM {
   public static UfficioBean loadUfficio(TutorBean tutor) throws SQLException {
     Connection connection = null;
     PreparedStatement ps = null;
-    UfficioBean ufficio = new UfficioBean();
+    UfficioBean ufficio = null;
     String selectSQL = null;
     String tipo = tutor.getTipo();
     
@@ -217,15 +207,16 @@ public class TutorModelDM {
     
     try {
       connection = DriverManagerConnectionPool.getConnection();
-      ps = connection.prepareStatement(connection);
+      ps = connection.prepareStatement(selectSQL);
       
       /*
        * ps set dei valori
        */
       
       ResultSet rs = ps.executeQuery();
-      while(rs.next()) {
+      if (rs.next()) {
         System.out.println("TutorTrovato");
+        ufficio = new UfficioBean();
         ufficio.setId(rs.getInt("id"));
         ufficio.setNome(rs.getString("nome"));
         ufficio.setPassword(rs.getString("pass"));
@@ -235,7 +226,7 @@ public class TutorModelDM {
         if (ps != null)
           ps.close();
       } finally {
-        DriverManagerConnectionPool.realiseConnection(connection);
+        DriverManagerConnectionPool.releaseConnection(connection);
       }
     }
     
@@ -245,7 +236,7 @@ public class TutorModelDM {
   public static RegistroBean loadRegistro(TutorBean tutor) throws SQLException {
     Connection connection = null;
     PreparedStatement ps = null;
-    RegistroBean registro = new RegistroBean();
+    RegistroBean registro = null;
     String selectSQL = null;
     String tipo = tutor.getTipo();
     
@@ -267,15 +258,16 @@ public class TutorModelDM {
     
     try {
       connection = DriverManagerConnectionPool.getConnection();
-      ps = connection.prepareStatement(connection);
+      ps = connection.prepareStatement(selectSQL);
       
       /*
        * ps set dei valori
        */
       
       ResultSet rs = ps.executeQuery();
-      while (rs.next()) {
+      if (rs.next()) {
         System.out.println("RegistroTrovato");
+        registro = new RegistroBean();
         registro.setDescrizione(rs.getString("descrizione"));
         registro.setId(rs.getInt("id"));
         registro.setNome(rs.getString("nome"));
@@ -300,7 +292,7 @@ public class TutorModelDM {
     
     try {
       connection = DriverManagerConnectionPool.getConnection();
-      ps = connection.prepareStatement(connection);
+      ps = connection.prepareStatement(selectSQL);
       
       /*
        * ps set dei valori
@@ -309,6 +301,7 @@ public class TutorModelDM {
       ResultSet rs = ps.executeQuery();
       if (rs.next()) {
         System.out.println("ProgettoFormativoTrovato");
+        progetto = new ProgettoFormativoBean();
         progetto.setApprovazione(rs.getBoolean("approvazione"));
         progetto.setId(rs.getInt("id"));
         progetto.setInfo(rs.getString("info"));

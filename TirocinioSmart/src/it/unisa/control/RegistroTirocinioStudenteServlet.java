@@ -3,17 +3,19 @@ package it.unisa.control;
 import java.util.ArrayList;
 import java.io.IOException;
 import java.sql.SQLException;
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
+import javax.servlet.http.HttpSession;
 import it.unisa.model.StudenteBean;
 import it.unisa.model.StudenteModelDM;
+import it.unisa.model.ProgettoFormativoBean;
 import it.unisa.model.RegistroBean;
 import it.unisa.model.RegistroModelDM;
-import it.unisa.model.TirocinioBean;
+
 import it.unisa.model.UfficioBean;
 import it.unisa.model.TutorBean;
 
@@ -21,14 +23,14 @@ import it.unisa.model.TutorBean;
 public class RegistroTirocinioStudenteServlet extends HttpServlet {
 
   @Override
-  protected void doGet(HttpServletRequest request, HttpServletResponse response) throws SQLException, ServletException, IOException {
+  protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
     HttpSession session = request.getSession(false);
     RegistroBean registroBean = null;
     StudenteBean studenteBean = null;
     UfficioBean ufficioBean = null;
     TutorBean tutorAziendaleBean = null;
     TutorBean tutorAccademicoBean = null;
-    TirocinioBean tirocinioBean = null;
+    ProgettoFormativoBean tirocinioBean = null;
     String idRegistro = (String)request.getParameter("id").toString();
     Boolean login = new Boolean(false);
     int id = -1;
@@ -48,12 +50,12 @@ public class RegistroTirocinioStudenteServlet extends HttpServlet {
       
       if (login != null) {
         if (login != new Boolean(true)) {
-          RequestDispatcher RequestDispatcher view = request.getRequestDispatcher("login-page.jsp");
+          RequestDispatcher view = request.getRequestDispatcher("login-page.jsp");
           view.forward(request, response);
           return;
         }
       } else {
-        RequestDispatcher RequestDispatcher view = request.getRequestDispatcher("login-page.jsp");
+        RequestDispatcher view = request.getRequestDispatcher("login-page.jsp");
         view.forward(request, response);
         return;
       }
@@ -108,17 +110,17 @@ public class RegistroTirocinioStudenteServlet extends HttpServlet {
         }
       } else {
         session.setAttribute("Loggato", new Boolean(false));
-        RequestDispatcher RequestDispatcher view = request.getRequestDispatcher("login-page.jsp");
+        RequestDispatcher view = request.getRequestDispatcher("login-page.jsp");
         view.forward(request, response);
       }
     } else {
-      RequestDispatcher RequestDispatcher view = request.getRequestDispatcher("login-page.jsp");
+      RequestDispatcher view = request.getRequestDispatcher("login-page.jsp");
       view.forward(request, response);
     }
   }
 
   @Override
-  protected void doPost(HttpServletRequest request, HttpServletResponse response) throws SQLException, ServletException, IOException {
+  protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
     doGet(request, response);
   }
 }

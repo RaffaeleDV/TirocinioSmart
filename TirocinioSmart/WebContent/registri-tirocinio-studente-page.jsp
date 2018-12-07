@@ -4,8 +4,7 @@
 <html>
 <%@ include file="general-head.jsp" %>
 <body>
-	<jsp:include page="generalHeader.jsp"></jsp:include>
-	<jsp:include page="registri.jsp"></jsp:include>
-	<jsp:include page="general-footer.jsp"></jsp:include>
+<%@ include file="generalHeader(Barra).jsp" %>
+<%@ include file="registri.jsp" %>
 </body>
 </html>

@@ -1,11 +1,19 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"
+    isThreadSafe="false"
+    import="it.unisa.model.StudenteBean" %>
 <section id="studente-info-wrapper">
   <div class="info-wrapper">
-  	<p class="info"> Matricola: <%= studenteBean.getMatricola(); %></p>
+    <%
+      StudenteBean studente = 
+        (StudenteBean)session.getAttribute("SessionStudente");
+    %>
+  	<p class="info"> Matricola: <%= studente.getMatricola() %></p>
   </div>
   <div class="info-wrapper">
-  	<p class="info"> Nome: <%= studenteBean.getNome(); %></p>
+  	<p class="info"> Nome: <%= studente.getNome() %></p>
   </div>
   <div class="info-wrapper">
-    <p class="info"> CFU: <%= studenteBean.getCfu(); %></p>
+    <p class="info"> CFU: <%= studente.getCfu() %></p>
   </div>
 </section>>

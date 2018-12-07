@@ -5,6 +5,6 @@
 <%@ include file="general-head.jsp" %>
 <body>
 <%@ include file="generalHeader(Barra).jsp" %>
-<%@ include file="tirocini.jsp" %>
+<jsp:include page="tirocini.jsp" %>
 </body>
 </html>

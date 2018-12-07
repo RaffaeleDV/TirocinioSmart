@@ -2,17 +2,18 @@ package it.unisa.control;
 
 import java.io.IOException;
 import java.sql.SQLException;
+
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.json.JSONObject;
-
 import it.unisa.model.TutorBean;
 import it.unisa.model.RegistroBean;
 import it.unisa.model.RegistroModelDM;
-
+import javax.servlet.http.HttpSession;
 
 @WebServlet("/ApprovaRegistroTirocinioServlet")
 public class ApprovaRegistroTirocinioServlet extends HttpServlet {
@@ -22,12 +23,12 @@ public class ApprovaRegistroTirocinioServlet extends HttpServlet {
    */
   
   @Override
-  protected void doGet(HttpRequest request, HttpResponse response) throws SQLException, ServletException, IOException {
+  protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
     doPost(request, response);
   }
   
   @Override
-  protected void doPost(HttpRequest request, HttpResponse response) throws SQLException, IOException, ServletException {
+  protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
     HttpSession session = request.getSession(false);
     TutorBean tutorBean = null;
     RegistroBean registroBean = null;
@@ -52,12 +53,12 @@ public class ApprovaRegistroTirocinioServlet extends HttpServlet {
         
         if (login != null) {
           if (login != new Boolean(true)) {
-            RequestDispatcher RequestDispatcher view = request.getRequestDispatcher("login-page.jsp");
+            RequestDispatcher view = request.getRequestDispatcher("login-page.jsp");
             view.forward(request, response);
             return;
           }
         } else {
-          RequestDispatcher RequestDispatcher view = request.getRequestDispatcher("login-page.jsp");
+          RequestDispatcher view = request.getRequestDispatcher("login-page.jsp");
           view.forward(request, response);
           return;
         }
@@ -89,7 +90,12 @@ public class ApprovaRegistroTirocinioServlet extends HttpServlet {
                 //redirect to an [error] page
                 break;
             }
-            RegistroModelDM.doUpdateRegistro(registroBean);
+            try {
+              RegistroModelDM.doUpdateRegistro(registroBean);
+            } catch (SQLException e) {
+              // TODO Auto-generated catch block
+              e.printStackTrace();
+            }
             approvazione = true;
           } else {
             approvazione = false;
@@ -102,12 +108,12 @@ public class ApprovaRegistroTirocinioServlet extends HttpServlet {
         }
       } else {
         session.setAttribute("Loggato", new Boolean(false));
-        RequestDispatcher RequestDispatcher view = request.getRequestDispatcher("login-page.jsp");
+        RequestDispatcher view = request.getRequestDispatcher("login-page.jsp");
         view.forward(request, response);
         return;
       }
     } else {
-      RequestDispatcher RequestDispatcher view = request.getRequestDispatcher("login-page.jsp");
+      RequestDispatcher view = request.getRequestDispatcher("login-page.jsp");
       view.forward(request, response);
       return;
     }

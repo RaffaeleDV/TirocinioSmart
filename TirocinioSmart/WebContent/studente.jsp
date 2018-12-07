@@ -2,8 +2,8 @@
     pageEncoding="ISO-8859-1"%>
 <!DOCTYPE html>
 <html>
-<%@include file="GeneralHead.jsp" %>
+<%@include file="general-head.jsp" %>
 <body>
-<%@include file="GeneralHeader(Barra).jsp" %>
+<%@include file="generalHeader(Barra).jsp" %>
 </body>
 </html>

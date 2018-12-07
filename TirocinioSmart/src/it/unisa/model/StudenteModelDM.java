@@ -8,7 +8,7 @@ import it.unisa.database.DriverManagerConnectionPool;
 
 public class StudenteModelDM {
 
-  private static final String TABLE_NAME = "studente";
+  public static final String TABLE_NAME = "studente";
 
 
   public static void loadInfo(StudenteBean stud) throws SQLException {

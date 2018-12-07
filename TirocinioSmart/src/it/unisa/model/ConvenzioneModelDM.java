@@ -8,7 +8,7 @@ import it.unisa.database.DriverManagerConnectionPool;
 
 public class ConvenzioneModelDM {
 
-  private static final String TABLE_NAME = "convenzione";
+  public static final String TABLE_NAME = "convenzione";
 
   public static void loadInfo(ConvenzioneBean conv) throws SQLException {
     Connection connection = null;
@@ -26,6 +26,7 @@ public class ConvenzioneModelDM {
 
       while (rs.next()) {
         conv.setInfo(rs.getString("info"));
+        conv.setAzienda(rs.getString("azienda"));
       }
     } finally {
       try {
@@ -42,7 +43,7 @@ public class ConvenzioneModelDM {
 
     Connection connection = null;
     PreparedStatement ps = null;
-    ConvenzioneBean conv = new ConvenzioneBean(id, null);
+    ConvenzioneBean conv = new ConvenzioneBean(id, null, null);
     conv.setId(id);
     String selectSQL = "SELECT * FROM " + TABLE_NAME + " WHERE id = ?";
     try {
@@ -52,6 +53,7 @@ public class ConvenzioneModelDM {
       ResultSet rs = ps.executeQuery();
       while (rs.next()) {
         conv.setInfo(rs.getString("info"));
+        conv.setAzienda(rs.getString("azienda"));
       }
     } finally {
       try {
@@ -70,14 +72,14 @@ public class ConvenzioneModelDM {
 
     int id;
     String info;
-
+    String azienda;
     id = conv.getId();
     info = conv.getInfo();
-
+    azienda = conv.getAzienda();
     Connection connection = null;
     PreparedStatement ps = null;
 
-    String selectSQL = "INSERT INTO " + TABLE_NAME + " VALUES (?,?)";
+    String selectSQL = "INSERT INTO " + TABLE_NAME + " VALUES (?,?,?)";
 
     try {
       connection = DriverManagerConnectionPool.getConnection();
@@ -85,6 +87,7 @@ public class ConvenzioneModelDM {
 
       ps.setInt(1, id);
       ps.setString(2, info);
+      ps.setString(3, azienda);
 
       System.out.println(ps.toString());
 

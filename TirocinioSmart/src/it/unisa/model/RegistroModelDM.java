@@ -4,7 +4,10 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+
 import it.unisa.database.DriverManagerConnectionPool;
+import it.unisa.sql.TSRegistroSQL;
 
 public class RegistroModelDM {
 
@@ -152,7 +155,7 @@ public class RegistroModelDM {
     String selectSQL = TSRegistroSQL.queryRegistroStudente;
     
     if (registroBean == null)
-      return;
+      return null;
     
     try {
       connection = DriverManagerConnectionPool.getConnection();
@@ -163,7 +166,7 @@ public class RegistroModelDM {
       ResultSet rs = ps.executeQuery();
       if (rs.next()) {
         studenteBean = new StudenteBean();
-        studenteBean.setCfu(rs.getInt("cfu"));
+        studenteBean.setCfu(rs.getString("cfu"));
         studenteBean.setMatricola(rs.getString("matricola"));
         studenteBean.setNome(rs.getString("nome"));
         studenteBean.setPassword(rs.getString("pass"));
@@ -205,7 +208,7 @@ public class RegistroModelDM {
         ufficioBean = new UfficioBean();
         ufficioBean.setId(rs.getInt("id"));
         ufficioBean.setNome(rs.getString("nome"));
-        ufficioBean.setPass(rs.getString("pass"));
+        ufficioBean.setPassword(rs.getString("pass"));
       }
     } finally {
       try {
@@ -240,7 +243,7 @@ public class RegistroModelDM {
         tutorBean.setConvenzioneID(rs.getInt("convenzioneID"));
         tutorBean.setId(rs.getInt("id"));
         tutorBean.setNome(rs.getString("nome"));
-        tutorBean.setPass(rs.getString("pass"));
+        tutorBean.setPassword(rs.getString("pass"));
         tutorBean.setTipo(rs.getString("tipo"));
       }
     } finally {
@@ -276,7 +279,7 @@ public class RegistroModelDM {
         tutorBean.setConvenzioneID(rs.getInt("convenzioneID"));
         tutorBean.setId(rs.getInt("id"));
         tutorBean.setNome(rs.getString("nome"));
-        tutorBean.setPass(rs.getString("pass"));
+        tutorBean.setPassword(rs.getString("pass"));
         tutorBean.setTipo(rs.getString("tipo"));
       }
     } finally {
@@ -291,10 +294,10 @@ public class RegistroModelDM {
     return tutorBean;
   }
   
-  public static TirocinioBean loadTirocinio(RegistroBean registroBean) throws SQLException {
+  public static ProgettoFormativoBean loadTirocinio(RegistroBean registroBean) throws SQLException {
     Connection connection = null;
     PreparedStatement ps = null;
-    TirocinioBean tirocinioBean = null;
+    ProgettoFormativoBean tirocinioBean = null;
     String selectSQL = TSRegistroSQL.queryRegistroTirocinio;
     
     try {
@@ -308,14 +311,10 @@ public class RegistroModelDM {
       ResultSet rs = ps.executeQuery();
       if (rs.next()) {
         System.out.println("TirocinioTrovato");
-        tirocinioBean = new TirocinioBean();
-        tirocinioBean.setCfu(rs.getInt("cfu"));
+        tirocinioBean = new ProgettoFormativoBean();
+        tirocinioBean.setApprovazione(rs.getBoolean("approvazione"));
         tirocinioBean.setId(rs.getInt("id"));
-        tirocinioBean.setMatricolaStudente(rs.getString("matricola"));
-        tirocinioBean.setNome(rs.getString("nome"));
-        tirocinioBean.setProgettoFormativoId(rs.getInt("progetto"));
-        tirocinioBean.setRegistroId(rs.getInt("registro"));
-        tirocinioBean.setUfficioId(rs.getInt("ufficio"));
+        tirocinioBean.setInfo(rs.getString("info"));
       }
     } finally {
       try {
@@ -326,7 +325,7 @@ public class RegistroModelDM {
       }
     }
     
-    return tirocinio;
+    return tirocinioBean;
   }
   
   public static boolean studenteRegistro(String matricola, int idRegistro) throws SQLException {
@@ -425,7 +424,7 @@ public class RegistroModelDM {
         if (ps != null) 
           ps.close();
       } finally {
-        DriverManagerConnection.releaseConnection(connection);
+        DriverManagerConnectionPool.releaseConnection(connection);
       }
     }
     return tutorRegistro;
@@ -453,7 +452,7 @@ public class RegistroModelDM {
         boolean consegna = rs.getBoolean("consegna");
         boolean confermaTutorAcc = rs.getBoolean("confermaTutorAcc");
         boolean confermaTutorAz = rs.getBoolean("confermaTutorAz");
-        RegistroBean registroBean = new RegistroBean(id, nome , descrizione, 
+        RegistroBean registroBean = new RegistroBean(idRegistro, nome , descrizione, 
             consegna, confermaTutorAcc, confermaTutorAz);
         registriBean.add(registroBean);
       }
@@ -462,7 +461,7 @@ public class RegistroModelDM {
         if (ps != null) 
           ps.close();
       } finally {
-        DriverManagerConnection.releaseConnection(connection);
+        DriverManagerConnectionPool.releaseConnection(connection);
       }
     }
     return registriBean;
@@ -497,7 +496,7 @@ public class RegistroModelDM {
         if (ps != null)
           ps.close();
       } finally {
-        DriverManagerConnection.releaseConnection(connection);
+        DriverManagerConnectionPool.releaseConnection(connection);
       }
     }
     return registriBean;

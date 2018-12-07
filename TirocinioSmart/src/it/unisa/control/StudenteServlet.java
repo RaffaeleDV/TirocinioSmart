@@ -3,17 +3,18 @@ package it.unisa.control;
 import java.util.ArrayList;
 import java.io.IOException;
 import java.sql.SQLException;
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
+import javax.servlet.http.HttpSession;
+import it.unisa.model.ProgettoFormativoBean;
+import it.unisa.model.ProgettoFormativoModelDM;
 import it.unisa.model.RegistroBean;
-import it.unisa.model.TirocinioBean;
 import it.unisa.model.RegistroModelDM;
 import it.unisa.model.StudenteBean;
-import it.unisa.model.TirocinioModelDM;
 
 @WebServlet("/StudenteServlet")
 public class StudenteServlet extends HttpServlet {
@@ -23,32 +24,32 @@ public class StudenteServlet extends HttpServlet {
    */
   
   @Override
-  protected void doGet(HttpRequest request, HttpResponse response) throws ServletException, SQLException, IOException {
+  protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
     HttpSession session = request.getSession(false);
     StudenteBean studenteBean = null;
     ArrayList<RegistroBean> registriBean = null;
-    ArrayList<TirocinioBean> tirociniBean = null;
+    ArrayList<ProgettoFormativoBean> tirociniBean = null;
     Boolean login = new Boolean(false);
     
     if (session != null) {
-      studenteBean = (StudenteBeansession.getAttribute("SessionStudente");
+      studenteBean = (StudenteBean)session.getAttribute("SessionStudente");
       login = (Boolean)session.getAttribute("Loggato");
       
       if (login != null) {
         if (login != new Boolean(true)) {
-          RequestDispatcher RequestDispatcher view = request.getRequestDispatcher("login-page.jsp");
+          RequestDispatcher view = request.getRequestDispatcher("login-page.jsp");
           view.forward(request, response);
           return;
         }
       } else {
-        RequestDispatcher RequestDispatcher view = request.getRequestDispatcher("login-page.jsp");
+        RequestDispatcher view = request.getRequestDispatcher("login-page.jsp");
         view.forward(request, response);
         return;
       }
       
       if (studenteBean != null) {
         registriBean = (ArrayList<RegistroBean>)session.getAttribute("SessionRegistri");
-        tirociniBean = (ArrayList<TirocinioBean>)session.getAttribute("SessionTirocini");
+        tirociniBean = (ArrayList<ProgettoFormativoBean>)session.getAttribute("SessionTirocini");
         if (registriBean == null) {
           try {
             registriBean = RegistroModelDM.loadRegistriStudente(studenteBean);
@@ -63,7 +64,7 @@ public class StudenteServlet extends HttpServlet {
             /*
              * nella pagina occorre distinguere i tirocini correnti
              */
-            tirociniBean = TirocinioModelDM.loadTirociniStudente(studenteBean);
+            tirociniBean = ProgettoFormativoModelDM.loadTirociniStudente(studenteBean);
             session.setAttribute("SessionTirocini", tirociniBean);
           } catch(SQLException e) {
             //redirect to an [error] page
@@ -76,18 +77,18 @@ public class StudenteServlet extends HttpServlet {
         }
       } else {
         session.setAttribute("Loggato", new Boolean(false));
-        RequestDispatcher RequestDispatcher view = request.getRequestDispatcher("login-page.jsp");
+        RequestDispatcher view = request.getRequestDispatcher("login-page.jsp");
         view.forward(request, response);
       }
     } else {
-      RequestDispatcher RequestDispatcher view = request.getRequestDispatcher("login-page.jsp");
+      RequestDispatcher view = request.getRequestDispatcher("login-page.jsp");
       view.forward(request, response);
     }
     //redirect to an [error] page
   }
   
   @Override
-  protected void doPost(HttpRequest request, HttpResponse response) throws ServletException, SQLException, IOException{
+  protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
     doGet(request, response);
   }
 }

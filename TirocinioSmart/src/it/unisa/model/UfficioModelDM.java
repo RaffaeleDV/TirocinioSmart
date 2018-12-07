@@ -8,7 +8,7 @@ import it.unisa.database.DriverManagerConnectionPool;
 
 public class UfficioModelDM {
 
-  private static final String TABLE_NAME = "ufficio";
+  public static final String TABLE_NAME = "ufficio";
 
   public static void loadInfo(UfficioBean ufficio) throws SQLException {
 

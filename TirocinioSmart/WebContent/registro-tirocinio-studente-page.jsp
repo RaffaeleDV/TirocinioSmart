@@ -4,7 +4,7 @@
 <html>
 <%@ include file="general-head.jsp" %>
 <body>
-	<%@ include file="generalHeader(Barra).jsp" %>
-	<%@ include file="registri.jsp" %>
+<%@ include file="generalHeader(Barra).jsp" %>
+<%@ include file="registri.jsp" %>
 </body>
 </html>

@@ -3,25 +3,26 @@ package it.unisa.control;
 import java.util.ArrayList;
 import java.io.IOException;
 import java.sql.SQLException;
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import it.unisa.model.TirocinioModelDM;
+import javax.servlet.http.HttpSession;
 import it.unisa.model.UfficioModelDM;
-import it.unisa.model.TirocinioBean;
+import it.unisa.model.ProgettoFormativoBean;
+import it.unisa.model.ProgettoFormativoModelDM;
 import it.unisa.model.UfficioBean;
 
 @WebServlet("/TirociniUfficioServlet")
 public class TirociniUfficioServlet extends HttpServlet {
 
   @Override
-  protected void doGet(HttpRequest request, HttpResponse response) throws SQLException, IOException, ServletException {
+  protected void doGet(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
     HttpSession session = request.getSession(false);
     UfficioBean ufficioBean = null;
-    ArrayList<TirocinioBean> tirociniBean = null;
+    ArrayList<ProgettoFormativoBean> tirociniBean = null;
     Boolean login = new Boolean(false);
     
     if (session != null) {
@@ -30,21 +31,21 @@ public class TirociniUfficioServlet extends HttpServlet {
       
       if (login != null) {
         if (login != new Boolean(true)) {
-          RequestDispatcher RequestDispatcher view = request.getRequestDispatcher("login-page.jsp");
+          RequestDispatcher view = request.getRequestDispatcher("login-page.jsp");
           view.forward(request, response);
           return;
         }
       } else {
-        RequestDispatcher RequestDispatcher view = request.getRequestDispatcher("login-page.jsp");
+        RequestDispatcher view = request.getRequestDispatcher("login-page.jsp");
         view.forward(request, response);
         return;
       }
       
       if (ufficioBean != null) {
-        tirociniBean = (ArrayList<TirocinioBean>)session.getAttribute("SessionTirocini");
+        tirociniBean = (ArrayList<ProgettoFormativoBean>)session.getAttribute("SessionTirocini");
         if (tirociniBean == null) {
           try {
-            tirociniBean = TirocinioModelDM.loadTirociniUfficio(ufficioBean);
+            tirociniBean = ProgettoFormativoModelDM.loadTirociniUfficio(ufficioBean);
           } catch(SQLException e) {
             //redirect to an [error] page
           }
@@ -58,19 +59,19 @@ public class TirociniUfficioServlet extends HttpServlet {
         }
       } else {
         session.setAttribute("Loggato", new Boolean(false));
-        RequestDispatcher RequestDispatcher view = request.getRequestDispatcher("login-page.jsp");
+        RequestDispatcher view = request.getRequestDispatcher("login-page.jsp");
         view.forward(request, response);
         return;
       }
     } else {
-      RequestDispatcher RequestDispatcher view = request.getRequestDispatcher("login-page.jsp");
+      RequestDispatcher view = request.getRequestDispatcher("login-page.jsp");
       view.forward(request, response);
       return;
     }
   }
   
   @Override
-  protected void doPost(HttpRequest request, HttpResponse response) throws SQLException, IOException, ServletException {
+  protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
     doGet(request, response);
   }
 }
