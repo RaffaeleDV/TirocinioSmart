@@ -23,7 +23,7 @@
 	
 	<div class = "wrap" id="login-container">
 		<div id="login-studente-container" style="display: none;">
-			<form method="post" action="LoginServletStudente"  > 
+			<form method="post" action="LoginServletStudente" > 
 				<h2>Entra nel nostro sistema</h2>
 					<input type = "text" name = "login-nome" placeholder = "Nome">
 					<input type = "password" name = "login-password" placeholder = "Password">

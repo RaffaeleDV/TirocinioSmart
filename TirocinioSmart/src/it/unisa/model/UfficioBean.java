@@ -2,7 +2,7 @@ package it.unisa.model;
 
 import java.io.Serializable;
 
-public class UfficioBean extends AbstractBean implements Serializable, Cloneable {
+public class UfficioBean extends UtenteBean implements Serializable, Cloneable {
 
   /**
   * 

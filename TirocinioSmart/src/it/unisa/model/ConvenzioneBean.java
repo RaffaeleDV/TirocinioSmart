@@ -5,8 +5,8 @@ import java.io.Serializable;
 public class ConvenzioneBean extends AbstractBean implements Serializable, Cloneable {
 
   /**
-  * 
-  */
+   * 
+   */
   private static final long serialVersionUID = 2768300536554372790L;
   private int id;
   private String info;

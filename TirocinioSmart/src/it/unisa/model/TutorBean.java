@@ -2,7 +2,7 @@ package it.unisa.model;
 
 import java.io.Serializable;
 
-public class TutorBean extends AbstractBean implements Serializable {
+public class TutorBean extends UtenteBean implements Serializable {
 
   /**
    * 

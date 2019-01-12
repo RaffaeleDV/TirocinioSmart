@@ -2,7 +2,7 @@ package it.unisa.model;
 
 import java.io.Serializable;
 
-public class StudenteBean extends AbstractBean implements Serializable, Cloneable {
+public class StudenteBean extends UtenteBean implements Serializable, Cloneable {
 
   private static final long serialVersionUID = -7363690702555462451L;
 

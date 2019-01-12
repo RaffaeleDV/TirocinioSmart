@@ -2,6 +2,8 @@ package it.unisa.login;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -13,7 +15,7 @@ import it.unisa.model.StudenteModelDM;
 /**
  * Servlet implementation class LoginServlet
  */
-@WebServlet("/LoginServlet")
+@WebServlet("/LoginServletStudente")
 public class LoginServletStudente extends HttpServlet {
   private static final long serialVersionUID = 1L;
 
@@ -33,7 +35,7 @@ public class LoginServletStudente extends HttpServlet {
     stud.setPassword(pass);
 
     if (Validate.checkUser(stud)) {
-
+      
       try {
         StudenteModelDM.loadInfo(stud);
 
@@ -43,7 +45,7 @@ public class LoginServletStudente extends HttpServlet {
       request.getSession().setAttribute("Loggato", new Boolean(true));
       request.getSession().setAttribute("SessionUser", stud);
       request.getSession().setAttribute("ErroreLogin", new Boolean(false));
-      redirectPage = "/login-success.jsp";
+      redirectPage = "/home-page.jsp";
 
     } else {
       request.getSession().setAttribute("Loggato", new Boolean(false));

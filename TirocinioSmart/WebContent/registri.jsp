@@ -2,8 +2,8 @@
     pageEncoding="UTF-8" 
     import="java.util.*" 
     import="it.unisa.model.RegistroBean" %>
-<div id="nomi-registri-wrapper">
-  <h1 id="registri-header">Registri Ufficio: </h1>
+<section id="nomi-registri-wrapper">
+  <h1 class="info">Registri</h1>
   <%
   	ArrayList<RegistroBean> regs = (ArrayList<RegistroBean>)session.getAttribute("SessionRegistri");
   %>
@@ -19,4 +19,4 @@
       }
     }
   %>
-</div>
+</section>

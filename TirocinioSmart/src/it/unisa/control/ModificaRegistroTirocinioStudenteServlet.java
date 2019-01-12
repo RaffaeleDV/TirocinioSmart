@@ -40,19 +40,17 @@ public class ModificaRegistroTirocinioStudenteServlet extends HttpServlet{
       }
     }
     if (session != null) {
-      studenteBean = (StudenteBean)session.getAttribute("SessionStudente");
+      studenteBean = (StudenteBean) session.getAttribute("SessionUser");
       login = (Boolean)session.getAttribute("Loggato");
       
       if (login != null) {
         if (login != new Boolean(true)) {
           RequestDispatcher view = request.getRequestDispatcher("login-page.jsp");
           view.forward(request, response);
-          return;
         }
       } else {
         RequestDispatcher view = request.getRequestDispatcher("login-page.jsp");
         view.forward(request, response);
-        return;
       }
       
       if (studenteBean != null) {
@@ -89,12 +87,10 @@ public class ModificaRegistroTirocinioStudenteServlet extends HttpServlet{
       } else {
         RequestDispatcher view = request.getRequestDispatcher("login-page.jsp");
         view.forward(request, response);
-        return;
       }
     } else {
       RequestDispatcher view = request.getRequestDispatcher("login-page.jsp");
       view.forward(request, response);
-      return;
     }
         
     JSONObject json = new JSONObject();

@@ -1,5 +1,10 @@
 @charset "ISO-8859-1";
 
+* {
+	width:auto;
+	height:auto;
+}
+
 body {
 	background: #8080ff;
 }
@@ -41,6 +46,11 @@ input {
 	border:none;
 }
 
+li {
+	list-style-type:none;	
+	overflow:hidden;
+}
+
 #input {
 	width:90%;
 }
@@ -54,6 +64,10 @@ input {
 	color:white;
 }
 
+img {
+	display:inline;
+}
+
 #submit:hover {
 	background:#000080;
 }
@@ -63,6 +77,7 @@ p{
 	padding:10px;
 	border-radius:10px;
 	font-size:20px;
+	overflow:hidden;
 }
 
 #logo {
@@ -101,312 +116,4 @@ span {
 	color:white;
 	padding:10px;
 	border-radius:10px;
-}
-
-#tutor-header{
-	margin-top:-10px;
-	margin-left:-10px;
-	margin-right:-8px;
-	background-color:#261263;
-	height:100px;
-	display:-webkit-box;
-	-webkit-box-align:end;
-	-webkit-box-pack:end;
-}
-
-#wrap-ts-mark{
-	display:block;
-	font-size:14px;
-	font-family:Helvetica;
-	-webkit-box-flex:1;
-}
-
-#wrap-ts-logo{
-	
-}
-
-#ts-logo{
-	width:160px;
-	height:120x;
-}
-
-#tirocinio-smart-mark{
-	color:#e8e6d2;
-	letter-spacing:3px;
-	word-spacing:8px;
-	font-size:28px;
-	overflow: hidden;
-	z-index:-100;
-	-webkit-box-align:justify;
-}
-
-#wrapaccount-tutor{
-	padding:5px;
-	-webkit-box-flex:1;
-}
-
-#user-logo{
-	padding:15px;
-	float:left;
-}
-
-#user-info{
-}
-
-#user-name{
-	font-size:14px;
-}
-
-#header-logout{
-	color:white;
-	text-decoration:none;
-	font-size:14px;
-	padding:5px;
-	background-color:#3A56BFBB;
-	margin-left:5px;
-	border-radius:8px;
-}
-
-#header-signout{
-	color:white;
-	text-decoration:none;
-	font-size:14px;
-	padding:5px;
-	background-color:#3FF6BFBB;
-	margin-right:15px;
-	border-radius:3px;
-}
-
-#wrapnav-tutor{
-	-webkit-box-flex:3;
-	padding:5px;
-	margin:0px;
-}
-
-#nav-tutor{
-	overflow:hidden;
-	z-index:100;
-}
-
-#nav-list{
-	
-}
-
-div > nav > ul > li{
-	list-style-type:none;
-	display:inline;
-	padding-left:15px;
-}
-
-ol > li{
-	list-style-type:none;
-	display:inline;
-	padding-left:15px;
-}
-
-ol > li:hover{
-	text-decoration:underline;
-}
-
-li > a{
-	color:#E6F1F2;
-	text-decoration:none;
-	font-size:15px;
-}
-
-ul > li > a:hover{
-	color:white;
-	background-color:#E97A19;
-	padding:12px;
-	border-radius:3px;
-}
-
-#nav-list{
-	
-}
-
-#tutor-questionari{
-	color:black;
-}
-
-#quest-heading{
-	color:black;
-}
-
-
-
-#new-questionario{
-	
-}
-
-#wrap-questionari{
-
-}
-
-#tutor-quest{
-}
-
-#wrap-tutor-questionari{
-	
-}
-
-#new-questionario{
-	
-}
-
-#wrap-ts-input{
-	padding:8px;
-}
-
-#tutor-convenzioni{
-	background-color:white;
-	padding:15px;
-	margin-top:25px;
-	margin-bottom:25px;
-	border-radius:15px;
-}
-
-#wrap-tutor-convenzioni{
-
-}
-
-#wrap-convenzioni{
-
-}
-
-#registra-convenzioni{
-
-}
-
-#new-convenzione{
-
-}
-
-#tutor-conv{
-	
-}
-
-#wrap-ts-input{
-	padding:35px;
-}
-
-#conv-heading{
-	color:black;
-}
-
-#tutor-footer{
-	background-color: #6D81AA;
-	margin-left:-10px;
-	margin-right:-8px;
-	margin-bottom:-40px;
-}
-
-#wrapup-footer{
-	height:40px;
-	background-color:#555753;
-}
-
-#scroll-up{
-	width:40px;
-	height:40px;
-	opacity:0.7;
-	color:white;
-}
-
-#wrapfooter-links{
-	
-}
-
-#wrapfooter-links > ul{
-	list-style-type:none;
-}
-
-ul{
-	display:flex;
-	flex-direction:row;
-}
-
-ul > li{
-	padding-left:15px;
-}
-
-#wrapfooter-links > ul > li > a:hover{
-}
-
-#wrapfooter-info{
-	margin-bottom:-25px;
-	padding:25px;
-}
-
-#registro-tirocinio{
-	background-color: white;
-	border-radius:10px;
-	padding:30px;
-	margin-top:15px;
-	margin-bottom:25px;
-}
-
-#wrap-registro-tirocinio{
-}
-
-#wrap-ts-input-reg{
-	float:right;
-}
-
-#reg-tirocinio{
-	padding:35px;
-}
-
-#wrap-reg-tirocinio{
-	padding:25px;
-}
-
-.registro-info{
-	font-size:18px;
-	color:black;
-}
-
-#tutor-tirocinio{
-	margin-top:35px;
-	border-radius:15px;
-	margin-bottom:35px;
-	background-color:white;
-	width:100%;
-	height:100%;
-}
-
-#wrap-tutor-tirocinio{
-	
-}
-
-#wrap-tirocinio-info{
-	
-}
-
-.tirocinio-info{
-	color:#2e3436;
-}
-
-#prog-formativo{
-	background-color:white;
-	padding:15px;
-	margin-top:25px;
-	margin-bottom:25px;
-	border-radius:15px;
-}
-
-#wrap-prog-formativo-info{
-	
-}
-
-.prog-formativo-info{
-	color:black;
-}
-
-#tutor-questionari{
-	background-color:white;
-	padding:15px;
-	margin-top:25px;
-	margin-bottom:25px;
-	border-radius:15px;
 }

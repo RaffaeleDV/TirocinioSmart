@@ -7,7 +7,6 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class DriverManagerConnectionPool {
-
   private static List<Connection> freeDbConnections;
 
 
@@ -17,6 +16,7 @@ public class DriverManagerConnectionPool {
       Class.forName("com.mysql.jdbc.Driver");
     } catch (ClassNotFoundException e) {
       System.out.println("DB driver not found:" + e.getMessage());
+      e.printStackTrace();
     }
   }
 
@@ -26,13 +26,12 @@ public class DriverManagerConnectionPool {
     Connection newConnection = null;
     String ip = "localhost";
     String port = "3306";
-    String db = "dbprogetto";
+    String db = "dbtirocinio";
     String username = "root";
     String password = "raffaele";
 
-    newConnection = DriverManager.getConnection("jdbc:mysql://" + ip + ":" + port + "/" + db,
+    newConnection = DriverManager.getConnection("jdbc:mysql://localhost:3306/dbtirocinio",
         username, password);
-
     newConnection.setAutoCommit(false);
     return newConnection;
   }
@@ -62,6 +61,4 @@ public class DriverManagerConnectionPool {
     if (connection != null)
       freeDbConnections.add(connection);
   }
-
-
 }
