@@ -2,6 +2,7 @@ package it.unisa.login;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -27,7 +28,7 @@ public class LoginServletUfficio extends HttpServlet {
 
     uff = new UfficioBean();
     uff.setNome(nome);
-    uff.setPassword(pass);
+    uff.setPass(pass);
 
     if (Validate.checkUser(uff)) {
 
@@ -40,7 +41,7 @@ public class LoginServletUfficio extends HttpServlet {
       request.getSession().setAttribute("Loggato", new Boolean(true));
       request.getSession().setAttribute("SessionUser", uff);
       request.getSession().setAttribute("ErroreLogin", new Boolean(false));
-      redirectPage = "/login-success.jsp";
+      redirectPage = "/home-page.jsp";
 
     } else {
       request.getSession().setAttribute("Loggato", new Boolean(false));

@@ -5,6 +5,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import it.unisa.database.DriverManagerConnectionPool;
+import java.util.List;
+import java.util.ArrayList;
 
 public class ConvenzioneModelDM {
 
@@ -102,5 +104,15 @@ public class ConvenzioneModelDM {
         DriverManagerConnectionPool.releaseConnection(connection);
       }
     }
+  }
+  
+  public static ArrayList<ConvenzioneBean> loadConvenzioniTutor(TutorBean tutor) {
+    ArrayList<ConvenzioneBean> convenzioni = new ArrayList<ConvenzioneBean>();
+    
+    /*
+     * codice per restituire le convenzioni di un tutor
+     */
+    
+    return convenzioni;
   }
 }

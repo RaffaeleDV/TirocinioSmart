@@ -26,8 +26,9 @@ public class UfficioModelDM {
       ResultSet rs = ps.executeQuery();
 
       while (rs.next()) {
+        ufficio.setEmail(rs.getString("email"));
         ufficio.setNome(rs.getString("nome"));
-        ufficio.setPassword(rs.getString("password"));
+        ufficio.setPass(rs.getString("pass"));
       }
 
     } finally {
@@ -60,8 +61,9 @@ public class UfficioModelDM {
       ResultSet rs = ps.executeQuery();
 
       while (rs.next()) {
+        uff.setEmail(rs.getString("email"));
         uff.setNome(rs.getString("nome"));
-        uff.setPassword(rs.getString("password"));
+        uff.setPass(rs.getString("pass"));
       }
     } finally {
       try {
@@ -76,24 +78,26 @@ public class UfficioModelDM {
 
   public static void saveUfficio(UfficioBean ufficio) throws SQLException {
     int id;
-    String nome, password;
+    String nome, pass, email;
 
     id = ufficio.getId();
     nome = ufficio.getNome();
-    password = ufficio.getPassword();
-
+    pass = ufficio.getPass();
+    email = ufficio.getEmail();
+    
     Connection connection = null;
     PreparedStatement ps = null;
 
-    String selectSQL = "INSERT INTO " + TABLE_NAME + " VALUES (?,?,?)";
+    String selectSQL = "INSERT INTO " + TABLE_NAME + " VALUES (?,?,?,?)";
 
     try {
       connection = DriverManagerConnectionPool.getConnection();
       ps = connection.prepareStatement(selectSQL);
 
       ps.setInt(1, id);
-      ps.setString(2, nome);
-      ps.setString(3, password);
+      ps.setString(2, email);
+      ps.setString(3, nome);
+      ps.setString(4, pass);
 
       System.out.println(ps.toString());
 

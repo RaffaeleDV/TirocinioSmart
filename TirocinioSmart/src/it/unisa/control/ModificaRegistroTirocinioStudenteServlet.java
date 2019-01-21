@@ -72,6 +72,7 @@ public class ModificaRegistroTirocinioStudenteServlet extends HttpServlet{
           if (!nome.equals(registroBean.getNome()) || !descrizione.equals(registroBean.getDescrizione())) {
             registroBean.setNome(nome);
             registroBean.setDescrizione(descrizione);
+            session.setAttribute("SessionRegistro", registroBean);
             try {
               RegistroModelDM.doUpdateRegistro(registroBean);
             } catch (SQLException e) {

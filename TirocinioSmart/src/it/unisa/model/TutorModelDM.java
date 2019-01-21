@@ -28,9 +28,9 @@ public class TutorModelDM {
       ResultSet rs = ps.executeQuery();
 
       while (rs.next()) {
-
+        tutor.setEmail(rs.getString("email"));
         tutor.setNome(rs.getString("nome"));
-        tutor.setPassword(rs.getString("pass"));
+        tutor.setPass(rs.getString("pass"));
         tutor.setTipo(rs.getString("tipo"));
         tutor.setConvenzioneID(rs.getInt("convenzioneID"));
       }
@@ -64,9 +64,9 @@ public class TutorModelDM {
       ResultSet rs = ps.executeQuery();
 
       while (rs.next()) {
-
+        tutor.setEmail(rs.getString("email"));
         tutor.setNome(rs.getString("nome"));
-        tutor.setPassword(rs.getString("pass"));
+        tutor.setPass(rs.getString("pass"));
         tutor.setTipo(rs.getString("tipo"));
         tutor.setConvenzioneID(rs.getInt("convenzioneID"));
       }
@@ -88,32 +88,31 @@ public class TutorModelDM {
 
   public static void saveTutor(TutorBean tutor) throws SQLException {
 
-    String nome, pass, tipo;
+    String nome, pass, tipo, email;
     int id, convenzioneID;
 
     nome = tutor.getNome();
-    pass = tutor.getPassword();
+    pass = tutor.getPass();
     tipo = tutor.getTipo();
     id = tutor.getId();
     convenzioneID = tutor.getConvenzioneID();
-
+    email = tutor.getEmail();
 
     Connection connection = null;
     PreparedStatement ps = null;
 
-    String selectSQL = "INSERT INTO " + TABLE_NAME + " VALUES (?,?,?,?,?)";
+    String selectSQL = "INSERT INTO " + TABLE_NAME + " VALUES (?,?,?,?,?,?)";
 
     try {
       connection = DriverManagerConnectionPool.getConnection();
       ps = connection.prepareStatement(selectSQL);
 
       ps.setInt(1, id);
-      ps.setString(2, nome);
-      ps.setString(3, pass);
-      ps.setString(4, tipo);
-      ps.setInt(5, convenzioneID);
-
-      System.out.println(ps.toString());
+      ps.setString(2, email);
+      ps.setString(3, nome);
+      ps.setString(4, pass);
+      ps.setString(5, tipo);
+      ps.setInt(6, convenzioneID);
 
       ps.executeUpdate();
       connection.commit();
@@ -219,7 +218,7 @@ public class TutorModelDM {
         ufficio = new UfficioBean();
         ufficio.setId(rs.getInt("id"));
         ufficio.setNome(rs.getString("nome"));
-        ufficio.setPassword(rs.getString("pass"));
+        ufficio.setPass(rs.getString("pass"));
       }
     } finally {
       try {

@@ -1,11 +1,16 @@
 package it.unisa.model;
 
+import java.io.BufferedOutputStream;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-
+import java.util.Scanner;
 import it.unisa.database.DriverManagerConnectionPool;
 import it.unisa.sql.TSRegistroSQL;
 
@@ -500,5 +505,40 @@ public class RegistroModelDM {
       }
     }
     return registriBean;
+  }
+  
+  public static RegistroBean loadRegistroStudente(StudenteBean studente) throws SQLException, FileNotFoundException {
+    RegistroBean registro = null;
+    Connection connection = null;
+    PreparedStatement ps = null;
+    ResultSet rs = null;
+    
+    try {
+      
+      connection = DriverManagerConnectionPool.getConnection();
+      ps = connection.prepareStatement(TSRegistroSQL.loadRegistroStudente);
+      ps.setString(1, studente.getMatricola());
+      rs = ps.executeQuery();
+      
+      if (rs.next()) {
+        int id = rs.getInt("id");
+        String nome = rs.getString("nome");
+        String descrizione = rs.getString("descrizione");
+        boolean consegna = rs.getBoolean("consegna");
+        boolean confermaTutorAcc = rs.getBoolean("confermaTutorAcc");
+        boolean confermaTutorAz = rs.getBoolean("confermaTutorAz");
+        registro = new RegistroBean(id, nome, descrizione, consegna, confermaTutorAcc, confermaTutorAz);
+      }
+      
+    } finally {
+      try {
+        if (ps != null)
+          ps.close();
+      } finally {
+        DriverManagerConnectionPool.releaseConnection(connection);
+      }
+    }
+    
+    return registro;
   }
 }

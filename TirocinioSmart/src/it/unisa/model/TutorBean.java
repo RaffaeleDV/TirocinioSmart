@@ -9,8 +9,9 @@ public class TutorBean extends UtenteBean implements Serializable {
    */
   private static final long serialVersionUID = 7743978606183893973L;
   private int id;
+  private String email;
   private String nome;
-  private String password;
+  private String pass;
   private String tipo;
   private int convenzioneID;
 
@@ -21,13 +22,21 @@ public class TutorBean extends UtenteBean implements Serializable {
   public void setNome(String nome) {
     this.nome = nome;
   }
-
-  public String getPassword() {
-    return password;
+  
+  public String getEmail() {
+    return email;
+  }
+  
+  public void setEmail(String email) {
+    this.email = email;
   }
 
-  public void setPassword(String pass) {
-    this.password = pass;
+  public String getPass() {
+    return pass;
+  }
+
+  public void setPass(String pass) {
+    this.pass = pass;
   }
 
   public String getTipo() {
@@ -60,7 +69,7 @@ public class TutorBean extends UtenteBean implements Serializable {
 
   @Override
   public String toString() {
-    return "TutorBean [id=" + id + ", nome=" + nome + ", pass=" + password + ", tipo=" + tipo
+    return "TutorBean [id=" + id + ", email=" + email + ", nome=" + nome + ", pass=" + pass + ", tipo=" + tipo
         + ", convenzioneID=" + convenzioneID + "]";
   }
 

@@ -43,13 +43,13 @@ public class Validate {
       conn = DriverManagerConnectionPool.getConnection();
 
       PreparedStatement ps =
-          conn.prepareStatement("SELECT * FROM tutor WHERE nome = ? AND pass = ? ");
+          conn.prepareStatement("SELECT * FROM tutor WHERE email = ? AND pass = ? ");
 
-      ps.setString(1, tut.getNome());
-      ps.setString(2, tut.getPassword());
+      ps.setString(1, tut.getEmail());
+      ps.setString(2, tut.getPass());
       ResultSet rs = ps.executeQuery();
       st = rs.next();
-
+      
     } catch (SQLException e) {
       e.printStackTrace();
     }
@@ -68,10 +68,10 @@ public class Validate {
           conn.prepareStatement("SELECT * FROM ufficio WHERE nome = ? AND pass = ? ");
 
       ps.setString(1, tut.getNome());
-      ps.setString(2, tut.getPassword());
+      ps.setString(2, tut.getPass());
       ResultSet rs = ps.executeQuery();
       st = rs.next();
-
+      
     } catch (SQLException e) {
       e.printStackTrace();
     }

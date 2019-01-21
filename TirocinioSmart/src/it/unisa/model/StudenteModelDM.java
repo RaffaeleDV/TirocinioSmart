@@ -16,18 +16,18 @@ public class StudenteModelDM {
     Connection connection = null;
     PreparedStatement ps = null;
 
-    String selectSQL = "SELECT * FROM " + TABLE_NAME + " WHERE matricola = ?";
+    String selectSQL = "SELECT * FROM " + TABLE_NAME + " WHERE nome = ?";
 
     try {
       connection = DriverManagerConnectionPool.getConnection();
       ps = connection.prepareStatement(selectSQL);
 
-      ps.setString(1, stud.getMatricola());
+      ps.setString(1, stud.getNome());
 
       ResultSet rs = ps.executeQuery();
 
       while (rs.next()) {
-        stud.setNome(rs.getString("nome"));
+        stud.setMatricola(rs.getString("matricola"));
         stud.setCfu(rs.getString("cfu"));
         stud.setPassword(rs.getString("pass"));
         stud.setTutorAccID(rs.getInt("tutorAccID"));

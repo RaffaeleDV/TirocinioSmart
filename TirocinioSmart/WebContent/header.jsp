@@ -1,16 +1,17 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"
+<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
+    pageEncoding="ISO-8859-1"
     import="it.unisa.model.StudenteBean"
     import="it.unisa.model.TutorBean"
     import="it.unisa.model.UtenteBean"
     import="it.unisa.model.UfficioBean" %>
 <header id="header-wrapper" class="wrapper">
   <% 
-    Object user = (UtenteBean) session.getAttribute("SessionUser");
-      if (user == null) {
-        RequestDispatcher view = request.getRequestDispatcher("login-page.jsp");
-        view.forward(request, response);
-      }
+    Object user = session.getAttribute("SessionUser");
+      
+    if (user == null) {
+      RequestDispatcher view = request.getRequestDispatcher("login-page.jsp");
+      view.forward(request, response);
+    }
   %>
   <div id="logo-wrapper" class="wrapper">
    <img id="logo" src="images/logo.png"/>
@@ -18,34 +19,47 @@
   <div id="navbar-wrapper" class="wrapper">
     <nav id="navbar" class="wrapper">
       <ul>
-        <li><a class="navbar-link" href="home-page.jsp">Home</a></li>
-        <li><a class="navbar-link" href="tirocinio-page.jsp">Tirocinio</a></li>
-        <li><a class="navbar-link" href="registro-page.jsp">Registro Del Tirocinio</a></li>
-        <li><a class="navbar-link" href="progetto-formativo-page.jsp">Progetto Formativo</a></li>
+        <li><a id="navbar-link" href="home-page.jsp">Home</a></li>
+        <li><a id="navbar-link" href="tirocinio-page.jsp">Tirocinio</a></li>
+        <li><a id="navbar-link" href="registro-page.jsp">Registro Del Tirocinio</a></li>
+        <li><a id="navbar-link" href="progetto-formativo-page.jsp">Progetto Formativo</a></li>
         <% 
-          if (user instanceof UfficioBean)
+          if (user.getClass().getName().equals(UfficioBean.class.getName())) {
         %>
-          <li><a class="navbar-link" href="questionario-page.jsp">Questionario</a></li>
+            <li><a id="navbar-link" href="questionario-page.jsp">Questionario</a></li>
         <%
-          if (user instanceof UfficioBean)
+          }
         %>
-            <li><a class="navbar-link" href="convenzione-page.jsp">Convenzione</a></li>
+        
+        <%
+          if (user.getClass().getName().equals(UfficioBean.class.getName())) {
+        %>
+            <li><a id="navbar-link" href="convenzione-page.jsp">Convenzione</a></li>
+        <%
+          }
+        %>
       </ul>
     </nav>
   </div>	
   <span id="info-wrapper">
     <b id="user-name">
-    <%
-      if (user != null) {
-    %>
-      <%= (((UtenteBean) user).getNome()).toString() %>
-    <%
-      } else {
-        RequestDispatcher view = request.getRequestDispatcher("login-page.jsp");
-        view.forward(request, response);
-      }
-    %>
+      <%
+        UtenteBean utente = (UtenteBean) user;
+        String nome = utente.getNome();
+        
+        if (utente.getClass().getName().equals(UfficioBean.class.getName())) {
+        %>
+          <%= "Ufficio".toString() %>
+        <%
+        } else if (nome != null) {
+          if (!nome.equals("")) {
+        %>
+            <%= nome.toString() %>
+        <%
+          }
+        }
+        %>
     </b>
-    <input type="button" class="button" href="">Logout</a>
+    <input type="button" class="button" value="Logout" />
   </span>
 </header>

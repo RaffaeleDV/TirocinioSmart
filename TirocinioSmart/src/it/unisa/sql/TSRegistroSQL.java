@@ -18,4 +18,5 @@ public class TSRegistroSQL {
   public static final String queryIsTutorRegistro = "";
   public static final String queryRegistriUfficio = "";
   public static final String queryRegistriStudente = "SELECT * FROM " + RegistroModelDM.TABLE_NAME + " WHERE id = ?;";
+  public static final String loadRegistroStudente = "SELECT r.* FROM studente AS s, registro AS r WHERE s.registro = r.id AND s.matricola = ?;";
 }

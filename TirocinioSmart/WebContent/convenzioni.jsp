@@ -1,5 +1,5 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"
+<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
+    pageEncoding="ISO-8859-1"
     isThreadSafe="false"
     import="java.util.ArrayList"
     import="it.unisa.model.ConvenzioneBean" %>
@@ -29,7 +29,7 @@
     <input class="button" name="nuova-convenzione" type="button" value="Registra Nuova Convenzione"/>
   </span>
   <span id="info-convenzione-wrapper" class="wrapper">
-    <textarea id="info-convenzione" placeholder="Convenzione" rows="40" cols="40"></textarea>
+    <textarea id="info-convenzione" placeholder="Convenzione" rows="10" cols="40"></textarea>
     <label id="button-wrapper" class="wrapper">
       <input class="button" name="compila-conv" type="button" value="Compila"/>
       <input class="button" name="invio-conv" type="button" value="Invio"/>

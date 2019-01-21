@@ -12,7 +12,6 @@
           <%
             ProgettoFormativoBean progetto = (ProgettoFormativoBean)session.getAttribute("SessionProgetto"); 
           %>
-          Nome Tirocinio: <!-- Nome Tirocinio Nel Codice Java--> <%=  %>
         </p>
         <input class="button" type="button" value="Visualizza Info"/>
       </div>
