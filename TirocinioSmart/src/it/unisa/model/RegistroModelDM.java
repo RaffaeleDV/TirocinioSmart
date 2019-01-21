@@ -123,7 +123,7 @@ public class RegistroModelDM {
     }
   }
   
-  public static void doUpdateRegistro(RegistroBean registroBean) throws SQLException {
+  public static void doUpdateRegistro(int id, RegistroBean registroBean) throws SQLException {
     Connection connection = null;
     PreparedStatement ps = null;
     String updateSQL = TSRegistroSQL.updateRegistro;
@@ -135,11 +135,13 @@ public class RegistroModelDM {
       connection = DriverManagerConnectionPool.getConnection();
       ps = connection.prepareStatement(updateSQL);
       
-      ps.setString(1, "'" + registroBean.getNome() + "'");
-      ps.setString(2, "'" + registroBean.getDescrizione() + "'");
-      ps.setBoolean(3, registroBean.getConsegna());
-      ps.setBoolean(4, registroBean.getConfermaTutorAcc());
-      ps.setBoolean(5, registroBean.getConfermaTutorAz());
+      ps.setInt(1, registroBean.getId());
+      ps.setString(2, "'" + registroBean.getNome() + "'");
+      ps.setString(3, "'" + registroBean.getDescrizione() + "'");
+      ps.setBoolean(4, registroBean.getConsegna());
+      ps.setBoolean(5, registroBean.getConfermaTutorAcc());
+      ps.setBoolean(6, registroBean.getConfermaTutorAz());
+      ps.setInt(7, id);
       
       ps.executeUpdate();
       connection.commit();

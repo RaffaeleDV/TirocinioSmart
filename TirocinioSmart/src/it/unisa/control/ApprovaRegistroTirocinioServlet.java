@@ -91,7 +91,7 @@ public class ApprovaRegistroTirocinioServlet extends HttpServlet {
                 break;
             }
             try {
-              RegistroModelDM.doUpdateRegistro(registroBean);
+              RegistroModelDM.doUpdateRegistro(registroBean.getId(), registroBean);
             } catch (SQLException e) {
               // TODO Auto-generated catch block
               e.printStackTrace();

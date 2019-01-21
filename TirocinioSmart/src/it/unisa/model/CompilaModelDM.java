@@ -81,7 +81,6 @@ public class CompilaModelDM implements BeansModel {
         Date data_inizio = rs.getDate("data_inizio");
         Date data_fine = rs.getDate("data_fine");
         CompilaBean c = new CompilaBean(utente, questionario, data_inizio, data_fine);
-        System.out.println(c.toString());
         comps.add(c);
       }
       

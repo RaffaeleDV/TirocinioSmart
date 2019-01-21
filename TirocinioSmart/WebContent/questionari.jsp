@@ -46,7 +46,6 @@
 	            questionarioCompilato = true;
 	            break;
 	          }
-	          System.out.println(questionarioCompilato);
 	        }
 	        
 	        if (!questionarioCompilato) {

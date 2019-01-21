@@ -30,7 +30,6 @@ public class ModificaRegistroTirocinioStudenteServlet extends HttpServlet{
     String descrizione = (String)request.getParameter("descrizione").toString();
     boolean modifica = false;
     Boolean login = new Boolean(false);
-    
     int id = -1;
     
     if (idRegistro != null) {
@@ -41,17 +40,6 @@ public class ModificaRegistroTirocinioStudenteServlet extends HttpServlet{
     }
     if (session != null) {
       studenteBean = (StudenteBean) session.getAttribute("SessionUser");
-      login = (Boolean)session.getAttribute("Loggato");
-      
-      if (login != null) {
-        if (login != new Boolean(true)) {
-          RequestDispatcher view = request.getRequestDispatcher("login-page.jsp");
-          view.forward(request, response);
-        }
-      } else {
-        RequestDispatcher view = request.getRequestDispatcher("login-page.jsp");
-        view.forward(request, response);
-      }
       
       if (studenteBean != null) {
         registroBean = (RegistroBean)session.getAttribute("SessionRegistro"); 
@@ -68,13 +56,15 @@ public class ModificaRegistroTirocinioStudenteServlet extends HttpServlet{
           }
         }
         
-        if (login == (new Boolean(true)) && registroBean != null) {
-          if (!nome.equals(registroBean.getNome()) || !descrizione.equals(registroBean.getDescrizione())) {
+        if (studenteBean != null && registroBean != null) {
+          if (Integer.valueOf(idRegistro) != registroBean.getId() || !nome.equals(registroBean.getNome()) || !descrizione.equals(registroBean.getDescrizione())) {
+            int oldId = registroBean.getId();
+            registroBean.setId(Integer.valueOf(idRegistro));
             registroBean.setNome(nome);
             registroBean.setDescrizione(descrizione);
             session.setAttribute("SessionRegistro", registroBean);
             try {
-              RegistroModelDM.doUpdateRegistro(registroBean);
+              RegistroModelDM.doUpdateRegistro(oldId, registroBean);
             } catch (SQLException e) {
               // TODO Auto-generated catch block
               e.printStackTrace();

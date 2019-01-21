@@ -23,6 +23,7 @@
 			          studenteRegistro = (StudenteBean) utenteRegistro;
 			          try {
 			            registro = (RegistroBean) RegistroModelDM.loadRegistroStudente(studenteRegistro);
+			            session.setAttribute("SessionRegistro", registro);
 			          } catch(SQLException e) {
 			            Logger.getGlobal().log(Level.SEVERE, e.getMessage());
 			          }
@@ -31,13 +32,16 @@
             	%>
                 <div id="reg-info-wrapper" class="wrapper" >
                 	<p id="reg-info" class="info" name="nome" >Nome: <%= registro.getNome()  %></p>
+                    <input id="mrnome" type="text" placeholder="Nome:" hidden />
                 </div>
                 <div id="registro-info" hidden >
                   <div id="reg-info-wrapper" class="wrapper" >
-	            	<p id="reg-info" class="info" name="id" >ID: <%= registro.getId() %></p>
+	            	<p id="reg-info" class="info" name="id" >ID: <b id="rid"><%= registro.getId() %></b></p>
+	            	<input id="mrid" type="text" placeholder="ID:" hidden />
             	  </div>
                   <div id="reg-info-wrapper" class="wrapper" >
                   	<p id="reg-info" class="info" name="descrizione" >Descrizione: <%= registro.getDescrizione() %></p>
+                  	<input id="mrdescrizione" type="text" placeholder="Descrizione:" hidden />
                   </div>
             	  <div id="reg-info-wrapper" class="wrapper" >
               		<b id="reg-info" class="info" name="consegna" >Consegna:   </b>
@@ -79,7 +83,7 @@
 	           				<b id="reg-info" class="info">Non Confermato Dal Tutor Aziendale</b>
 	           		<%
 	           			}
-	           		%>
+	           		%> 
             	  </div>
                 </div>
             </div>
@@ -96,6 +100,7 @@
     <script type="text/javascript">
       function visualizzaRegistro() {
     	  var h = document.getElementById("registro-info").hidden;
+    	  
     	  if (h == true) {
     	    document.getElementById("registro-info").hidden = false;
     	  } else {
@@ -104,35 +109,69 @@
       }
       
       function modificaRegistro() {
-    	  var id = document.getElementsByName("id").innerHTML;
-    	  var nome = document.getElementsByName("nome").innerHTML;
-    	  var descrizione = document.getElementsByName("descrizione").innerHTML;
-    	  var str = "id:" + id + ", nome:" + nome + ", descrizione:" + descrizione;
+    	  var h = document.getElementById("registro-info").hidden;
+    	  
+    	  if (h == false) {
+    		  var hm = document.getElementById("mrnome").hidden;
+    		  if (hm == true) {
+    		      document.getElementById("mrnome").hidden = false;
+    		      document.getElementById("mrid").hidden = false;
+    		      document.getElementById("mrdescrizione").hidden = false;
+    		  } else {
+    			  var id = $('#mrid').val();
+    	    	  var nome = $('#mrnome').val();
+    	    	  var descrizione = $('#mrdescrizione').val();
+    	    	  var str = "id:" + id + ", nome:" + nome + ", descrizione:" + descrizione;
+    	    	  $.ajax({
+    	    			type : "POST",
+    	    			url : "ModificaRegistroTirocinioStudenteServlet",
+    	    			contentType: "application/x-www-form-urlencoded",
+    	    			datatype : "json", 
+    	    			data: "id="+id+"&nome="+nome+"&descrizione="+descrizione,
+    	    			success: function(data){
+    	    				var json = data;
+    	    				var mod = json.modifica;
+    	    				
+    	    				if (mod) {
+    	    					alert("Modifica effettuata, occorre aggiornare la pagina per rendere visibili gli effetti");
+    	    				} else {
+    	    					alert("Modifica non effettuata");
+    	    				}
+    	    			},
+    	    			error: function(error){
+    	    				console.log("Errore:"+ error);
+    	    			}
+    	          })
+    	    	  document.getElementById("mrnome").hidden = true;
+      		      document.getElementById("mrid").hidden = true;
+      		      document.getElementById("mrdescrizione").hidden = true;
+    		  }
+    	  }
+      }
+      
+      function consegnaRegistro() {
+    	  var id = document.getElementById("rid").innerHTML;
     	  
     	  $.ajax({
   			type : "POST",
-  			url : "ModificaRegistroTirocinioStudenteServlet",
+  			url : "ConsegnaRegistroTirocinioServlet",
   			contentType: "application/x-www-form-urlencoded",
-  			datatype : "json", 
-  			data: "id="+id+"&nome="+nome+"&descrizione="+descrizione,
+  			datatype : "json",
+  			data: "id="+id,
   			success: function(data){
   				var json = data;
-  				var mod = json.modifica;
+  				var con = json.consegna;
   				
-  				if (mod) {
-  					console.log("Modifica effettuata");
+  				if (consegna) {
+  					alert("Consegna effettuata");
   				} else {
-  					console.log("Modifica non effettuata");
+  					alert("Consegna non effettuata");
   				}
   			},
   			error: function(error){
   				console.log("Errore:"+ error);
   			}
         })
-      }
-      
-      function consegnaRegistro() {
-    	  
       }
     </script>
 </section>
