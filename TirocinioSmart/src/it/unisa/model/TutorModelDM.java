@@ -18,19 +18,18 @@ public class TutorModelDM {
     PreparedStatement ps = null;
 
 
-    String selectSQL = "SELECT * FROM " + TABLE_NAME + " WHERE id = ?";
+    String selectSQL = "SELECT * FROM " + TABLE_NAME + " WHERE email = ?";
 
     try {
       connection = DriverManagerConnectionPool.getConnection();
       ps = connection.prepareStatement(selectSQL);
 
-      ps.setInt(1, tutor.getId());
+      ps.setString(1, tutor.getEmail());
       ResultSet rs = ps.executeQuery();
 
       while (rs.next()) {
-        tutor.setEmail(rs.getString("email"));
+        tutor.setId(rs.getInt("id"));
         tutor.setNome(rs.getString("nome"));
-        tutor.setPass(rs.getString("pass"));
         tutor.setTipo(rs.getString("tipo"));
         tutor.setConvenzioneID(rs.getInt("convenzioneID"));
       }

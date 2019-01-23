@@ -137,7 +137,7 @@ public class ChooseModelDM implements BeansModel {
     return false;
   }
   
-  public Collection<ChooseBean> retreiveQuestionChooses(QuestionBean question) throws SQLException {
+  public static Collection<ChooseBean> retreiveQuestionChooses(QuestionBean question) throws SQLException {
     Collection<ChooseBean> chooses = new ArrayList<ChooseBean>();
     Connection connection = null;
     PreparedStatement ps = null;

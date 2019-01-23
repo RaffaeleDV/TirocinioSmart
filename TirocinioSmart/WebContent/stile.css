@@ -32,6 +32,12 @@ h2{
 	border-radius:10px;
 }
 
+h3 {
+	font-weight: 300;
+	font-size: 18px;
+	color: black;
+}
+
 input {
 	padding:10px;
 	margin:5px;
@@ -159,6 +165,8 @@ div > nav > ul > li > a {
 	padding: 10px;
 	background-color: #fcaf3d;
 	font-weight: 900;
+	font-size: 16px;
+	color: #ffffff;
 }
 
 #info-wrapper {
@@ -262,11 +270,34 @@ div > nav > ul > li > a {
 	color: black;
 }
 
-h3 {
-	font-weight: 300;
-	font-size: 18px;
-	color: black;
+#nomi-registri-wrapper {
+	margin: 25px;
+	padding: 35px;
 }
+
+#nome-registro-wrapper {
+	margin: 30px;
+	padding-bottom: 5px;
+	margin-bottom: 10px;
+	text-size: 12px;
+	border-style: solid;
+	border-width: 1px;
+	border-radius: 3px;
+	border-color: #204a87;
+}
+
+#nome-registro-info {
+	color: black;
+	margin: 15px;
+	font-size: 14px;
+}
+
+#registri-heading {
+	color: #000000;
+	font-weight: 550;
+}
+
+
 
 .wrap {
 	width: 350px;

@@ -6,5 +6,5 @@ public class ChooseSQL {
   public static String doSave = "INSERT INTO " + TABLE_NAME + " VALUES (?,?,?);";
   public static String doDelete = "DELETE FROM " + TABLE_NAME + " WHERE id = ?;";
   public static String doRetrieveAll = "SELECT * FROM choose;";
-  public static String retreiveQuestionChooses = "SELECT c.* FROM choose AS c, risponde AS r WHERE r.idquest = ? AND c.id = r.idchoose;";
+  public static String retreiveQuestionChooses = "SELECT c.* FROM choose AS c, risponde AS r WHERE r.quest = ? AND c.id = r.choose;";
 }

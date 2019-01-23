@@ -29,7 +29,6 @@ public class ModificaRegistroTirocinioStudenteServlet extends HttpServlet{
     String nome = (String)request.getParameter("nome").toString();
     String descrizione = (String)request.getParameter("descrizione").toString();
     boolean modifica = false;
-    Boolean login = new Boolean(false);
     int id = -1;
     
     if (idRegistro != null) {
@@ -38,6 +37,7 @@ public class ModificaRegistroTirocinioStudenteServlet extends HttpServlet{
         //redirect to an [error] page
       }
     }
+    
     if (session != null) {
       studenteBean = (StudenteBean) session.getAttribute("SessionUser");
       

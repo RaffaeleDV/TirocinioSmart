@@ -10,6 +10,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 import it.unisa.database.DriverManagerConnectionPool;
 import it.unisa.sql.TSRegistroSQL;
@@ -367,7 +368,7 @@ public class RegistroModelDM {
     return studenteRegistro;
   }
   
-  public static ArrayList<RegistroBean> loadRegistriTirocinio(int idTirocinio) throws SQLException {
+  public static List<RegistroBean> loadRegistriTirocinio(int idTirocinio) throws SQLException {
     Connection connection = null;
     PreparedStatement ps = null;
     String selectSQL = TSRegistroSQL.queryRegistriTirocinio;
@@ -405,21 +406,19 @@ public class RegistroModelDM {
     return registriTirocinio;
   }
   
-  public static boolean tutorRegistro(int idTutor, int idRegistro) throws SQLException {
+  public static boolean tutorRegistroAcc(int idTutor, int idRegistro) throws SQLException {
     Connection connection = null;
     PreparedStatement ps = null;
-    String selectSQL = TSRegistroSQL.queryIsTutorRegistro;
+    String selectSQL = TSRegistroSQL.queryIsTutorAccRegistro;
     boolean tutorRegistro = false;
     
     try {
       connection = DriverManagerConnectionPool.getConnection();
       ps = connection.prepareStatement(selectSQL);
-      
-      /*
-       * ps set dei valori nella query
-       */
-      
+      ps.setInt(1, idTutor);
+      ps.setInt(2, idRegistro);      
       ResultSet rs = ps.executeQuery();
+      
       if (rs.next()) {
         System.out.println("TutorTrovato");
         tutorRegistro = true;
@@ -437,7 +436,37 @@ public class RegistroModelDM {
     return tutorRegistro;
   }
   
-  public static ArrayList<RegistroBean> loadRegistriUfficio(int idUfficio) throws SQLException {
+  public static boolean tutorRegistroAz(int idTutor, int idRegistro) throws SQLException {
+    Connection connection = null;
+    PreparedStatement ps = null;
+    String selectSQL = TSRegistroSQL.queryIsTutorAzRegistro;
+    boolean tutorRegistro = false;
+    
+    try {
+      connection = DriverManagerConnectionPool.getConnection();
+      ps = connection.prepareStatement(selectSQL);
+      ps.setInt(1, idTutor);
+      ps.setInt(2, idRegistro);
+      ResultSet rs = ps.executeQuery();
+      
+      if (rs.next()) {
+        System.out.println("TutorTrovato");
+        tutorRegistro = true;
+      } else {
+        tutorRegistro = false;
+      }
+    } finally {
+      try {
+        if (ps != null) 
+          ps.close();
+      } finally {
+        DriverManagerConnectionPool.releaseConnection(connection);
+      }
+    }
+    return tutorRegistro;
+  }
+  
+  public static List<RegistroBean> loadRegistriUfficio(int idUfficio) throws SQLException {
     Connection connection = null;
     PreparedStatement ps = null;
     String selectSQL = TSRegistroSQL.queryRegistriUfficio;
@@ -474,7 +503,7 @@ public class RegistroModelDM {
     return registriBean;
   }
   
-  public static ArrayList<RegistroBean> loadRegistriStudente(StudenteBean studenteBean) throws SQLException {
+  public static List<RegistroBean> loadRegistriStudente(StudenteBean studenteBean) throws SQLException {
     Connection connection = null;
     PreparedStatement ps = null;
     ArrayList<RegistroBean> registriBean = new ArrayList<RegistroBean>();
@@ -542,5 +571,112 @@ public class RegistroModelDM {
     }
     
     return registro;
+  }
+  
+  public static List<RegistroBean> loadRegistriTutorAz(int idTutor) throws SQLException {
+    List<RegistroBean> regs = new ArrayList<RegistroBean>();
+    Connection connection = null;
+    PreparedStatement ps = null;
+    ResultSet rs = null;
+    
+    try {
+      
+      connection = DriverManagerConnectionPool.getConnection();
+      ps = connection.prepareStatement(TSRegistroSQL.queryRegistriTutorAz);
+      ps.setInt(1, idTutor);
+      rs = ps.executeQuery();
+      
+      while (rs.next()) {
+        int id = rs.getInt("id");
+        String nome = rs.getString("nome");
+        String descrizione = rs.getString("descrizione");
+        boolean consegna = rs.getBoolean("consegna");
+        boolean confermaTutorAcc = rs.getBoolean("confermaTutorAcc");
+        boolean confermaTutorAz = rs.getBoolean("confermaTutorAcc");
+        RegistroBean reg = new RegistroBean(id, nome, descrizione, consegna, confermaTutorAcc, confermaTutorAz);
+        regs.add(reg);
+      }
+      
+    } finally {
+      try {
+        if (ps != null)
+          ps.close();
+      } finally {
+        DriverManagerConnectionPool.releaseConnection(connection);
+      }
+    }
+    
+    return regs;
+  }
+  
+  public static List<RegistroBean> loadRegistriTutorAcc(int idTutor) throws SQLException {
+    List<RegistroBean> regs = new ArrayList<RegistroBean>();
+    Connection connection = null;
+    PreparedStatement ps = null;
+    ResultSet rs = null;
+    
+    try {
+      
+      connection = DriverManagerConnectionPool.getConnection();
+      ps = connection.prepareStatement(TSRegistroSQL.queryRegistriTutorAcc);
+      ps.setInt(1, idTutor);
+      rs = ps.executeQuery();
+      
+      while (rs.next()) {
+        int id = rs.getInt("id");
+        String nome = rs.getString("nome");
+        String descrizione = rs.getString("descrizione");
+        boolean consegna = rs.getBoolean("consegna");
+        boolean confermaTutorAcc = rs.getBoolean("confermaTutorAcc");
+        boolean confermaTutorAz = rs.getBoolean("confermaTutorAcc");
+        RegistroBean reg = new RegistroBean(id, nome, descrizione, consegna, confermaTutorAcc, confermaTutorAz);
+        regs.add(reg);
+      }
+      
+    } finally {
+      try {
+        if (ps != null)
+          ps.close();
+      } finally {
+        DriverManagerConnectionPool.releaseConnection(connection);
+      }
+    }
+    
+    return regs;
+  }
+  
+  public static List<RegistroBean> loadRegistri() throws SQLException {
+    List<RegistroBean> registri = new ArrayList<RegistroBean>();
+    Connection connection = null;
+    PreparedStatement ps = null;
+    ResultSet rs = null;
+    
+    try {
+      
+      connection = DriverManagerConnectionPool.getConnection();
+      ps = connection.prepareStatement(TSRegistroSQL.queryRegistri);
+      rs = ps.executeQuery();
+      
+      while (rs.next()) {
+        int id = rs.getInt("id");
+        String nome = rs.getString("nome");
+        String descrizione = rs.getString("descrizione");
+        boolean consegna = rs.getBoolean("consegna");
+        boolean confermaTutorAcc = rs.getBoolean("confermaTutorAcc");
+        boolean confermaTutorAz = rs.getBoolean("confermaTutorAz");
+        RegistroBean registro = new RegistroBean(id, nome, descrizione, consegna, confermaTutorAcc, confermaTutorAz);
+        registri.add(registro);
+      }
+      
+    } finally {
+      try {
+        if (ps != null)
+          ps.close();
+      } finally {
+        DriverManagerConnectionPool.releaseConnection(connection);
+      }
+    }
+    
+    return registri;
   }
 }

@@ -6,4 +6,5 @@ public class QuestionarioSQL {
   public static String doSave = "INSERT INTO " + TABLE_NAME + " VALUES (?,?,?,?,?,?);";
   public static String doDelete = "DELETE FROM " + TABLE_NAME + " WHERE id = ?;";
   public static String doRetrieveAll = "SELECT * FROM " + TABLE_NAME + ";";
+  public static String loadQuestionarioByNome = "SELECT * FROM " + TABLE_NAME + " WHERE nome = ?;";
 }

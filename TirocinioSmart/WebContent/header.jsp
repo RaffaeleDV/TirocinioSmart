@@ -21,7 +21,21 @@
       <ul>
         <li><a id="navbar-link" href="home-page.jsp">Home</a></li>
         <li><a id="navbar-link" href="tirocinio-page.jsp">Tirocinio</a></li>
-        <li><a id="navbar-link" href="registro-page.jsp">Registro Del Tirocinio</a></li>
+        <%
+          if (user instanceof StudenteBean) {
+        %>
+            <li><a id="navbar-link" href="registro-studente-page.jsp">Registro Del Tirocinio(Studente)</a></li>
+        <%
+          } else if (user instanceof TutorBean) {
+        %>
+            <li><a id="navbar-link" href="registri-tutor-page.jsp">Registri Del Tirocinio(Tutor)</a></li>
+        <%
+          } else if (user instanceof UfficioBean) {
+        %>
+            <li><a id="navbar-link" href="registri-ufficio-page.jsp">Registri Del Tirocinio(Ufficio)</a></li>
+        <%
+          }
+        %>
         <li><a id="navbar-link" href="progetto-formativo-page.jsp">Progetto Formativo</a></li>
         <% 
           if (user.getClass().getName().equals(UfficioBean.class.getName())) {

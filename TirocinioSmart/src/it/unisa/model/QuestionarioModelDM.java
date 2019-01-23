@@ -5,8 +5,10 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.sql.Connection;
 import it.unisa.database.DriverManagerConnectionPool;
+import it.unisa.sql.QuestionSQL;
 import it.unisa.sql.QuestionarioSQL;
 
 public class QuestionarioModelDM implements BeansModel {
@@ -141,4 +143,38 @@ public class QuestionarioModelDM implements BeansModel {
     return false;
   }
 
+  public QuestionarioBean loadQuestionarioByNome(String questionarioNome) throws SQLException {
+    QuestionarioBean questionario = null;
+    Connection connection = null;
+    PreparedStatement ps = null;
+    ResultSet rs = null;
+        
+    try {
+      
+      connection = DriverManagerConnectionPool.getConnection();
+      ps = connection.prepareStatement(QuestionarioSQL.loadQuestionarioByNome);
+      ps.setString(1, questionarioNome);
+      rs = ps.executeQuery();
+      
+      if (rs.next()) {
+        int id = rs.getInt("id");
+        int quests = rs.getInt("quests");
+        int nutenti = rs.getInt("nutenti");
+        String nome = rs.getString("nome");
+        String description = rs.getString("description");
+        String tematica = rs.getString("tematica");
+        questionario = new QuestionarioBean(id, quests, nutenti, description, nome, tematica);
+      }
+      
+    } finally {
+      try {
+        if (ps != null)
+          ps.close();
+      } finally {
+        DriverManagerConnectionPool.releaseConnection(connection);
+      }
+    }
+    
+    return questionario;
+  }
 }

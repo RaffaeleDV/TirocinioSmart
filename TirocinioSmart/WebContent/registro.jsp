@@ -16,22 +16,25 @@
             <div id="wrap-reg-tirocinio">
             	<%
 			      Object utenteRegistro = session.getAttribute("SessionUser");
-			      StudenteBean studenteRegistro = null;
-			      RegistroBean registro = null;
-			      if (utenteRegistro != null) {
-			        if (utenteRegistro instanceof StudenteBean) {
-			          studenteRegistro = (StudenteBean) utenteRegistro;
-			          try {
-			            registro = (RegistroBean) RegistroModelDM.loadRegistroStudente(studenteRegistro);
-			            session.setAttribute("SessionRegistro", registro);
-			          } catch(SQLException e) {
-			            Logger.getGlobal().log(Level.SEVERE, e.getMessage());
+            	  RegistroBean registro = (RegistroBean) session.getAttribute("SessionRegistro");  
+            	  StudenteBean studenteRegistro = null;
+			      
+            	  if (registro == null) {
+			        if (utenteRegistro != null) {
+			          if (utenteRegistro instanceof StudenteBean) {
+			            studenteRegistro = (StudenteBean) utenteRegistro;
+			            try {
+			              registro = (RegistroBean) RegistroModelDM.loadRegistroStudente(studenteRegistro);
+  			              session.setAttribute("SessionRegistro", registro);
+			            } catch(SQLException e) {
+			              Logger.getGlobal().log(Level.SEVERE, e.getMessage());
+			            }
 			          }
 			        }
-			      }
+            	  }
             	%>
                 <div id="reg-info-wrapper" class="wrapper" >
-                	<p id="reg-info" class="info" name="nome" >Nome: <%= registro.getNome()  %></p>
+                	<p id="reg-info" class="info" name="nome" >Nome: <%= registro.getNome() %></p>
                     <input id="mrnome" type="text" placeholder="Nome:" hidden />
                 </div>
                 <div id="registro-info" hidden >

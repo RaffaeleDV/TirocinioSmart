@@ -106,7 +106,7 @@ public class QuestionModelDM implements BeansModel {
     return false;
   }
   
-  public Collection<QuestionBean> retreiveQuestionsByQuestionario(QuestionarioBean questionario) throws SQLException {
+  public static Collection<QuestionBean> retreiveQuestionsByQuestionario(QuestionarioBean questionario) throws SQLException {
     Collection<QuestionBean> questions = new ArrayList<QuestionBean>();
     Connection connection = null;
     PreparedStatement ps = null;

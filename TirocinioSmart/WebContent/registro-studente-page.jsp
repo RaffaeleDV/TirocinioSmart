@@ -7,7 +7,7 @@
 </head>
 <body>
   <%@ include file = "header.jsp" %>
-  <%@ include file = "questionario.jsp" %>
+  <%@ include file = "registro.jsp" %>
   <%@ include file = "footer.jsp" %>
 </body>
 </html>

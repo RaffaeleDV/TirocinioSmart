@@ -17,7 +17,7 @@
       </div>
     </div>
     <div>
-      <%@include file="tirocinio-info.jsp" %>
+      <!-- <%@ include file="tirocinio-info.jsp" %> -->
     </div>
     <div>
       <input class="button" type="button" value="Registri" />
