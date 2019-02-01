@@ -6,24 +6,24 @@
 <section class="convenzioni-wrapper">
   <h1 class="title">Convenzioni</h1>
   <div class="convenzioni-wrapper">
-    <%
-      ArrayList<ConvenzioneBean> convs =
-          (ArrayList<ConvenzioneBean>) session.getAttribute("SessionConvenzioni");
-    %>
-    <%
-      for(int i = 0; i < convs.size(); i++) {
-        ConvenzioneBean convenzioneBean = convs.get(i);
-        if (convenzioneBean != null) {
-    %>
-          <div id="info-wrapper" class="wrapper">
-            <p class="info">
-              ID Convenzione: <%= convenzioneBean.getId() %>
-            </p>
-           </div>
-    <%
-        }
+  <%
+    ArrayList<ConvenzioneBean> convs =
+        (ArrayList<ConvenzioneBean>) session.getAttribute("SessionConvenzioni");
+  %>
+  <%
+    for(int i = 0; i < convs.size(); i++) {
+      ConvenzioneBean convenzioneBean = convs.get(i);
+      if (convenzioneBean != null) {
+  %>
+        <div id="info-wrapper" class="wrapper">
+          <p class="info">
+            ID Convenzione: <%= convenzioneBean.getId() %>
+          </p>
+         </div>
+  <%
       }
-    %>
+    }
+  %>
   </div>
   <span class="wrapper">
     <input class="button" name="nuova-convenzione" type="button" value="Registra Nuova Convenzione"/>

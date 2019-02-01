@@ -14,7 +14,7 @@
   <h1><b id="quest-heading">Questionari</b></h1>
   <div id="questionari-wrapper" class="wrapper">
     <div id="sceltaquestionario-wrapper" class="wrapper">
-      <input id="input-questionario" name="questionario" type="text" placeholder="inserire il nome del questionario"/>
+      <input id="input-questionario" name="questionario" type="text" placeholder="inserire il nome del questionario" />
       <input id="button-questionario" name="quest-submit" type="button" value="Vai Al Questionario" onclick="vaiQuestionario()" />
     </div>
     <%
@@ -100,13 +100,13 @@
       
       $.ajax({
         type : "POST",
-        url : "EffettuaQuestionarioServlet",
+        url : "EffettuaQuestionarioStudenteServlet",
         contentType: "application/x-www-form-urlencoded",
         datatype : "json", 
         data: "questionario="+questionario,
         success: function(data){
           console.log("Nome Del Questionario Scelto: " + questionario);
-          console.log("Richiesta effettuata da EffettuaQuestionarioServlet");
+          console.log("Richiesta effettuata da EffettuaQuestionarioStudenteServlet");
         },
         error: function(error){
           console.log("Errore:"+ error);

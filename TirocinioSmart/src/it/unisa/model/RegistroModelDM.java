@@ -104,8 +104,8 @@ public class RegistroModelDM {
       ps = connection.prepareStatement(selectSQL);
       
       ps.setInt(1, id);
-      ps.setString(2, "'" + nome + "'");
-      ps.setString(3, "'" + descrizione + "'");
+      ps.setString(2, nome);
+      ps.setString(3, descrizione);
       ps.setBoolean(4, consegna);
       ps.setBoolean(5, confermaTutorAcc);
       ps.setBoolean(6, confermaTutorAz);
@@ -137,8 +137,8 @@ public class RegistroModelDM {
       ps = connection.prepareStatement(updateSQL);
       
       ps.setInt(1, registroBean.getId());
-      ps.setString(2, "'" + registroBean.getNome() + "'");
-      ps.setString(3, "'" + registroBean.getDescrizione() + "'");
+      ps.setString(2, registroBean.getNome());
+      ps.setString(3, registroBean.getDescrizione());
       ps.setBoolean(4, registroBean.getConsegna());
       ps.setBoolean(5, registroBean.getConfermaTutorAcc());
       ps.setBoolean(6, registroBean.getConfermaTutorAz());

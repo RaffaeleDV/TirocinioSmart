@@ -29,7 +29,11 @@
 			            } catch(SQLException e) {
 			              Logger.getGlobal().log(Level.SEVERE, e.getMessage());
 			            }
+			          } else {
+			            //redirect to an [error] page
 			          }
+			        } else {
+			          //redirect to an [login] page
 			        }
             	  }
             	%>

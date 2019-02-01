@@ -25,14 +25,14 @@ import it.unisa.model.QuestionModelDM;
 /**
  * Servlet implementation class QuestionarioServlet
  */
-@WebServlet("/EffettuaQuestionarioServlet")
-public class EffettuaQuestionarioServlet extends HttpServlet {
+@WebServlet("/EffettuaQuestionarioStudenteServlet")
+public class EffettuaQuestionarioStudenteServlet extends HttpServlet {
   private static final long serialVersionUID = 1L;
        
   /**
    * @see HttpServlet#HttpServlet()
    */
-  public EffettuaQuestionarioServlet() {
+  public EffettuaQuestionarioStudenteServlet() {
     super();
   }
 

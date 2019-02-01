@@ -297,7 +297,47 @@ div > nav > ul > li > a {
 	font-weight: 550;
 }
 
+#sceltaquestionario-wrapper {
+	margin-left: 30%;
+	margin-right: 10%;
+	padding: 45px;
+}
 
+#input-questionario {
+	border-radius: 0px;
+	border-style: solid;
+	border-color: #80cbc2;
+	border-width: 1px;
+}
+
+#button-questionario {
+	font-weight: 900;
+	font-size: 18px;
+	color: #ffffff;
+	background-color: #65a29b;
+	border-radius: 0px;
+}
+
+#scelta-registro-wrapper {
+	margin-left: 30%;
+	margin-right: 10%;
+	padding: 45px;
+}
+
+#id-reg-input {
+	border-radius: 0px;
+	border-style: solid;
+	border-color: #80cbc2;
+	border-width: 1px;
+}
+
+#button-registro {
+	font-weight: 900;
+	font-size: 18px;
+	color: #ffffff;
+	background-color: #65a29b;
+	border-radius: 0px;
+}
 
 .wrap {
 	width: 350px;

@@ -9,37 +9,41 @@
     import="java.util.logging.Level" %>
 <section id="nomi-registri-wrapper" class="wrapper">
   <h1 id="registri-heading" class="info">Registri</h1>
+  <div id="scelta-registro-wrapper" class="wrapper">
+    <input id="id-reg-input" type="text" placeholder="Inserire ID Del Registro Scelto" />
+    <input id="button-registro" type="button" onclick="vaiRegistro()" value="Vai Al Registro" />
+  </div>
   <%
     TutorBean tutor = null;
     Object userRegistriTutor = session.getAttribute("SessionUser");
   	List<RegistroBean> regs = (ArrayList<RegistroBean>) session.getAttribute("SessionRegistriTutor");
     
-  	if (userRegistriTutor instanceof TutorBean) {
-  	  tutor = (TutorBean) userRegistriTutor;
+  	if (userRegistriTutor != null) {
+  	  if (userRegistriTutor instanceof TutorBean) {
+  	    tutor = (TutorBean) userRegistriTutor;
+  	  } else {
+  	    //redirect to an [error] page
+  	  }
+  	} else {
+  	  //redirect to an [login] page
   	}
   	
-  	
     if (regs == null) {
-      if (tutor != null) {
-        if (tutor.getTipo().equals("Aziendale")) {
-          try {
-            regs = RegistroModelDM.loadRegistriTutorAz(tutor.getId());
-          } catch(SQLException e) {
-            Logger.getGlobal().log(Level.SEVERE, e.getMessage());
-          }
-        } else if (tutor.getTipo().equals("Accademico")) {
-          try {
-            regs = RegistroModelDM.loadRegistriTutorAcc(tutor.getId());
-          } catch(SQLException e) {
-            Logger.getGlobal().log(Level.SEVERE, e.getMessage());
-          }
+      if (tutor.getTipo().equals("Aziendale")) {
+        try {
+          regs = RegistroModelDM.loadRegistriTutorAz(tutor.getId());
+        } catch(SQLException e) {
+          Logger.getGlobal().log(Level.SEVERE, e.getMessage());
         }
-        
-        session.setAttribute("SessionRegistriTutor", regs);
-      } else {
-        RequestDispatcher view = request.getRequestDispatcher("login-page.jsp");
-  	    view.forward(request, response);
+      } else if (tutor.getTipo().equals("Accademico")) {
+        try {
+          regs = RegistroModelDM.loadRegistriTutorAcc(tutor.getId());
+        } catch(SQLException e) {
+          Logger.getGlobal().log(Level.SEVERE, e.getMessage());
+        }
       }
+      
+      session.setAttribute("SessionRegistriTutor", regs);
   	}
   
     if (regs != null) {
@@ -48,7 +52,7 @@
         if (registroBean != null){
   %>
           <div id="nome-registro-wrapper" class="wrapper">
-            <p id="id-registro-info" class="info" hidden> ID Registro: <b id="id-reg"><%= registroBean.getId() %></b>
+            <p id="nome-registro-info" class="info"> ID Registro: <b id="id-reg"><%= registroBean.getId() %></b>
             <p id="nome-registro-info" class="info"> Nome Registro: <b id="nome-reg"><%= registroBean.getNome() %></b></p>
           </div>
   <%
@@ -58,26 +62,24 @@
       //redirect to an [error] page
     }
   %>
-  <!-- 
+  
   <script type="text/javascript">
     function vaiRegistro() {
-      var idReg = document.getElementById("id-reg").innerHTML;
-      var nomeReg = document.getElementById("nome-reg").innerHTML;
+      var idReg = $('#id-reg-input').val();
       
       $.ajax({
         type : "POST",
-        url : "RegistroServlet",
+        url : "RegistroTutorServlet",
         contentType: "application/x-www-form-urlencoded",
-        datatype : "json", 
-        data: "id="+idReg+"&nome="+nomeReg,
-        success: function(data){
-          console.log("richiesta di registro per nome effettuata");
+        datatype : "json",
+        data: "id="+idReg,
+        success: function(data) {
+          console.log("richiesta del registro con id: " + idReg + " effettuata ");
         },
-        error: function(error){
+        error: function(error) {
           console.log("Errore:"+ error);
         }
       })
     }
   </script>
-  -->
 </section>

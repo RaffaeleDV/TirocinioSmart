@@ -24,7 +24,7 @@
         <%
           if (user instanceof StudenteBean) {
         %>
-            <li><a id="navbar-link" href="registro-studente-page.jsp">Registro Del Tirocinio(Studente)</a></li>
+            <li><a id="navbar-link" href="registro-studente-page.jsp" onclick="visualizzaRegistroStudente()">Registro Del Tirocinio(Studente)</a></li>
         <%
           } else if (user instanceof TutorBean) {
         %>
@@ -76,4 +76,21 @@
     </b>
     <input type="button" class="button" value="Logout" />
   </span>
+  <script type="text/javascript">
+    function visualizzaRegistroStudente() {
+      $.ajax({
+        type : "POST",
+        url : "RegistroStudenteServlet",
+        contentType: "application/x-www-form-urlencoded",
+        datatype : "json",
+        data: "",
+        success: function(data) {
+          console.log("richiesta del registro da parte dello studente effettuata");
+        },
+        error: function(error) {
+          console.log("Errore:"+ error);
+        }
+      })
+    }
+  </script>
 </header>
