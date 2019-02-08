@@ -4,7 +4,11 @@ import java.io.Serializable;
 
 public class UtenteBean extends AbstractBean implements Serializable, Cloneable {
 
-  private String nome;
+  /**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+private String nome;
   private String password;
   
   public UtenteBean() {
