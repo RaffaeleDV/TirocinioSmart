@@ -1,47 +1,76 @@
-<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
-    pageEncoding="ISO-8859-1"
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"
     import="java.util.*" 
     import="it.unisa.model.RegistroBean"
     import="it.unisa.model.RegistroModelDM" 
     import="it.unisa.model.UfficioBean"
+    import="it.unisa.model.AbstractBean"
     import="java.sql.SQLException"
     import="java.util.logging.Logger"
     import="java.util.logging.Level" %>
 <section id="nomi-registri-wrapper">
-  <h1 id="registri-heading" class="info">Registri</h1>
+  <h3 style="font-weight: 200; padding: 35px; font-size: 28px; color: black;" align="center">Registri</h3>
+  <!--
   <div id="scelta-registro-wrapper" class="wrapper">
-    <input id="id-reg-input" type="text" placeholder="Inserire ID Del Registro Scelto" />
-    <input id="button-registro" type="button" onclick="vaiRegistro()" value="Vai Al Registro" />
+    <input id="search-input" type="text" placeholder="Inserire ID Del Registro Scelto" />
+    <input id="button" type="button" onclick="vaiRegistro()" value="Vai Al Registro" />
   </div>
+  -->
   <%
-    UfficioBean ufficio = null;
+    UfficioBean ufficioBean = null;
     Object userRegistriUfficio = session.getAttribute("SessionUser");
-    List<RegistroBean> regs = (ArrayList<RegistroBean>) session.getAttribute("SessionRegistriUfficio");
+    List<AbstractBean> regs = null;
+    RegistroModelDM registroModelDM = (RegistroModelDM) session.getAttribute("SessionRegistroModelDM");
+    if (registroModelDM == null) {
+      registroModelDM = new RegistroModelDM();
+      session.setAttribute("SessionRegistroModelDM", registroModelDM);
+    }
     
     if (userRegistriUfficio != null) {
       if (userRegistriUfficio instanceof UfficioBean) {
-        ufficio = (UfficioBean) userRegistriUfficio;
+        ufficioBean = (UfficioBean) userRegistriUfficio;
       } else {
+        RequestDispatcher view = request.getRequestDispatcher("login-page.jsp");
+        view.forward(request, response);
+      }
+    } else {
+      RequestDispatcher view = request.getRequestDispatcher("login-page.jsp");
+      view.forward(request, response);
+    }
+    
+    if (ufficioBean != null) {
+      try {
+        regs = (List<AbstractBean>) registroModelDM.doRetrieveByUfficio(ufficioBean.getID());
+      } catch(SQLException e) {
+        Logger.getGlobal().log(Level.SEVERE, e.getMessage());
         //redirect to an [error] page
       }
     } else {
-      //redirect to an [login] page
+      RequestDispatcher view = request.getRequestDispatcher("login-page.jsp");
+      view.forward(request, response);
     }
-    
-    if (regs == null) {
-      try {
-        regs = RegistroModelDM.loadRegistri();
-      } catch(SQLException e) {
-        Logger.getGlobal().log(Level.SEVERE, e.getMessage());
-      }
-    }
-    
+
     if (regs != null) {
-      for (RegistroBean registro: regs) {
+      for (AbstractBean product: regs) {
+        RegistroBean registroBean = null;
+        if (product instanceof RegistroBean) {
+          registroBean = (RegistroBean) product;
+        } else {
+          Logger.getGlobal().log(Level.INFO, "Oggetto non del tipo di RegistroBean tra i registri");
+          //redirect to an [error] page
+        }
   %>
         <div id="nome-registro-wrapper" class="wrapper">
-          <p id="nome-registro-info" class="info"> ID Registro: <b id="id-reg"><%= registro.getId() %></b>
-          <p id="nome-registro-info" class="info"> Nome Registro: <b id="nome-reg"><%= registro.getNome() %></b></p>
+          <div>
+            <img id="registro-icon" src="images/registro-icon.png"/>
+          </div>
+          <div>
+            <p id="nome-registro-info" class="info"> ID Registro: <b id="id-reg"><%= registroBean.getID() %></b>
+            <p id="nome-registro-info" class="info"> Nome Registro: <b id="nome-reg"><%= registroBean.getNome() %></b></p>
+          </div>
+          <div>
+          
+          </div>
         </div>
   <%
       }

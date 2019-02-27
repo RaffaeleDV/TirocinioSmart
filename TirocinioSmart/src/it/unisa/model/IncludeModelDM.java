@@ -20,26 +20,57 @@ public class IncludeModelDM implements BeansModel {
 
   @Override
   public Collection<AbstractBean> doRetrieveAll(String order) throws SQLException {
-    return null;
+    Connection connection = null;
+    PreparedStatement ps = null;
+    ResultSet rs = null;
+    Collection<AbstractBean> include = null;
+    
+    try {
+      connection = DriverManagerConnectionPool.getConnection();
+      ps = connection.prepareStatement(IncludeSQL.DO_RETRIEVE_ALL);
+      
+      rs = ps.executeQuery();
+      
+      include = new ArrayList<AbstractBean>();
+      
+      while (rs.next()) {
+        int questionarioID = rs.getInt("questionarioID");
+        int questionID = rs.getInt("questionID");
+        
+        include.add(new IncludeBean(questionarioID, questionID));
+      }
+      
+    } finally {
+      try {
+        if (ps != null)
+          ps.close();
+      } finally {
+        DriverManagerConnectionPool.releaseConnection(connection);
+      }
+    }
+    
+    return include;
   }
 
   @Override
   public void doSave(AbstractBean product) throws SQLException {
-     IncludeBean include = (IncludeBean) product;
      Connection connection = null;
      PreparedStatement ps = null;
+     IncludeBean include = (IncludeBean) product;
      
      try {
-       
        connection = DriverManagerConnectionPool.getConnection();
-       ps = connection.prepareStatement(IncludeSQL.doSave);
-       ps.setInt(1, include.getQuestionario());
-       ps.setInt(2, include.getQuestion());
-       int rowCount = ps.executeUpdate();
+       ps = connection.prepareStatement(IncludeSQL.DO_SAVE);
        
-       if (!(rowCount >= 1)) {
-         Logger.getGlobal().log(Level.SEVERE, "IncludeBean not saved");
+       ps.setInt(1, include.getQuestionarioID());
+       ps.setInt(2, include.getQuestionID());
+       
+       if (!(ps.executeUpdate() > 0)) {
+         Logger.getGlobal().log(Level.INFO, "Oggetto IncludeBean non memorizzato");
        }
+       
+       connection.commit();
+       
      } finally {
        try {
          if (ps != null)
@@ -55,24 +86,26 @@ public class IncludeModelDM implements BeansModel {
     return false;
   }
   
-  public Collection<IncludeBean> retreiveByQuestionario(IncludeBean include) throws SQLException {
-    Collection<IncludeBean> includes = new ArrayList<IncludeBean>();
+  public Collection<AbstractBean> doRetrieveByQuestionario(int code) throws SQLException {
     Connection connection = null;
     PreparedStatement ps = null;
     ResultSet rs = null;
+    Collection<AbstractBean> includes = null;
     
     try {
-      
       connection = DriverManagerConnectionPool.getConnection();
-      ps = connection.prepareStatement(IncludeSQL.retreiveByQuestionario);
-      ps.setInt(1, include.getQuestionario());
+      ps = connection.prepareStatement(IncludeSQL.DO_RETRIEVE_BY_QUESTIONARIO);
+      
+      ps.setInt(1, code);
+      
       rs = ps.executeQuery();
       
+      includes = new ArrayList<AbstractBean>();
+      
       while (rs.next()) {
-        int questionario = rs.getInt("questionario");
-        int question = rs.getInt("question");
-        IncludeBean i = new IncludeBean(questionario, question);
-        includes.add(i);
+        int questionID = rs.getInt("questionID");
+        
+        includes.add(new IncludeBean(code, questionID));
       }
       
     } finally {
@@ -87,24 +120,26 @@ public class IncludeModelDM implements BeansModel {
     return includes;
   }
 
-  public Collection<IncludeBean> retreiveByQuestion(IncludeBean include) throws SQLException {
-    Collection<IncludeBean> includes = new ArrayList<IncludeBean>();
+  public Collection<AbstractBean> doRetrieveByQuestion(int code) throws SQLException {
     Connection connection = null;
     PreparedStatement ps = null;
     ResultSet rs = null;
+    Collection<AbstractBean> includes = null;
     
     try {
-      
       connection = DriverManagerConnectionPool.getConnection();
-      ps = connection.prepareStatement(IncludeSQL.retreiveByQuestion);
-      ps.setInt(1, include.getQuestion());
+      ps = connection.prepareStatement(IncludeSQL.DO_RETRIEVE_BY_QUESTION);
+      
+      ps.setInt(1, code);
+      
       rs = ps.executeQuery();
       
+      includes = new ArrayList<AbstractBean>();
+      
       while (rs.next()) {
-        int questionario = rs.getInt("questionario");
-        int question = rs.getInt("question");
-        IncludeBean i = new IncludeBean(questionario, question);
-        includes.add(i);
+        int questionarioID = rs.getInt("questionarioID");
+        
+        includes.add(new IncludeBean(questionarioID, code));
       }
       
     } finally {
@@ -119,20 +154,23 @@ public class IncludeModelDM implements BeansModel {
     return includes;
   }
   
-  public void deleteByQuestionario(IncludeBean include) throws SQLException {
+  public boolean doDeleteByQuestionario(int code) throws SQLException {
     Connection connection = null;
     PreparedStatement ps = null;
+    boolean deleted = false;
     
     try {
-      
       connection = DriverManagerConnectionPool.getConnection();
-      ps = connection.prepareStatement(IncludeSQL.deleteByQuestionario);
-      ps.setInt(1, include.getQuestionario());
-      int rowCount = ps.executeUpdate();
+      ps = connection.prepareStatement(IncludeSQL.DO_DELETE_BY_QUESTIONARIO);
       
-      if (!(rowCount >= 1)) {
-        Logger.getGlobal().log(Level.SEVERE, "IncludeBean not deleted");
+      ps.setInt(1, code);
+      
+      if (ps.executeUpdate() > 0) {
+        deleted = true;
+      } else {
+        Logger.getGlobal().log(Level.INFO, "Oggetto IncludeBean non rimosso con il questionario specificato");
       }
+      
     } finally {
       try {
         if (ps != null)
@@ -141,22 +179,27 @@ public class IncludeModelDM implements BeansModel {
         DriverManagerConnectionPool.releaseConnection(connection);
       }
     }
+    
+    return deleted;
   }
   
-  public void deleteByQuestion(IncludeBean include) throws SQLException {
+  public boolean doDeleteByQuestion(int code) throws SQLException {
     Connection connection = null;
     PreparedStatement ps = null;
+    boolean deleted = false;
     
     try {
-      
       connection = DriverManagerConnectionPool.getConnection();
-      ps = connection.prepareStatement(IncludeSQL.deleteByQuestion);
-      ps.setInt(1, include.getQuestion());
-      int rowCount = ps.executeUpdate();
+      ps = connection.prepareStatement(IncludeSQL.DO_DELETE_BY_QUESTION);
       
-      if (!(rowCount >= 1)) {
-        Logger.getGlobal().log(Level.SEVERE, "IncludeBean not deleted");
+      ps.setInt(1, code);
+      
+      if (ps.executeUpdate() > 0) {
+        deleted = true;
+      } else {
+        Logger.getGlobal().log(Level.INFO, "Oggetto IncludeBean non rimosso con il question specificato");
       }
+      
     } finally {
       try {
         if (ps != null)
@@ -165,5 +208,7 @@ public class IncludeModelDM implements BeansModel {
         DriverManagerConnectionPool.releaseConnection(connection);
       }
     }
+    
+    return deleted;
   }
 }

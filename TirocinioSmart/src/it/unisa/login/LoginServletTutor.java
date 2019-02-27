@@ -2,6 +2,7 @@ package it.unisa.login;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -9,9 +10,13 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import it.unisa.model.TutorBean;
 import it.unisa.model.TutorModelDM;
+import it.unisa.model.AbstractBean;
 import it.unisa.model.ConvenzioneBean;
 import it.unisa.model.ConvenzioneModelDM;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * Servlet implementation class LoginServletTutor
@@ -19,7 +24,14 @@ import java.util.ArrayList;
 @WebServlet("/LoginServletTutor")
 public class LoginServletTutor extends HttpServlet {
   private static final long serialVersionUID = 1L;
-
+  private static final ConvenzioneModelDM convenzioneModelDM = new ConvenzioneModelDM();
+  private static final TutorModelDM tutorModelDM = new TutorModelDM();
+  
+  public LoginServletTutor() {
+    super();
+  }
+  
+  @Override
   protected void doGet(HttpServletRequest request, HttpServletResponse response)
       throws ServletException, IOException {
 
@@ -27,7 +39,7 @@ public class LoginServletTutor extends HttpServlet {
     String pass = request.getParameter("login-password");
     String redirectPage = null;
     TutorBean tut = null;
-    ArrayList<ConvenzioneBean> convenzioni = null;
+    List<AbstractBean> convenzioni = null;
 
     tut = new TutorBean();
     tut.setEmail(nome);
@@ -35,10 +47,18 @@ public class LoginServletTutor extends HttpServlet {
 
 
     if (Validate.checkUser(tut)) {
-
       try {
-        TutorModelDM.loadInfo(tut);
-        convenzioni = ConvenzioneModelDM.loadConvenzioniTutor(tut);
+        tut = (TutorBean) tutorModelDM.doRetrieveTutorByEmail(tut.getEmail());
+        if (tut != null) {
+          if (tut.getTipo().equals("Aziendale")) {
+            convenzioni = (List<AbstractBean>) convenzioneModelDM.doRetrieveByTutorAz(tut.getID());
+          } else {
+            Logger.getGlobal().log(Level.INFO, "Richiesta di convenzione da parte di un tutor accademico non fattibile");
+          }
+        } else {
+          RequestDispatcher view = request.getRequestDispatcher("login-page.jsp");
+          view.forward(request, response);
+        }
       } catch (SQLException e) {
         e.printStackTrace();
       }
@@ -58,9 +78,9 @@ public class LoginServletTutor extends HttpServlet {
 
   }
 
+  @Override
   protected void doPost(HttpServletRequest request, HttpServletResponse response)
       throws ServletException, IOException {
     doGet(request, response);
   }
-
 }

@@ -1,14 +1,16 @@
-<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
-    pageEncoding="ISO-8859-1"
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"
     import="it.unisa.model.StudenteBean"
     import="it.unisa.model.TutorBean"
-    import="it.unisa.model.UtenteBean"
-    import="it.unisa.model.UfficioBean" %>
+    import="it.unisa.model.UfficioBean"
+    import="it.unisa.model.AbstractBean" 
+    import="java.util.logging.Logger"
+    import="java.util.logging.Level" %>
 <header id="header-wrapper" class="wrapper">
   <% 
-    Object user = session.getAttribute("SessionUser");
+    AbstractBean userBean = (AbstractBean) session.getAttribute("SessionUser");
       
-    if (user == null) {
+    if (userBean == null) {
       RequestDispatcher view = request.getRequestDispatcher("login-page.jsp");
       view.forward(request, response);
     }
@@ -18,79 +20,50 @@
   </div>
   <div id="navbar-wrapper" class="wrapper">
     <nav id="navbar" class="wrapper">
-      <ul>
+      <ul id="navbar-list">
         <li><a id="navbar-link" href="home-page.jsp">Home</a></li>
-        <li><a id="navbar-link" href="tirocinio-page.jsp">Tirocinio</a></li>
         <%
-          if (user instanceof StudenteBean) {
+          if (userBean instanceof StudenteBean) {
         %>
-            <li><a id="navbar-link" href="registro-studente-page.jsp" onclick="visualizzaRegistroStudente()">Registro Del Tirocinio(Studente)</a></li>
+            <li><a id="navbar-link" href="registro-studente-page.jsp">Registro Del Tirocinio(Studente)</a></li>
+            <li><a id="navbar-link" href="progetto-formativo-studente-page.jsp">Progetto Formativo(Studente)</a>
         <%
-          } else if (user instanceof TutorBean) {
+          } else if (userBean instanceof TutorBean) {
         %>
             <li><a id="navbar-link" href="registri-tutor-page.jsp">Registri Del Tirocinio(Tutor)</a></li>
+            <li><a id="navbar-link" href="progetti-formativi-tutor-page.jsp">Progetti Formativi(Tutor)</a>
         <%
-          } else if (user instanceof UfficioBean) {
+          } else if (userBean instanceof UfficioBean) {
         %>
             <li><a id="navbar-link" href="registri-ufficio-page.jsp">Registri Del Tirocinio(Ufficio)</a></li>
-        <%
-          }
-        %>
-        <li><a id="navbar-link" href="progetto-formativo-page.jsp">Progetto Formativo</a></li>
-        <% 
-          if (user.getClass().getName().equals(UfficioBean.class.getName())) {
-        %>
+            <li><a id="navbar-link" href="progetti-formativi-ufficio-page.jsp">Progetti Formativi(Ufficio)</a></li>
             <li><a id="navbar-link" href="questionario-page.jsp">Questionario</a></li>
-        <%
-          }
-        %>
-        
-        <%
-          if (user.getClass().getName().equals(UfficioBean.class.getName())) {
-        %>
             <li><a id="navbar-link" href="convenzione-page.jsp">Convenzione</a></li>
         <%
+          } else {
+            //redirect to an [login] page
+            RequestDispatcher view = request.getRequestDispatcher("login-page.jsp");
+            view.forward(request, response);
           }
         %>
       </ul>
     </nav>
-  </div>	
-  <span id="info-wrapper">
-    <b id="user-name">
-      <%
-        UtenteBean utente = (UtenteBean) user;
-        String nome = utente.getNome();
-        
-        if (utente.getClass().getName().equals(UfficioBean.class.getName())) {
-        %>
-          <%= "Ufficio".toString() %>
-        <%
-        } else if (nome != null) {
-          if (!nome.equals("")) {
-        %>
-            <%= nome.toString() %>
-        <%
-          }
-        }
-        %>
-    </b>
-    <input type="button" class="button" value="Logout" />
-  </span>
+  </div>
+  <div id="log-wrapper">
+    <img id="login-icon" src="images/login-icon.png" onclick="visualizzaUserLog()"/>
+  </div>
   <script type="text/javascript">
-    function visualizzaRegistroStudente() {
-      $.ajax({
-        type : "POST",
-        url : "RegistroStudenteServlet",
-        contentType: "application/x-www-form-urlencoded",
-        datatype : "json",
-        data: "",
-        success: function(data) {
-          console.log("richiesta del registro da parte dello studente effettuata");
-        },
-        error: function(error) {
-          console.log("Errore:"+ error);
-        }
-      })
+    function visualizzaUserLog() {
+      var h = document.getElementById("user-log-wrapper").hidden;
+      console.log("visualizzaUserLog invocato");
+      if (h == false) {
+        document.getElementById("user-log-wrapper").hidden = true;
+      } else {
+        document.getElementById("user-log-wrapper").hidden = false;
+      }
     }
   </script>
 </header>
+
+
+	

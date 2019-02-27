@@ -17,6 +17,9 @@ import it.unisa.model.UfficioModelDM;
 @WebServlet("/LoginServletUfficio")
 public class LoginServletUfficio extends HttpServlet {
   private static final long serialVersionUID = 1L;
+  private static final UfficioModelDM ufficioModelDM = new UfficioModelDM();
+  
+  
 
   protected void doGet(HttpServletRequest request, HttpServletResponse response)
       throws ServletException, IOException {
@@ -33,7 +36,7 @@ public class LoginServletUfficio extends HttpServlet {
     if (Validate.checkUser(uff)) {
 
       try {
-        UfficioModelDM.loadInfo(uff);
+        uff = (UfficioBean) ufficioModelDM.doRetrieveByNome(nome);
 
       } catch (SQLException e) {
         e.printStackTrace();

@@ -20,26 +20,58 @@ public class RispondeModelDM implements BeansModel {
 
   @Override
   public Collection<AbstractBean> doRetrieveAll(String order) throws SQLException {
-    return null;
+    Connection connection = null;
+    PreparedStatement ps = null;
+    ResultSet rs = null;
+    Collection<AbstractBean> risponde = null;
+    
+    try {
+      connection = DriverManagerConnectionPool.getConnection();
+      ps = connection.prepareStatement(RispondeSQL.DO_RETRIEVE_ALL);
+      
+      rs = ps.executeQuery();
+      
+      risponde = new ArrayList<AbstractBean>();
+      
+      while (rs.next()) {
+        int questionID = rs.getInt("questionID");
+        int chooseID = rs.getInt("chooseID");
+        
+        risponde.add(new RispondeBean(questionID, chooseID));
+      }
+      
+    } finally {
+      try {
+        if (ps != null)
+          ps.close();
+      } finally {
+        DriverManagerConnectionPool.releaseConnection(connection);
+      }
+    }
+    
+    return risponde;
   }
 
   @Override
   public void doSave(AbstractBean product) throws SQLException {
-    RispondeBean risponde = (RispondeBean) product;
     Connection connection = null;
     PreparedStatement ps = null;
+    RispondeBean risponde = (RispondeBean) product;
     
     try {
       
       connection = DriverManagerConnectionPool.getConnection();
-      ps = connection.prepareStatement(RispondeSQL.doSave);
-      ps.setInt(1, risponde.getQuest());
-      ps.setInt(2, risponde.getChoose());
-      int rowCount = ps.executeUpdate();
+      ps = connection.prepareStatement(RispondeSQL.DO_SAVE);
       
-      if (!(rowCount >= 1)) {
-        Logger.getGlobal().log(Level.SEVERE, "RispondeBean not saved");
+      ps.setInt(1, risponde.getQuestionID());
+      ps.setInt(2, risponde.getChooseID());
+      
+      if (!(ps.executeUpdate() > 0)) {
+        Logger.getGlobal().log(Level.INFO, "Oggetto RispondeBean non memorizzato");
       }
+      
+      connection.commit();
+      
     } finally {
       try {
         if (ps != null)
@@ -55,23 +87,26 @@ public class RispondeModelDM implements BeansModel {
     return false;
   }
 
-  public Collection<RispondeBean> retreiveByQuestion(RispondeBean risponde) throws SQLException {
-    Collection<RispondeBean> risposte = new ArrayList<RispondeBean>();
+  public Collection<AbstractBean> doRetrieveByQuestion(int code) throws SQLException {
     Connection connection = null;
     PreparedStatement ps = null;
     ResultSet rs = null;
+    Collection<AbstractBean> risposte = null;
     
     try {
-      
       connection = DriverManagerConnectionPool.getConnection();
-      ps = connection.prepareStatement(RispondeSQL.retreiveByQuestion);
-      ps.setInt(1, risponde.getQuest());
+      ps = connection.prepareStatement(RispondeSQL.DO_RETRIEVE_BY_QUESTION);
+      
+      ps.setInt(1, code);
+      
       rs = ps.executeQuery();
       
+      risposte = new ArrayList<AbstractBean>();
+      
       while (rs.next()) {
-        int choose = rs.getInt("choose");
-        RispondeBean r = new RispondeBean(risponde.getQuest(), choose);
-        risposte.add(r);
+        int chooseID = rs.getInt("chooseID");
+        
+        risposte.add(new RispondeBean(code, chooseID));
       }
       
     } finally {
@@ -86,23 +121,26 @@ public class RispondeModelDM implements BeansModel {
     return risposte;
   }
   
-  public Collection<RispondeBean> retreiveByChoose(RispondeBean risponde) throws SQLException {
-    Collection<RispondeBean> risposte = new ArrayList<RispondeBean>();
+  public Collection<AbstractBean> doRetrieveByChoose(int code) throws SQLException {
     Connection connection = null;
     PreparedStatement ps = null;
     ResultSet rs = null;
+    Collection<AbstractBean> risposte = null;
     
     try {
-      
       connection = DriverManagerConnectionPool.getConnection();
-      ps = connection.prepareStatement(RispondeSQL.retreiveByQuestion);
-      ps.setInt(1, risponde.getChoose());
+      ps = connection.prepareStatement(RispondeSQL.DO_RETRIEVE_BY_CHOOSE);
+      
+      ps.setInt(1, code);
+      
       rs = ps.executeQuery();
       
+      risposte = new ArrayList<AbstractBean>();
+      
       while (rs.next()) {
-        int quest = rs.getInt("quest");
-        RispondeBean r = new RispondeBean(quest, risponde.getChoose());
-        risposte.add(r);
+        int questionID = rs.getInt("questionID");
+        
+        risposte.add(new RispondeBean(questionID, code));
       }
       
     } finally {

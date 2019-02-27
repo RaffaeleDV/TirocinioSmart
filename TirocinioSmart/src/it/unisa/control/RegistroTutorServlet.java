@@ -17,18 +17,20 @@ import it.unisa.model.RegistroModelDM;
 import it.unisa.model.StudenteBean;
 import it.unisa.model.TutorBean;
 import it.unisa.model.UfficioBean;
+import it.unisa.model.AbstractBean;
 
 /**
- * Servlet implementation class RegistroServlet
+ * Servlet implementation class RegistroTutorServlet
  */
 @WebServlet("/RegistroTutorServlet")
 public class RegistroTutorServlet extends HttpServlet {
 
-  private static final long serialVersionUID = 1L;
+  private static final RegistroModelDM registroModelDM = new RegistroModelDM();
+  
+  
   /**
    * * @see HttpServlet#HttpServlet()
    * */
-
   public RegistroTutorServlet() {
     super();
   }
@@ -36,6 +38,7 @@ public class RegistroTutorServlet extends HttpServlet {
   /**
    * * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
    * */
+  @Override
   protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
     doPost(request, response);
   }
@@ -43,54 +46,96 @@ public class RegistroTutorServlet extends HttpServlet {
   /**
    * * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
    * */
+  @Override
   protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-    HttpSession session = request.getSession(false);
-    Object user = session.getAttribute("SessionUser");
-    List<RegistroBean> regs = null;
-    RegistroBean reg = null;
-    int idReg = Integer.parseInt(request.getParameter("id"));
-    boolean trovatoRegs = false;
+    HttpSession session = null;
+    RegistroBean registroBean = null;
+    TutorBean tutorBean = null;
+    String idRegistro = null;
+    int id = -1;
     
-    if (session != null) {
-      if (user != null) {
-        if (user instanceof TutorBean) {
-          TutorBean tutor = (TutorBean) user;
-          regs = (List<RegistroBean>) session.getAttribute("SessionRegistriTutor");
-          if (regs != null) {
-            for (RegistroBean registro: regs) {
-              if (registro.getId() == idReg) {
-                trovatoRegs = true;
-                reg = registro;
-              }
-            }
-          }
-          
-          if (!trovatoRegs) {
-            try {
-              if (tutor.getTipo().equals("Accademico")) {
-                if (RegistroModelDM.tutorRegistroAcc(tutor.getId(), idReg)) {
-                  reg = RegistroModelDM.loadRegistro(idReg);
-                }
-              } else if (tutor.getTipo().equals("Aziendale")) {
-                if (RegistroModelDM.tutorRegistroAz(tutor.getId(), idReg)) {
-                  reg = RegistroModelDM.loadRegistro(idReg);
-                }
-              }
-            } catch(SQLException e) {
-              Logger.getGlobal().log(Level.SEVERE, e.getMessage());
-            }
-          }
-        } else {
-          //redirect to an [error] page
-        }
-        
-        session.setAttribute("SessionRegistro", reg);
+    getServletContext().setAttribute("ContextRegistroModelDM", registroModelDM);
+    
+    idRegistro = (String) request.getParameter("id").toString();
+    if (idRegistro != null) {
+      if (!idRegistro.equals("")) {
+        id = Integer.valueOf(idRegistro);
       } else {
+        Logger.getGlobal().log(Level.INFO, "idRegistro stringa vuota nella consegna di un registro da parte di uno studente");
         //redirect to an [error] page
+        //set del valore per SessionErrorMessage404
+        RequestDispatcher view = request.getRequestDispatcher("404-page.jsp");
+        view.forward(request, response);
       }
+    } else {
+      Logger.getGlobal().log(Level.INFO, "idRegistro nullo nella consegna di un registo da parte di uno studente");
+      //redirect to an [error] page
+      //set del valore per SessionErrorMessage404
+      RequestDispatcher view = request.getRequestDispatcher("404-page.jsp");
+      view.forward(request, response);
     }
     
-    Logger.getGlobal().log(Level.INFO, "Registro Da Visualizzare: " + reg.toString());
+    session = request.getSession(false);
+    if (session != null) {
+      AbstractBean userBean = (AbstractBean) session.getAttribute("SessionUser");
+      
+      if (userBean != null) {
+        if (!userBean.getClass().getName().equals(TutorBean.class.getName())) {
+          Logger.getGlobal().log(Level.INFO, "L' utente non risulta loggato come tutor");
+          RequestDispatcher view = request.getRequestDispatcher("login-page.jsp");
+          view.forward(request, response);
+        } else {
+          tutorBean = (TutorBean) userBean;
+        }
+      } else {
+        Logger.getGlobal().log(Level.INFO, "Nessun utente loggato");
+        RequestDispatcher view = request.getRequestDispatcher("login-page.jsp");
+        view.forward(request, response);
+      }
+      
+      if (id >= 0) {
+        try {
+          if (tutorBean.getTipo().equals("Accademico")) {
+            if (registroModelDM.isTutorAccRegistro(tutorBean.getID(), id)) {
+              registroBean = (RegistroBean) registroModelDM.doRetrieveByKey(id);
+            }
+          } else if (tutorBean.getTipo().equals("Aziendale")) {
+            if (registroModelDM.isTutorAzRegistro(tutorBean.getID(), id)) {
+              registroBean = (RegistroBean) registroModelDM.doRetrieveByKey(id);
+            }
+          } else {
+            Logger.getGlobal().log(Level.INFO, "Tipo di tutor non valido nella visualizzazione di un registro da parte del tutor");
+            //redirect to an [error] page
+          }
+          
+          if (registroBean == null) {
+            Logger.getGlobal().log(Level.INFO, "Registro non trovato con l' id specificato nell' accesso da parte di un tutor");
+            //redirect to an [error] page
+            //set del valore per SessionErrorMessage404
+            RequestDispatcher view = request.getRequestDispatcher("404-page.jsp");
+            view.forward(request, response);
+          }
+        } catch(SQLException e) {
+          Logger.getGlobal().log(Level.SEVERE, e.getMessage());
+          //redirect to an [error] page
+          //set del valore per SessionErrorMessage500
+          RequestDispatcher view = request.getRequestDispatcher("500-page.jsp");
+          view.forward(request, response);
+        }
+      } else {
+        Logger.getGlobal().log(Level.INFO, "ID negativo nella visualizzazione di un registro da parte di un tutor");
+        //redirect to an [error] page
+        //set del valore per SessionErrorMessage404
+        RequestDispatcher view = request.getRequestDispatcher("404-page.jsp");
+        view.forward(request, response);
+      }        
+    } else {
+      Logger.getGlobal().log(Level.INFO, "Nessuna sessione nella ricerca di tirocini da parte di un tutor");
+      RequestDispatcher view = request.getRequestDispatcher("login-page.jsp");
+      view.forward(request, response);
+    }
+    
+    Logger.getGlobal().log(Level.INFO, "Registro Da Visualizzare: " + registroBean.toString());
     RequestDispatcher view = request.getRequestDispatcher("registro-page.jsp");
     view.forward(request, response);
   }

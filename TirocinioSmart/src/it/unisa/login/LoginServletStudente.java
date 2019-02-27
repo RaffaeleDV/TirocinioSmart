@@ -18,7 +18,10 @@ import it.unisa.model.StudenteModelDM;
 @WebServlet("/LoginServletStudente")
 public class LoginServletStudente extends HttpServlet {
   private static final long serialVersionUID = 1L;
-
+  private static final StudenteModelDM studenteModelDM = new StudenteModelDM();
+  
+  
+  
   /**
    * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
    */
@@ -32,12 +35,12 @@ public class LoginServletStudente extends HttpServlet {
 
     stud = new StudenteBean();
     stud.setNome(nome);
-    stud.setPassword(pass);
+    stud.setPass(pass);
 
     if (Validate.checkUser(stud)) {
       
       try {
-        StudenteModelDM.loadInfo(stud);
+        stud = (StudenteBean) studenteModelDM.doRetrieveByNome(nome);
 
       } catch (SQLException e) {
         e.printStackTrace();

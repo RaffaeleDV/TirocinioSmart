@@ -1,8 +1,10 @@
 package it.unisa.model;
 
 import java.util.ArrayList;
+import java.util.logging.Level;
 import java.sql.SQLException;
 import java.util.Collection;
+import java.util.logging.Logger;
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.PreparedStatement;
@@ -19,26 +21,60 @@ public class AnswerModelDM implements BeansModel {
 
   @Override
   public Collection<AbstractBean> doRetrieveAll(String order) throws SQLException {
-    // TODO Auto-generated method stub
-    return null;
+    Connection connection = null;
+    PreparedStatement ps = null;
+    ResultSet rs = null;
+    Collection<AbstractBean> answers = null;
+    
+    try {
+      connection = DriverManagerConnectionPool.getConnection();
+      ps = connection.prepareStatement(AnswerSQL.DO_RETRIEVE_ALL);
+      
+      rs = ps.executeQuery();
+      
+      answers = new ArrayList<AbstractBean>();
+      
+      while (rs.next()) {
+        int questionID = rs.getInt("questionID");
+        int studenteID = rs.getInt("studenteID");
+        int chooseID = rs.getInt("chooseID");
+        Date answerDate = rs.getDate("answerDate");
+        
+        answers.add(new AnswerBean(questionID, studenteID, chooseID, answerDate));
+      }
+      
+    } finally {
+      try {
+        if (ps != null)
+          ps.close();
+      } finally {
+        DriverManagerConnectionPool.releaseConnection(connection);
+      }
+    }
+    
+    return answers;
   }
 
   @Override
   public void doSave(AbstractBean product) throws SQLException {
-    AnswerBean answer = (AnswerBean) product;
     Connection connection = null;
     PreparedStatement ps = null;
+    AnswerBean answer = (AnswerBean) product;
     
     try {
-      
       connection = DriverManagerConnectionPool.getConnection();
-      ps = connection.prepareStatement(AnswerSQL.doSave);
-      ps.setInt(2, answer.getChoose());
-      ps.setInt(3, answer.getQuest());
-      ps.setInt(4, answer.getUtente());
-      ps.setDate(5, answer.getA_date());
+      ps = connection.prepareStatement(AnswerSQL.DO_SAVE);
       
-      ps.executeQuery();
+      ps.setInt(1, answer.getQuestionID());
+      ps.setInt(2, answer.getStudenteID());
+      ps.setInt(3, answer.getChooseID());
+      ps.setDate(4, answer.getAnswerDate());
+      
+      if (!(ps.executeUpdate() > 0)) {
+        Logger.getGlobal().log(Level.INFO, "Oggetto AnswerBean non e stato memorizzato");
+      }
+      
+      connection.commit();
       
     } finally {
       try {
@@ -55,25 +91,64 @@ public class AnswerModelDM implements BeansModel {
     return false;
   }
   
-  public Collection<AnswerBean> retreiveByQuestion(AnswerBean answer) throws SQLException {
-    Collection<AnswerBean> answers = new ArrayList<AnswerBean>();
+  public boolean doUpdate(AbstractBean product) throws SQLException {
+    Connection connection = null;
+    PreparedStatement ps = null;
+    AnswerBean answerBean = (AnswerBean) product;
+    boolean updated = false;
+    
+    try {
+      connection = DriverManagerConnectionPool.getConnection();
+      ps = connection.prepareStatement(AnswerSQL.DO_UPDATE);
+
+      ps.setInt(1, answerBean.getQuestionID());
+      ps.setInt(2, answerBean.getStudenteID());
+      ps.setInt(3, answerBean.getChooseID());
+      ps.setDate(4, answerBean.getAnswerDate());
+      
+      if (ps.executeUpdate() > 0) {
+        updated = true;
+      } else {
+        Logger.getGlobal().log(Level.INFO, "Oggetto AnswerBean non aggiornato");
+      }
+      
+      connection.commit();
+      
+    } finally {
+      try {
+        if (ps != null)
+          ps.close();
+      } finally {
+        DriverManagerConnectionPool.releaseConnection(connection);
+      }
+    }
+    
+    return updated;
+  }
+  
+  public Collection<AbstractBean> doRetrieveByQuestion(int code) throws SQLException {
     Connection connection = null;
     PreparedStatement ps = null;
     ResultSet rs = null;
+    Collection<AbstractBean> answers = null;
     
     try {
-      
       connection = DriverManagerConnectionPool.getConnection();
-      ps = connection.prepareStatement(AnswerSQL.retreiveByQuestion);
-      ps.setInt(1, answer.getQuest());
+      ps = connection.prepareStatement(AnswerSQL.DO_RETRIEVE_BY_QUESTION);
+      
+      ps.setInt(1, code);
+      
       rs = ps.executeQuery();
       
+      answers = new ArrayList<AbstractBean>();
+      
       while (rs.next()) {
-        int utente = rs.getInt("utente");
-        int choose = rs.getInt("choose");
-        Date a_date = rs.getDate("a_date");
-        AnswerBean a = new AnswerBean(answer.getQuest(), utente, choose, a_date);
-        answers.add(a);
+        int questionID = rs.getInt("questionID");
+        int studenteID = rs.getInt("studenteID");
+        int chooseID = rs.getInt("chooseID");
+        Date answerDate = rs.getDate("answerDate");
+        
+        answers.add(new AnswerBean(questionID, studenteID, chooseID, answerDate));
       }
       
     } finally {
@@ -88,25 +163,28 @@ public class AnswerModelDM implements BeansModel {
     return answers;
   }
   
-  public Collection<AnswerBean> retreiveByUtente(AnswerBean answer) throws SQLException {
-    Collection<AnswerBean> answers = new ArrayList<AnswerBean>();
+  public Collection<AbstractBean> doRetrieveByStudente(int code) throws SQLException {
     Connection connection = null;
     PreparedStatement ps = null;
     ResultSet rs = null;
+    Collection<AbstractBean> answers = null;
     
     try {
-      
       connection = DriverManagerConnectionPool.getConnection();
-      ps = connection.prepareStatement(AnswerSQL.retreiveByQuestion);
-      ps.setInt(1, answer.getUtente());
+      ps = connection.prepareStatement(AnswerSQL.DO_RETRIEVE_BY_STUDENTE);
+      
+      ps.setInt(1, code);
+      
       rs = ps.executeQuery();
       
+      answers = new ArrayList<AbstractBean>();
+      
       while (rs.next()) {
-        int quest = rs.getInt("quest");
-        int choose = rs.getInt("choose");
-        Date a_date = rs.getDate("a_date");
-        AnswerBean a = new AnswerBean(quest, answer.getUtente(), choose, a_date);
-        answers.add(a);
+        int questionID = rs.getInt("questionID");
+        int chooseID = rs.getInt("chooseID");
+        Date answerDate = rs.getDate("answerDate");
+        
+        answers.add(new AnswerBean(questionID, code, chooseID, answerDate));
       }
       
     } finally {
@@ -121,25 +199,28 @@ public class AnswerModelDM implements BeansModel {
     return answers;
   }
   
-  public Collection<AnswerBean> retreiveByChoose(AnswerBean answer) throws SQLException {
-    Collection<AnswerBean> answers = new ArrayList<AnswerBean>();
+  public Collection<AbstractBean> doRetrieveByChoose(int code) throws SQLException {
     Connection connection = null;
     PreparedStatement ps = null;
     ResultSet rs = null;
+    Collection<AbstractBean> answers = null;
     
     try {
-      
       connection = DriverManagerConnectionPool.getConnection();
-      ps = connection.prepareStatement(AnswerSQL.retreiveByQuestion);
-      ps.setInt(1, answer.getUtente());
+      ps = connection.prepareStatement(AnswerSQL.DO_RETRIEVE_BY_CHOOSE);
+      
+      ps.setInt(1, code);
+      
       rs = ps.executeQuery();
       
+      answers = new ArrayList<AbstractBean>();
+      
       while (rs.next()) {
-        int quest = rs.getInt("quest");
-        int utente = rs.getInt("utente");
-        Date a_date = rs.getDate("a_date");
-        AnswerBean a = new AnswerBean(quest, utente, answer.getChoose(), a_date);
-        answers.add(a);
+        int questionID = rs.getInt("questionID");
+        int studenteID = rs.getInt("studenteID");
+        Date answerDate = rs.getDate("answerDate");
+        
+        answers.add(new AnswerBean(questionID, studenteID, code, answerDate));
       }
       
     } finally {
@@ -154,5 +235,41 @@ public class AnswerModelDM implements BeansModel {
     return answers;
   }
   
-  
+  public Collection<AbstractBean> doRetrieveByAnswerDateBetween(Date startDate, Date endDate) throws SQLException {
+    Connection connection = null;
+    PreparedStatement ps = null;
+    ResultSet rs = null;
+    Collection<AbstractBean> answers = null;
+    
+    try {
+      connection = DriverManagerConnectionPool.getConnection();
+      ps = connection.prepareStatement(AnswerSQL.DO_RETRIEVE_BY_ANSWER_DATE_BETWEEN);
+      
+      ps.setDate(1, startDate);
+      ps.setDate(2, endDate);
+      
+      rs = ps.executeQuery();
+      
+      answers = new ArrayList<AbstractBean>();
+      
+      while (rs.next()) {
+        int questionID = rs.getInt("questionID");
+        int studenteID = rs.getInt("studenteID");
+        int chooseID = rs.getInt("chooseID");
+        Date answerDate = rs.getDate("answerDate");
+        
+        answers.add(new AnswerBean(questionID, studenteID, chooseID, answerDate));
+      }
+      
+    } finally {
+      try {
+        if (ps != null)
+          ps.close();
+      } finally {
+        DriverManagerConnectionPool.getConnection();
+      }
+    }
+    
+    return answers;
+  }
 }

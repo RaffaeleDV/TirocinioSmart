@@ -24,7 +24,7 @@ public class Validate {
           conn.prepareStatement("SELECT * FROM studente WHERE nome = ? AND pass = ? ");
 
       ps.setString(1, stud.getNome());
-      ps.setString(2, stud.getPassword());
+      ps.setString(2, stud.getPass());
       ResultSet rs = ps.executeQuery();
       st = rs.next();
 

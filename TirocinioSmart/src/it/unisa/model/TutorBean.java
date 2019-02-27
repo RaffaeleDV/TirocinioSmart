@@ -1,20 +1,41 @@
 package it.unisa.model;
 
 import java.io.Serializable;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
-public class TutorBean extends UtenteBean implements Serializable {
+public class TutorBean extends AbstractBean implements Serializable, Cloneable {
 
   /**
    * 
    */
   private static final long serialVersionUID = 7743978606183893973L;
   private int id;
+  private int convenzioneID;
   private String email;
   private String nome;
   private String pass;
   private String tipo;
-  private int convenzioneID;
 
+  public TutorBean() {
+    
+  }
+  
+  public TutorBean(
+      int id,
+      int convenzioneID,
+      String email,
+      String nome,
+      String pass,
+      String tipo) {
+    this.id = id;
+    this.email = email;
+    this.nome = nome;
+    this.pass = pass;
+    this.tipo = tipo;
+    this.convenzioneID = convenzioneID;
+  }
+  
   public String getNome() {
     return nome;
   }
@@ -59,11 +80,11 @@ public class TutorBean extends UtenteBean implements Serializable {
     return serialVersionUID;
   }
 
-  public int getId() {
+  public int getID() {
     return id;
   }
 
-  public void setId(int id) {
+  public void setID(int id) {
     this.id = id;
   }
 
@@ -73,6 +94,39 @@ public class TutorBean extends UtenteBean implements Serializable {
         + ", convenzioneID=" + convenzioneID + "]";
   }
 
+  @Override
+  public boolean equals(Object o) {
+    
+    if (o == null)
+      return false;
+    
+    if (!getClass().getName().equals(o.getClass().getName()))
+      return false;
+    
+    TutorBean tutorBean = (TutorBean) o;
+    
+    if (
+        id == tutorBean.getID() &&
+        convenzioneID == tutorBean.getConvenzioneID() &&
+        email.equals(tutorBean.getEmail()) &&
+        nome.equals(tutorBean.getNome()) &&
+        pass.equals(tutorBean.getPass()) &&
+        tipo.equals(tutorBean.getTipo()))
+      return true;
+      
+    return false;
+  }
 
-
+  @Override
+  public TutorBean clone() throws CloneNotSupportedException {
+    TutorBean tutorBean = null;
+    
+    try {
+      tutorBean = (TutorBean) super.clone();
+    } catch (CloneNotSupportedException e) {
+      Logger.getGlobal().log(Level.SEVERE, e.getMessage());
+    }
+    
+    return tutorBean;
+  }
 }

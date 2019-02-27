@@ -1,5 +1,5 @@
-<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
-    pageEncoding="ISO-8859-1"
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"
     import="it.unisa.model.QuestionarioBean"
     import="java.util.HashMap"
     import="it.unisa.model.QuestionBean"
@@ -15,8 +15,8 @@
         <p id="quest-info">Nome: <b><%= questionario.getNome() %></b></p>
         <p id="quest-info">Descrizione: <%= questionario.getDescription() %></p>
         <p id="quest-info">Tematica: <%= questionario.getTematica() %></p>
-        <p id="quest-info">#Domande: <%= questionario.getQuests() %></p>
-        <p id="quest-info">#Utenti Che Hanno Compilato: <%= questionario.getNutenti() %></p>
+        <p id="quest-info">#Domande: <%= questionario.getQuestions() %></p>
+        <p id="quest-info">#Utenti Che Hanno Compilato: <%= questionario.getNstudenti() %></p>
       </div>
   <%
     } else {
@@ -36,8 +36,8 @@
           <div class="info-wrapper">
             <p class="info">Question: <b><%= question.getQuestion() %></b></p>
             <p class="info">Descrizione: <b><%= question.getDescription() %></b></p>
-            <p class="info">#Max Answers: <b><%= question.getMax_answers() %></b></p>
-            <p class="info">#Max Chooses: <b><%= question.getMax_chooses() %></b></p>
+            <p class="info">#Max Answers: <b><%= question.getMaxAnswers() %></b></p>
+            <p class="info">#Max Chooses: <b><%= question.getMaxChooses() %></b></p>
           </div>
           <div class="wrapper">
             <select>

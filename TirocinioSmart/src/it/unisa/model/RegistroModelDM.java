@@ -1,671 +1,88 @@
 package it.unisa.model;
 
-import java.io.BufferedOutputStream;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.sql.Connection;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Date;
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
+import java.util.Collection;
+import java.util.logging.Logger;
+import java.util.logging.Level;
+import java.sql.PreparedStatement;
 import it.unisa.database.DriverManagerConnectionPool;
-import it.unisa.sql.TSRegistroSQL;
+import it.unisa.sql.RegistroSQL;
 
-public class RegistroModelDM {
+public class RegistroModelDM implements BeansModel {
 
-  public static final String TABLE_NAME = "registro";
-  
-  public static void loadInfo(RegistroBean registroBean) throws SQLException {
+  @Override
+  public AbstractBean doRetrieveByKey(int code) throws SQLException {
     Connection connection = null;
     PreparedStatement ps = null;
-    String selectSQL = "SELECT * FROM " + TABLE_NAME + " WHERE id = ?;";
+    ResultSet rs = null;
+    RegistroBean registroBean = null;
     
     try {
       connection = DriverManagerConnectionPool.getConnection();
-      ps = connection.prepareStatement(selectSQL);
+      ps = connection.prepareStatement(RegistroSQL.DO_RETRIEVE_BY_KEY);
       
-      ps.setInt(1, registroBean.getId());
+      ps.setInt(1, code);
       
-      ResultSet rs = ps.executeQuery();
-      while (rs.next()) {
-        registroBean.setNome(rs.getString("nome"));
-        registroBean.setDescrizione(rs.getString("descrizione"));
-        registroBean.setConsegna(rs.getBoolean("consegna"));
-        registroBean.setConfermaTutorAcc(rs.getBoolean("confermaTutorAcc"));
-        registroBean.setConfermaTutorAz(rs.getBoolean("confermaTutorAz"));
+      rs = ps.executeQuery();
+      
+      if (rs.next()) {
+        String nome = rs.getString("nome");
+        String descrizione = rs.getString("descrizione");
+        Date primaIstituzione = rs.getDate("primaIstituzione");
+        Date ultimoAgg = rs.getDate("ultimoAgg");
+        boolean consegna = rs.getBoolean("consegna");
+        boolean confermaTutorAcc = rs.getBoolean("confermaTutorAcc");
+        boolean confermaTutorAz = rs.getBoolean("confermaTutorAz");
+        boolean confermaUff = rs.getBoolean("confermaUff");
+        
+        registroBean = new RegistroBean(code, nome, descrizione, primaIstituzione, ultimoAgg, consegna, confermaTutorAcc, confermaTutorAz, confermaUff);
+      } else {
+        Logger.getGlobal().log(Level.INFO, "Registro con l' id specificato non trovato");
       }
+      
     } finally {
       try {
         if (ps != null)
           ps.close();
-        
       } finally {
         DriverManagerConnectionPool.releaseConnection(connection);
       }
     }
-  }
-  
-  public static RegistroBean loadRegistro(int id) throws SQLException {
-    Connection connection = null;
-    PreparedStatement ps = null;
-    RegistroBean registroBean = null;
-    String selectSQL = "SELECT * FROM " + TABLE_NAME + " WHERE id = ?;";
     
-    try {
-      connection = DriverManagerConnectionPool.getConnection();
-      ps = connection.prepareStatement(selectSQL);
-      
-      ps.setInt(1, id);
-      
-      ResultSet rs = ps.executeQuery();
-      while (rs.next()) {
-        registroBean = new RegistroBean();
-        registroBean.setId(id);
-        registroBean.setDescrizione(rs.getString("descrizione"));
-        registroBean.setNome(rs.getString("nome"));
-        registroBean.setConsegna(rs.getBoolean("consegna"));
-        registroBean.setConfermaTutorAcc(rs.getBoolean("confermaTutorAcc"));
-        registroBean.setConfermaTutorAz(rs.getBoolean("confermaTutorAz"));
-      }
-    } finally {
-      try {
-        if (ps != null)
-          ps.close(); 
-      } finally {
-        DriverManagerConnectionPool.releaseConnection(connection);
-      }
-    }
     return registroBean;
   }
-  
-  public static void saveRegistro(RegistroBean reg) throws SQLException {
-    boolean consegna = false, confermaTutorAcc = false, confermaTutorAz = false;
-    int id = -1;
-    String nome = null, descrizione = null;
-    
-    
-    id = reg.getId();
-    nome = reg.getNome();
-    descrizione = reg.getDescrizione();
-    consegna = reg.getConsegna();
-    confermaTutorAcc = reg.getConfermaTutorAcc();
-    confermaTutorAz = reg.getConfermaTutorAz();
-    
-    Connection connection = null;
-    PreparedStatement ps = null;
-    String selectSQL = "INSERT INTO " + TABLE_NAME + " VALUES (?,?,?,?,?,?);";
-    
-    try {
-      connection = DriverManagerConnectionPool.getConnection();
-      ps = connection.prepareStatement(selectSQL);
-      
-      ps.setInt(1, id);
-      ps.setString(2, nome);
-      ps.setString(3, descrizione);
-      ps.setBoolean(4, consegna);
-      ps.setBoolean(5, confermaTutorAcc);
-      ps.setBoolean(6, confermaTutorAz);
-      
-      System.out.println(ps.toString());
-      
-      ps.executeUpdate();
-      connection.commit();
-    } finally {
-      try {
-        if (ps != null)
-          ps.close();
-      } finally {
-        DriverManagerConnectionPool.releaseConnection(connection); 
-      }
-    }
-  }
-  
-  public static void doUpdateRegistro(int id, RegistroBean registroBean) throws SQLException {
-    Connection connection = null;
-    PreparedStatement ps = null;
-    String updateSQL = TSRegistroSQL.updateRegistro;
-    
-    if (registroBean == null)
-      return;
-    
-    try {
-      connection = DriverManagerConnectionPool.getConnection();
-      ps = connection.prepareStatement(updateSQL);
-      
-      ps.setInt(1, registroBean.getId());
-      ps.setString(2, registroBean.getNome());
-      ps.setString(3, registroBean.getDescrizione());
-      ps.setBoolean(4, registroBean.getConsegna());
-      ps.setBoolean(5, registroBean.getConfermaTutorAcc());
-      ps.setBoolean(6, registroBean.getConfermaTutorAz());
-      ps.setInt(7, id);
-      
-      ps.executeUpdate();
-      connection.commit();
-    } finally {
-      try {
-        if(ps != null)
-          ps.close();
-      } finally {
-        DriverManagerConnectionPool.releaseConnection(connection);
-      }
-    }
-  }
-  
-  public static StudenteBean loadStudente(RegistroBean registroBean) throws SQLException {
-    Connection connection = null;
-    PreparedStatement ps = null;
-    StudenteBean studenteBean = null;
-    String selectSQL = TSRegistroSQL.queryRegistroStudente;
-    
-    if (registroBean == null)
-      return null;
-    
-    try {
-      connection = DriverManagerConnectionPool.getConnection();
-      ps = connection.prepareStatement(selectSQL);
-      
-      ps.setInt(1, registroBean.getId());
-      
-      ResultSet rs = ps.executeQuery();
-      if (rs.next()) {
-        studenteBean = new StudenteBean();
-        studenteBean.setCfu(rs.getString("cfu"));
-        studenteBean.setMatricola(rs.getString("matricola"));
-        studenteBean.setNome(rs.getString("nome"));
-        studenteBean.setPassword(rs.getString("pass"));
-        studenteBean.setRegistro(rs.getInt("registro"));
-        studenteBean.setTirocinio(rs.getInt("tirocinio"));
-        studenteBean.setTutorAccID(rs.getInt("tutorAccID"));
-        studenteBean.setTutorAzID(rs.getInt("tutorAzID"));
-      }
-    } finally {
-      try {
-        if (ps != null)
-          ps.close();
-      } finally {
-        DriverManagerConnectionPool.releaseConnection(connection);
-      }
-    }
-    
-    return studenteBean;
-  }
-  
-  
-  public static UfficioBean loadUfficio(RegistroBean registroBean) throws SQLException {
-    Connection connection = null;
-    PreparedStatement ps = null;
-    UfficioBean ufficioBean = null;
-    String selectSQL = TSRegistroSQL.queryRegistroUfficio;
-    
-    try {
-      connection = DriverManagerConnectionPool.getConnection();
-      ps = connection.prepareStatement(selectSQL);
-      
-      /*
-       * ps set dei valori
-       */
-      
-      ResultSet rs = ps.executeQuery();
-      if (rs.next()) {
-        System.out.println("UfficioTrovato");
-        ufficioBean = new UfficioBean();
-        ufficioBean.setId(rs.getInt("id"));
-        ufficioBean.setNome(rs.getString("nome"));
-        ufficioBean.setPassword(rs.getString("pass"));
-      }
-    } finally {
-      try {
-        if (ps != null)
-          ps.close();
-      } finally {
-        DriverManagerConnectionPool.releaseConnection(connection);
-      }
-    }
-    
-    return ufficioBean;
-  }
-  
-  public static TutorBean loadTutorAziendale(RegistroBean registroBean) throws SQLException {
-    Connection connection = null;
-    PreparedStatement ps = null;
-    TutorBean tutorBean = null;
-    String selectSQL = TSRegistroSQL.queryRegistroTutorAziendale;
-    
-    try {
-      connection = DriverManagerConnectionPool.getConnection();
-      ps = connection.prepareStatement(selectSQL);
-      
-      /*
-       * ps set dei valori
-       */
-      
-      ResultSet rs = ps.executeQuery();
-      if (rs.next()) {
-        System.out.println("TutorAziendaleTrovato");
-        tutorBean = new TutorBean();
-        tutorBean.setConvenzioneID(rs.getInt("convenzioneID"));
-        tutorBean.setId(rs.getInt("id"));
-        tutorBean.setNome(rs.getString("nome"));
-        tutorBean.setPassword(rs.getString("pass"));
-        tutorBean.setTipo(rs.getString("tipo"));
-      }
-    } finally {
-      try {
-        if (ps != null)
-          ps.close();
-      } finally {
-        DriverManagerConnectionPool.releaseConnection(connection);
-      }
-    }
-    
-    return tutorBean;
-  }
-  
-  public static TutorBean loadTutorAccademico(RegistroBean registroBean) throws SQLException {
-    Connection connection = null;
-    PreparedStatement ps = null;
-    TutorBean tutorBean = null;
 
-    String selectSQL = TSRegistroSQL.queryRegistroTutorAccademico;
-    
-    try {
-      connection = DriverManagerConnectionPool.getConnection();
-      ps = connection.prepareStatement(selectSQL);
-      
-      /*
-       * ps set dei valori
-       */
-      
-      ResultSet rs = ps.executeQuery();
-      if (rs.next()) {
-        System.out.println("TutorAziendaleTrovato");
-        tutorBean.setConvenzioneID(rs.getInt("convenzioneID"));
-        tutorBean.setId(rs.getInt("id"));
-        tutorBean.setNome(rs.getString("nome"));
-        tutorBean.setPassword(rs.getString("pass"));
-        tutorBean.setTipo(rs.getString("tipo"));
-      }
-    } finally {
-      try {
-        if (ps != null)
-          ps.close();
-      } finally {
-        DriverManagerConnectionPool.releaseConnection(connection);
-      }
-    }
-    
-    return tutorBean;
-  }
-  
-  public static ProgettoFormativoBean loadTirocinio(RegistroBean registroBean) throws SQLException {
-    Connection connection = null;
-    PreparedStatement ps = null;
-    ProgettoFormativoBean tirocinioBean = null;
-    String selectSQL = TSRegistroSQL.queryRegistroTirocinio;
-    
-    try {
-      connection = DriverManagerConnectionPool.getConnection();
-      ps = connection.prepareStatement(selectSQL);
-      
-      /*
-       * ps set dei valori
-       */
-      
-      ResultSet rs = ps.executeQuery();
-      if (rs.next()) {
-        System.out.println("TirocinioTrovato");
-        tirocinioBean = new ProgettoFormativoBean();
-        tirocinioBean.setApprovazione(rs.getBoolean("approvazione"));
-        tirocinioBean.setId(rs.getInt("id"));
-        tirocinioBean.setInfo(rs.getString("info"));
-      }
-    } finally {
-      try {
-        if (ps != null)
-          ps.close();
-      } finally {
-        DriverManagerConnectionPool.releaseConnection(connection);
-      }
-    }
-    
-    return tirocinioBean;
-  }
-  
-  public static boolean studenteRegistro(String matricola, int idRegistro) throws SQLException {
-    Connection connection = null;
-    PreparedStatement ps = null;
-    StudenteBean studenteBean = null;
-    boolean studenteRegistro = false;
-    String selectSQL = TSRegistroSQL.queryIsStudenteRegistro;
-    
-    try {
-      connection = DriverManagerConnectionPool.getConnection();
-      ps = connection.prepareStatement(selectSQL);
-      
-      /*
-       * ps set dei valori
-       */
-      
-      ResultSet rs = ps.executeQuery();
-      if (rs.next()) {
-        studenteRegistro = true;
-      } else {
-        studenteRegistro = false;
-      }
-    } finally {
-      try {
-        if (ps != null)
-          ps.close();
-      } finally {
-        DriverManagerConnectionPool.releaseConnection(connection);
-      }
-    }
-    return studenteRegistro;
-  }
-  
-  public static List<RegistroBean> loadRegistriTirocinio(int idTirocinio) throws SQLException {
-    Connection connection = null;
-    PreparedStatement ps = null;
-    String selectSQL = TSRegistroSQL.queryRegistriTirocinio;
-    RegistroBean registroBean = null;
-    ArrayList<RegistroBean> registriTirocinio = new ArrayList<RegistroBean>();
-    
-    try {
-      connection = DriverManagerConnectionPool.getConnection();
-      ps = connection.prepareStatement(selectSQL);
-      
-      /*
-       * ps set dei valori nella query
-       */
-      
-      ResultSet rs = ps.executeQuery();
-      while (rs.next()) {
-        System.out.println("StudenteTrovato");
-        registroBean = new RegistroBean();
-        registroBean.setDescrizione(rs.getString("descrizione"));
-        registroBean.setId(rs.getInt("id"));
-        registroBean.setNome(rs.getString("nome"));
-        registroBean.setConsegna(rs.getBoolean("consegna"));
-        registroBean.setConfermaTutorAcc(rs.getBoolean("confermaTutorAcc"));
-        registroBean.setConfermaTutorAz(rs.getBoolean("confermaTutorAz"));
-        registriTirocinio.add(registroBean);
-      }
-    } finally {
-      try {
-        if (ps != null) 
-          ps.close();
-      } finally {
-        DriverManagerConnectionPool.releaseConnection(connection);
-      }
-    }
-    return registriTirocinio;
-  }
-  
-  public static boolean tutorRegistroAcc(int idTutor, int idRegistro) throws SQLException {
-    Connection connection = null;
-    PreparedStatement ps = null;
-    String selectSQL = TSRegistroSQL.queryIsTutorAccRegistro;
-    boolean tutorRegistro = false;
-    
-    try {
-      connection = DriverManagerConnectionPool.getConnection();
-      ps = connection.prepareStatement(selectSQL);
-      ps.setInt(1, idTutor);
-      ps.setInt(2, idRegistro);      
-      ResultSet rs = ps.executeQuery();
-      
-      if (rs.next()) {
-        System.out.println("TutorTrovato");
-        tutorRegistro = true;
-      } else {
-        tutorRegistro = false;
-      }
-    } finally {
-      try {
-        if (ps != null) 
-          ps.close();
-      } finally {
-        DriverManagerConnectionPool.releaseConnection(connection);
-      }
-    }
-    return tutorRegistro;
-  }
-  
-  public static boolean tutorRegistroAz(int idTutor, int idRegistro) throws SQLException {
-    Connection connection = null;
-    PreparedStatement ps = null;
-    String selectSQL = TSRegistroSQL.queryIsTutorAzRegistro;
-    boolean tutorRegistro = false;
-    
-    try {
-      connection = DriverManagerConnectionPool.getConnection();
-      ps = connection.prepareStatement(selectSQL);
-      ps.setInt(1, idTutor);
-      ps.setInt(2, idRegistro);
-      ResultSet rs = ps.executeQuery();
-      
-      if (rs.next()) {
-        System.out.println("TutorTrovato");
-        tutorRegistro = true;
-      } else {
-        tutorRegistro = false;
-      }
-    } finally {
-      try {
-        if (ps != null) 
-          ps.close();
-      } finally {
-        DriverManagerConnectionPool.releaseConnection(connection);
-      }
-    }
-    return tutorRegistro;
-  }
-  
-  public static List<RegistroBean> loadRegistriUfficio(int idUfficio) throws SQLException {
-    Connection connection = null;
-    PreparedStatement ps = null;
-    String selectSQL = TSRegistroSQL.queryRegistriUfficio;
-    ArrayList<RegistroBean> registriBean = new ArrayList<RegistroBean>();
-    
-    try {
-      connection = DriverManagerConnectionPool.getConnection();
-      ps = connection.prepareStatement(selectSQL);
-      
-      /*
-       * ps set dei valori della query
-       */
-      
-      ResultSet rs = ps.executeQuery();
-      while (rs.next()) {
-        int idRegistro = rs.getInt("id");
-        String nome = rs.getString("nome");
-        String descrizione  = rs.getString("descrizione");
-        boolean consegna = rs.getBoolean("consegna");
-        boolean confermaTutorAcc = rs.getBoolean("confermaTutorAcc");
-        boolean confermaTutorAz = rs.getBoolean("confermaTutorAz");
-        RegistroBean registroBean = new RegistroBean(idRegistro, nome , descrizione, 
-            consegna, confermaTutorAcc, confermaTutorAz);
-        registriBean.add(registroBean);
-      }
-    } finally {
-      try {
-        if (ps != null) 
-          ps.close();
-      } finally {
-        DriverManagerConnectionPool.releaseConnection(connection);
-      }
-    }
-    return registriBean;
-  }
-  
-  public static List<RegistroBean> loadRegistriStudente(StudenteBean studenteBean) throws SQLException {
-    Connection connection = null;
-    PreparedStatement ps = null;
-    ArrayList<RegistroBean> registriBean = new ArrayList<RegistroBean>();
-    String selectSQL = TSRegistroSQL.queryRegistriStudente;
-    
-    try {
-      connection = DriverManagerConnectionPool.getConnection();
-      ps = connection.prepareStatement(selectSQL);
-      
-      ps.setInt(1, studenteBean.getRegistro());
-      
-      ResultSet rs = ps.executeQuery();
-      while (rs.next()) {
-        int idRegistro = rs.getInt("id");
-        String nome = rs.getString("nome");
-        String descrizione = rs.getString("descrizione");
-        boolean consegna = rs.getBoolean("consegna");
-        boolean confermaTutorAcc = rs.getBoolean("confermaTutorAcc");
-        boolean confermaTutorAz = rs.getBoolean("confermaTutorAz");
-        RegistroBean registroBean = new RegistroBean(idRegistro, nome, descrizione,
-            consegna, confermaTutorAcc, confermaTutorAz);
-        registriBean.add(registroBean);
-      }
-    } finally {
-      try {
-        if (ps != null)
-          ps.close();
-      } finally {
-        DriverManagerConnectionPool.releaseConnection(connection);
-      }
-    }
-    return registriBean;
-  }
-  
-  public static RegistroBean loadRegistroStudente(StudenteBean studente) throws SQLException, FileNotFoundException {
-    RegistroBean registro = null;
+  @Override
+  public Collection<AbstractBean> doRetrieveAll(String order) throws SQLException {
     Connection connection = null;
     PreparedStatement ps = null;
     ResultSet rs = null;
+    Collection<AbstractBean> registri = null;
     
     try {
-      
       connection = DriverManagerConnectionPool.getConnection();
-      ps = connection.prepareStatement(TSRegistroSQL.loadRegistroStudente);
-      ps.setString(1, studente.getMatricola());
+      ps = connection.prepareStatement(RegistroSQL.DO_RETRIEVE_ALL);
+      
       rs = ps.executeQuery();
       
-      if (rs.next()) {
-        int id = rs.getInt("id");
-        String nome = rs.getString("nome");
-        String descrizione = rs.getString("descrizione");
-        boolean consegna = rs.getBoolean("consegna");
-        boolean confermaTutorAcc = rs.getBoolean("confermaTutorAcc");
-        boolean confermaTutorAz = rs.getBoolean("confermaTutorAz");
-        registro = new RegistroBean(id, nome, descrizione, consegna, confermaTutorAcc, confermaTutorAz);
-      }
-      
-    } finally {
-      try {
-        if (ps != null)
-          ps.close();
-      } finally {
-        DriverManagerConnectionPool.releaseConnection(connection);
-      }
-    }
-    
-    return registro;
-  }
-  
-  public static List<RegistroBean> loadRegistriTutorAz(int idTutor) throws SQLException {
-    List<RegistroBean> regs = new ArrayList<RegistroBean>();
-    Connection connection = null;
-    PreparedStatement ps = null;
-    ResultSet rs = null;
-    
-    try {
-      
-      connection = DriverManagerConnectionPool.getConnection();
-      ps = connection.prepareStatement(TSRegistroSQL.queryRegistriTutorAz);
-      ps.setInt(1, idTutor);
-      rs = ps.executeQuery();
+      registri = new ArrayList<AbstractBean>();
       
       while (rs.next()) {
         int id = rs.getInt("id");
         String nome = rs.getString("nome");
         String descrizione = rs.getString("descrizione");
-        boolean consegna = rs.getBoolean("consegna");
-        boolean confermaTutorAcc = rs.getBoolean("confermaTutorAcc");
-        boolean confermaTutorAz = rs.getBoolean("confermaTutorAcc");
-        RegistroBean reg = new RegistroBean(id, nome, descrizione, consegna, confermaTutorAcc, confermaTutorAz);
-        regs.add(reg);
-      }
-      
-    } finally {
-      try {
-        if (ps != null)
-          ps.close();
-      } finally {
-        DriverManagerConnectionPool.releaseConnection(connection);
-      }
-    }
-    
-    return regs;
-  }
-  
-  public static List<RegistroBean> loadRegistriTutorAcc(int idTutor) throws SQLException {
-    List<RegistroBean> regs = new ArrayList<RegistroBean>();
-    Connection connection = null;
-    PreparedStatement ps = null;
-    ResultSet rs = null;
-    
-    try {
-      
-      connection = DriverManagerConnectionPool.getConnection();
-      ps = connection.prepareStatement(TSRegistroSQL.queryRegistriTutorAcc);
-      ps.setInt(1, idTutor);
-      rs = ps.executeQuery();
-      
-      while (rs.next()) {
-        int id = rs.getInt("id");
-        String nome = rs.getString("nome");
-        String descrizione = rs.getString("descrizione");
-        boolean consegna = rs.getBoolean("consegna");
-        boolean confermaTutorAcc = rs.getBoolean("confermaTutorAcc");
-        boolean confermaTutorAz = rs.getBoolean("confermaTutorAcc");
-        RegistroBean reg = new RegistroBean(id, nome, descrizione, consegna, confermaTutorAcc, confermaTutorAz);
-        regs.add(reg);
-      }
-      
-    } finally {
-      try {
-        if (ps != null)
-          ps.close();
-      } finally {
-        DriverManagerConnectionPool.releaseConnection(connection);
-      }
-    }
-    
-    return regs;
-  }
-  
-  public static List<RegistroBean> loadRegistri() throws SQLException {
-    List<RegistroBean> registri = new ArrayList<RegistroBean>();
-    Connection connection = null;
-    PreparedStatement ps = null;
-    ResultSet rs = null;
-    
-    try {
-      
-      connection = DriverManagerConnectionPool.getConnection();
-      ps = connection.prepareStatement(TSRegistroSQL.queryRegistri);
-      rs = ps.executeQuery();
-      
-      while (rs.next()) {
-        int id = rs.getInt("id");
-        String nome = rs.getString("nome");
-        String descrizione = rs.getString("descrizione");
+        Date primaIstituzione = rs.getDate("primaIstituzione");
+        Date ultimoAgg = rs.getDate("ultimoAgg");
         boolean consegna = rs.getBoolean("consegna");
         boolean confermaTutorAcc = rs.getBoolean("confermaTutorAcc");
         boolean confermaTutorAz = rs.getBoolean("confermaTutorAz");
-        RegistroBean registro = new RegistroBean(id, nome, descrizione, consegna, confermaTutorAcc, confermaTutorAz);
-        registri.add(registro);
+        boolean confermaUff = rs.getBoolean("confermaUff");
+        
+        registri.add(new RegistroBean(id, nome, descrizione, primaIstituzione, ultimoAgg, consegna, confermaTutorAcc, confermaTutorAz, confermaUff));
       }
       
     } finally {
@@ -678,5 +95,778 @@ public class RegistroModelDM {
     }
     
     return registri;
+  }
+
+  @Override
+  public void doSave(AbstractBean product) throws SQLException {
+    Connection connection = null;
+    PreparedStatement ps = null;
+    RegistroBean registroBean = null;
+    
+    try {
+      connection = DriverManagerConnectionPool.getConnection();
+      ps = connection.prepareStatement(RegistroSQL.DO_SAVE);
+      
+      registroBean = (RegistroBean) product;
+      
+      ps.setInt(1, registroBean.getID());
+      ps.setString(2, registroBean.getNome());
+      ps.setString(3, registroBean.getDescrizione());
+      ps.setDate(4, registroBean.getPrimaIstituzione());
+      ps.setDate(5, registroBean.getUltimoAgg());
+      ps.setBoolean(6, registroBean.getConsegna());
+      ps.setBoolean(7, registroBean.getConfermaTutorAcc());
+      ps.setBoolean(8, registroBean.getConfermaTutorAz());
+      ps.setBoolean(9, registroBean.getConfermaUff());
+      
+      if (!(ps.executeUpdate() > 0)) {
+        Logger.getGlobal().log(Level.INFO, "Oggetto RegistroBean non memorizzato");
+      }
+      
+      connection.commit();
+      
+    } finally {
+      try {
+        if (ps != null)
+          ps.close();
+      } finally {
+        DriverManagerConnectionPool.releaseConnection(connection);
+      }
+    }
+  }
+
+  @Override
+  public boolean doDelete(int code) throws SQLException {
+    Connection connection = null;
+    PreparedStatement ps = null;
+    boolean deleted = false;
+    
+    try {
+      connection = DriverManagerConnectionPool.getConnection();
+      ps = connection.prepareStatement(RegistroSQL.DO_DELETE);
+      
+      ps.setInt(1, code);
+      
+      if (ps.executeUpdate() > 0) {
+        deleted = true;
+      } else {
+        Logger.getGlobal().log(Level.INFO, "Oggetto RegistroBean non rimosso");
+      }
+      
+      connection.commit();
+      
+    } finally {
+      try {
+        if (ps != null)
+          ps.close();
+      } finally {
+        DriverManagerConnectionPool.releaseConnection(connection);
+      }
+    }
+    
+    return deleted;
+  }
+  
+  public boolean doUpdate(AbstractBean product) throws SQLException {
+    Connection connection = null;
+    PreparedStatement ps = null;
+    RegistroBean registroBean = (RegistroBean) product;
+    boolean updated = false;
+    
+    try {
+      connection = DriverManagerConnectionPool.getConnection();
+      ps = connection.prepareStatement(RegistroSQL.DO_UPDATE);
+      
+      ps.setString(1, registroBean.getNome());
+      ps.setString(2, registroBean.getDescrizione());
+      ps.setDate(3, registroBean.getPrimaIstituzione());
+      ps.setDate(4, registroBean.getUltimoAgg());
+      ps.setBoolean(5, registroBean.getConsegna());
+      ps.setBoolean(6, registroBean.getConfermaTutorAcc());
+      ps.setBoolean(7, registroBean.getConfermaTutorAz());
+      ps.setBoolean(8, registroBean.getConfermaUff());
+      ps.setInt(9, registroBean.getID());
+      
+      if (ps.executeUpdate() > 0) {
+        updated = true;
+      } else {
+        Logger.getGlobal().log(Level.INFO, "Oggetto RegistroBean non aggiornato");
+      }
+      
+      connection.commit();
+      
+    } finally {
+      try {
+        if (ps != null)
+          ps.close();
+      } finally {
+        DriverManagerConnectionPool.releaseConnection(connection);
+      }
+    }
+    
+    return updated;
+  }
+  
+  public Collection<AbstractBean> doRetrieveByNome(String text) throws SQLException {
+    Connection connection = null;
+    PreparedStatement ps = null;
+    ResultSet rs = null;
+    Collection<AbstractBean> registri = null;
+    
+    try {
+      connection = DriverManagerConnectionPool.getConnection();
+      ps = connection.prepareStatement(RegistroSQL.DO_RETRIEVE_BY_NOME);
+      
+      ps.setString(1, text);
+      
+      rs = ps.executeQuery();
+      
+      registri = new ArrayList<AbstractBean>();
+      
+      while (rs.next()) {
+        int id = rs.getInt("id");
+        String nome = rs.getString("nome");
+        String descrizione = rs.getString("descrizione");
+        Date primaIstituzione = rs.getDate("primaIstituzione");
+        Date ultimoAgg = rs.getDate("ultimoAgg");
+        boolean consegna = rs.getBoolean("consegna");
+        boolean confermaTutorAcc = rs.getBoolean("confermaTutorAcc");
+        boolean confermaTutorAz = rs.getBoolean("confermaTutorAz");
+        boolean confermaUff = rs.getBoolean("confermaUff");
+        
+        registri.add(new RegistroBean(id, nome, descrizione, primaIstituzione, ultimoAgg, consegna, confermaTutorAcc, confermaTutorAz, confermaUff));
+      }
+      
+    } finally {
+      try {
+        if (ps != null)
+          ps.close();
+      } finally {
+        DriverManagerConnectionPool.releaseConnection(connection);
+      }
+    }
+    
+    return registri;
+  }
+  
+  public Collection<AbstractBean> doRetrieveByDescrizione(String text) throws SQLException {
+    Connection connection = null;
+    PreparedStatement ps = null;
+    ResultSet rs = null;
+    Collection<AbstractBean> registri = null;
+    
+    try {
+      connection = DriverManagerConnectionPool.getConnection();
+      ps = connection.prepareStatement(RegistroSQL.DO_RETRIEVE_BY_DESCRIZIONE);
+      
+      ps.setString(1, text);
+      
+      rs = ps.executeQuery();
+      
+      registri = new ArrayList<AbstractBean>();
+      
+      while (rs.next()) {
+        int id = rs.getInt("id");
+        String nome = rs.getString("nome");
+        String descrizione = rs.getString("descrizione");
+        Date primaIstituzione = rs.getDate("primaIstituzione");
+        Date ultimoAgg = rs.getDate("ultimoAgg");
+        boolean consegna = rs.getBoolean("consegna");
+        boolean confermaTutorAcc = rs.getBoolean("confermaTutorAcc");
+        boolean confermaTutorAz = rs.getBoolean("confermaTutorAz");
+        boolean confermaUff = rs.getBoolean("confermaUff");
+        
+        registri.add(new RegistroBean(id, nome, descrizione, primaIstituzione, ultimoAgg, consegna, confermaTutorAcc, confermaTutorAz, confermaUff));
+      }
+      
+    } finally {
+      try {
+        if (ps != null)
+          ps.close();
+      } finally {
+        DriverManagerConnectionPool.releaseConnection(connection);
+      }
+    }
+    
+    return registri;
+  }
+  
+  public Collection<AbstractBean> doRetrieveByPrimaIstituzione(Date primaIstituzione) throws SQLException {
+    Connection connection = null;
+    PreparedStatement ps = null;
+    ResultSet rs = null;
+    Collection<AbstractBean> registri = null;
+    
+    try {
+      connection = DriverManagerConnectionPool.getConnection();
+      ps = connection.prepareStatement(RegistroSQL.DO_RETRIEVE_BY_PRIMA_ISTITUZIONE);
+      
+      ps.setDate(1, primaIstituzione);
+      
+      rs = ps.executeQuery();
+      
+      registri = new ArrayList<AbstractBean>();
+      
+      while (rs.next()) {
+        int id = rs.getInt("id");
+        String nome = rs.getString("nome");
+        String descrizione = rs.getString("descrizione");
+        Date ultimoAgg = rs.getDate("ultimoAgg");
+        boolean consegna = rs.getBoolean("consegna");
+        boolean confermaTutorAcc = rs.getBoolean("confermaTutorAcc");
+        boolean confermaTutorAz = rs.getBoolean("confermaTutorAz");
+        boolean confermaUff = rs.getBoolean("confermaUff");
+        
+        registri.add(new RegistroBean(id, nome, descrizione, primaIstituzione, ultimoAgg, consegna, confermaTutorAcc, confermaTutorAz, confermaUff));
+      }
+      
+    } finally {
+      try {
+        if (ps != null)
+          ps.close();
+      } finally {
+        DriverManagerConnectionPool.releaseConnection(connection);
+      }
+    }
+    
+    return registri;
+  }
+  
+  public Collection<AbstractBean> doRetrieveByUltimoAgg(Date ultimoAgg) throws SQLException {
+    Connection connection = null;
+    PreparedStatement ps = null;
+    ResultSet rs = null;
+    Collection<AbstractBean> registri = null;
+    
+    try {
+      connection = DriverManagerConnectionPool.getConnection();
+      ps = connection.prepareStatement(RegistroSQL.DO_RETRIEVE_BY_ULTIMO_AGG);
+      
+      ps.setDate(1, ultimoAgg);
+      
+      rs = ps.executeQuery();
+      
+      registri = new ArrayList<AbstractBean>();
+      
+      while (rs.next()) {
+        int id = rs.getInt("id");
+        String nome = rs.getString("nome");
+        String descrizione = rs.getString("descrizione");
+        Date primaIstituzione = rs.getDate("primaIstituzione");
+        boolean consegna = rs.getBoolean("consegna");
+        boolean confermaTutorAcc = rs.getBoolean("confermaTutorAcc");
+        boolean confermaTutorAz = rs.getBoolean("confermaTutorAz");
+        boolean confermaUff = rs.getBoolean("confermaUff");
+        
+        registri.add(new RegistroBean(id, nome, descrizione, primaIstituzione, ultimoAgg, consegna, confermaTutorAcc, confermaTutorAz, confermaUff));
+      }
+      
+    } finally {
+      try {
+        if (ps != null)
+          ps.close();
+      } finally {
+        DriverManagerConnectionPool.releaseConnection(connection);
+      }
+    }
+    
+    return registri;
+  }
+  
+  public Collection<AbstractBean> doRetrieveByConsegna(boolean consegna) throws SQLException {
+    Connection connection = null;
+    PreparedStatement ps = null;
+    ResultSet rs = null;
+    Collection<AbstractBean> registri = null;
+    
+    try {
+      connection = DriverManagerConnectionPool.getConnection();
+      ps = connection.prepareStatement(RegistroSQL.DO_RETRIEVE_BY_CONSEGNA);
+      
+      ps.setBoolean(1, consegna);
+      
+      rs = ps.executeQuery();
+      
+      registri = new ArrayList<AbstractBean>();
+      
+      while (rs.next()) {
+        int id = rs.getInt("id");
+        String nome = rs.getString("nome");
+        String descrizione = rs.getString("descrizione");
+        Date primaIstituzione = rs.getDate("primaIstituzione");
+        Date ultimoAgg = rs.getDate("ultimoAgg");
+        boolean confermaTutorAcc = rs.getBoolean("confermaTutorAcc");
+        boolean confermaTutorAz = rs.getBoolean("confermaTutorAz");
+        boolean confermaUff = rs.getBoolean("confermaUff");
+        
+        registri.add(new RegistroBean(id, nome, descrizione, primaIstituzione, ultimoAgg, consegna, confermaTutorAcc, confermaTutorAz, confermaUff));
+      }
+      
+    } finally {
+      try {
+        if (ps != null)
+          ps.close();
+      } finally {
+        DriverManagerConnectionPool.releaseConnection(connection);
+      }
+    }
+    
+    return registri;
+  }
+  
+  public Collection<AbstractBean> doRetrieveByConfermaTutorAcc(boolean confermaTutorAcc) throws SQLException {
+    Connection connection = null;
+    PreparedStatement ps = null;
+    ResultSet rs = null;
+    Collection<AbstractBean> registri = null;
+    
+    try {
+      connection = DriverManagerConnectionPool.getConnection();
+      ps = connection.prepareStatement(RegistroSQL.DO_RETRIEVE_BY_CONFERMA_TUTOR_ACC);
+      
+      ps.setBoolean(1, confermaTutorAcc);
+      
+      rs = ps.executeQuery();
+      
+      registri = new ArrayList<AbstractBean>();
+      
+      while (rs.next()) {
+        int id = rs.getInt("id");
+        String nome = rs.getString("nome");
+        String descrizione = rs.getString("descrizione");
+        Date primaIstituzione = rs.getDate("primaIstituzione");
+        Date ultimoAgg = rs.getDate("ultimoAgg");
+        boolean consegna = rs.getBoolean("consegna");
+        boolean confermaTutorAz = rs.getBoolean("confermaTutorAz");
+        boolean confermaUff = rs.getBoolean("confermaUff");
+        
+        registri.add(new RegistroBean(id, nome, descrizione, primaIstituzione, ultimoAgg, consegna, confermaTutorAcc, confermaTutorAz, confermaUff));
+      }
+      
+    } finally {
+      try {
+        if (ps != null)
+          ps.close();
+      } finally {
+        DriverManagerConnectionPool.releaseConnection(connection);
+      }
+    }
+    
+    return registri;
+  }
+  
+  public Collection<AbstractBean> doRetrieveByConfermaTutorAz(boolean confermaTutorAz) throws SQLException {
+    Connection connection = null;
+    PreparedStatement ps = null;
+    ResultSet rs = null;
+    Collection<AbstractBean> registri = null;
+    
+    try {
+      connection = DriverManagerConnectionPool.getConnection();
+      ps = connection.prepareStatement(RegistroSQL.DO_RETRIEVE_BY_CONFERMA_TUTOR_AZ);
+      
+      ps.setBoolean(1, confermaTutorAz);
+      
+      rs = ps.executeQuery();
+      
+      registri = new ArrayList<AbstractBean>();
+      
+      while (rs.next()) {
+        int id = rs.getInt("id");
+        String nome = rs.getString("nome");
+        String descrizione = rs.getString("descrizione");
+        Date primaIstituzione = rs.getDate("primaIstituzione");
+        Date ultimoAgg = rs.getDate("ultimoAgg");
+        boolean consegna = rs.getBoolean("consegna");
+        boolean confermaTutorAcc = rs.getBoolean("confermaTutorAcc");
+        boolean confermaUff = rs.getBoolean("confermaUff");
+        
+        registri.add(new RegistroBean(id, nome, descrizione, primaIstituzione, ultimoAgg, consegna, confermaTutorAcc, confermaTutorAz, confermaUff));
+      }
+      
+    } finally {
+      try {
+        if (ps != null)
+          ps.close();
+      } finally {
+        DriverManagerConnectionPool.releaseConnection(connection);
+      }
+    }
+    
+    return registri;
+  }
+  
+  public Collection<AbstractBean> doRetrieveByConfermaTutorUff(boolean confermaTutorUff) throws SQLException {
+    Connection connection = null;
+    PreparedStatement ps = null;
+    ResultSet rs = null;
+    Collection<AbstractBean> registri = null;
+    
+    try {
+      connection = DriverManagerConnectionPool.getConnection();
+      ps = connection.prepareStatement(RegistroSQL.DO_RETRIEVE_BY_CONFERMA_TUTOR_UFF);
+      
+      ps.setBoolean(1, confermaTutorUff);
+      
+      rs = ps.executeQuery();
+      
+      registri = new ArrayList<AbstractBean>();
+      
+      while (rs.next()) {
+        int id = rs.getInt("id");
+        String nome = rs.getString("nome");
+        String descrizione = rs.getString("descrizione");
+        Date primaIstituzione = rs.getDate("primaIstituzione");
+        Date ultimoAgg = rs.getDate("ultimoAgg");
+        boolean consegna = rs.getBoolean("consegna");
+        boolean confermaTutorAcc = rs.getBoolean("confermaTutorAcc");
+        boolean confermaTutorAz = rs.getBoolean("confermaTutorAz");
+        
+        registri.add(new RegistroBean(id, nome, descrizione, primaIstituzione, ultimoAgg, consegna, confermaTutorAcc, confermaTutorAz, confermaTutorUff));
+      }
+      
+    } finally {
+      try {
+        if (ps != null)
+          ps.close();
+      } finally {
+        DriverManagerConnectionPool.releaseConnection(connection);
+      }
+    }
+    
+    return registri;
+  }
+  
+  public AbstractBean doRetrieveByStudente(int code) throws SQLException {
+    Connection connection = null;
+    PreparedStatement ps = null;
+    ResultSet rs = null;
+    RegistroBean registroBean = null;
+    
+    try {
+      connection = DriverManagerConnectionPool.getConnection();
+      ps = connection.prepareStatement(RegistroSQL.DO_RETRIEVE_BY_STUDENTE);
+      
+      ps.setInt(1, code);
+      
+      rs = ps.executeQuery();
+      
+      if (rs.next()) {
+        String nome = rs.getString("nome");
+        String descrizione = rs.getString("descrizione");
+        Date primaIstituzione = rs.getDate("primaIstituzione");
+        Date ultimoAgg = rs.getDate("ultimoAgg");
+        boolean consegna = rs.getBoolean("consegna");
+        boolean confermaTutorAcc = rs.getBoolean("confermaTutorAcc");
+        boolean confermaTutorAz = rs.getBoolean("confermaTutorAz");
+        boolean confermaUff = rs.getBoolean("confermaUff");
+        
+        registroBean = new RegistroBean(code, nome, descrizione, primaIstituzione, ultimoAgg, consegna, confermaTutorAcc, confermaTutorAz, confermaUff);        
+      } else {
+        Logger.getGlobal().log(Level.INFO, "Nessun registro trovato per lo studente specificato tramite id");
+      }
+      
+    } finally {
+      try {
+        if (ps != null)
+          ps.close();
+      } finally {
+        DriverManagerConnectionPool.releaseConnection(connection);
+      }
+    }
+    
+    return registroBean;
+  }
+  
+  public Collection<AbstractBean> doRetrieveByTutorAz(int code) throws SQLException {
+    Connection connection = null;
+    PreparedStatement ps = null;
+    ResultSet rs = null;
+    Collection<AbstractBean> registri = null;
+    
+    try {
+      connection = DriverManagerConnectionPool.getConnection();
+      ps = connection.prepareStatement(RegistroSQL.DO_RETRIEVE_BY_TUTOR_AZ);
+      
+      ps.setInt(1, code);
+      
+      rs = ps.executeQuery();
+      
+      registri = new ArrayList<AbstractBean>();
+      
+      while (rs.next()) {
+        int id = rs.getInt("id");
+        String nome = rs.getString("nome");
+        String descrizione = rs.getString("descrizione");
+        Date primaIstituzione = rs.getDate("primaIstituzione");
+        Date ultimoAgg = rs.getDate("ultimoAgg");
+        boolean consegna = rs.getBoolean("consegna");
+        boolean confermaTutorAcc = rs.getBoolean("confermaTutorAcc");
+        boolean confermaTutorAz = rs.getBoolean("confermaTutorAz");
+        boolean confermaUff = rs.getBoolean("confermaUff");
+        
+        registri.add(new RegistroBean(id, nome, descrizione, primaIstituzione, ultimoAgg, consegna, confermaTutorAcc, confermaTutorAz, confermaUff));
+      }
+      
+    } finally {
+      try {
+        if (ps != null)
+          ps.close();
+      } finally {
+        DriverManagerConnectionPool.releaseConnection(connection);
+      }
+    }
+    
+    return registri;
+  }
+  
+  public Collection<AbstractBean> doRetrieveByTutorAcc(int code) throws SQLException {
+    Connection connection = null;
+    PreparedStatement ps = null;
+    ResultSet rs = null;
+    Collection<AbstractBean> registri = null;
+    
+    try {
+      connection = DriverManagerConnectionPool.getConnection();
+      ps = connection.prepareStatement(RegistroSQL.DO_RETRIEVE_BY_TUTOR_ACC);
+      
+      ps.setInt(1, code);
+      
+      rs = ps.executeQuery();
+      
+      registri = new ArrayList<AbstractBean>();
+      
+      while (rs.next()) {
+        int id = rs.getInt("id");
+        String nome = rs.getString("nome");
+        String descrizione = rs.getString("descrizione");
+        Date primaIstituzione = rs.getDate("primaIstituzione");
+        Date ultimoAgg = rs.getDate("ultimoAgg");
+        boolean consegna = rs.getBoolean("consegna");
+        boolean confermaTutorAcc = rs.getBoolean("confermaTutorAcc");
+        boolean confermaTutorAz = rs.getBoolean("confermaTutorAz");
+        boolean confermaUff = rs.getBoolean("confermaUff");
+        
+        registri.add(new RegistroBean(id, nome, descrizione, primaIstituzione, ultimoAgg, consegna, confermaTutorAcc, confermaTutorAz, confermaUff));
+      }
+      
+    } finally {
+      try {
+        if (ps != null)
+          ps.close();
+      } finally {
+        DriverManagerConnectionPool.releaseConnection(connection);
+      }
+    }
+    
+    return registri;
+  }
+  
+  public AbstractBean doRetrieveByProgettoFormativo(int code) throws SQLException {
+    Connection connection = null;
+    PreparedStatement ps = null;
+    ResultSet rs = null;
+    RegistroBean registroBean = null;
+    
+    try {
+      connection = DriverManagerConnectionPool.getConnection();
+      ps = connection.prepareStatement(RegistroSQL.DO_RETRIEVE_BY_PROGETTO_FORMATIVO);
+      
+      ps.setInt(1, code);
+      
+      rs = ps.executeQuery();
+      
+      if (rs.next()) {
+        int id = rs.getInt("id");
+        String nome = rs.getString("nome");
+        String descrizione = rs.getString("descrizione");
+        Date primaIstituzione = rs.getDate("primaIstituzione");
+        Date ultimoAgg = rs.getDate("ultimoAgg");
+        boolean consegna = rs.getBoolean("consegna");
+        boolean confermaTutorAcc = rs.getBoolean("confermaTutorAcc");
+        boolean confermaTutorAz = rs.getBoolean("confermaTutorAz");
+        boolean confermaUff = rs.getBoolean("confermaUff");
+        
+        registroBean = new RegistroBean(id, nome, descrizione, primaIstituzione, ultimoAgg, consegna, confermaTutorAcc, confermaTutorAz, confermaUff);
+      } else {
+        Logger.getGlobal().log(Level.INFO, "Oggetto RegistroBean non trovato per il progetto formativo specificato");
+      }
+      
+    } finally {
+      try {
+        if (ps != null)
+          ps.close();
+      } finally {
+        DriverManagerConnectionPool.releaseConnection(connection);
+      }
+    }
+    
+    return registroBean;
+  }
+  
+  public Collection<AbstractBean> doRetrieveByUfficio(int code) throws SQLException {
+    Connection connection = null;
+    PreparedStatement ps = null;
+    ResultSet rs = null;
+    Collection<AbstractBean> registri = null;
+    
+    try {
+      connection = DriverManagerConnectionPool.getConnection();
+      ps = connection.prepareStatement(RegistroSQL.DO_RETRIEVE_BY_UFFICIO);
+      
+      ps.setInt(1, code);
+      
+      rs = ps.executeQuery();
+      
+      registri = new ArrayList<AbstractBean>();
+      
+      while(rs.next()) {
+        int id = rs.getInt("id");
+        String nome = rs.getString("nome");
+        String descrizione = rs.getString("descrizione");
+        Date primaIstituzione = rs.getDate("primaIstituzione");
+        Date ultimoAgg = rs.getDate("ultimoAgg");
+        boolean consegna = rs.getBoolean("consegna");
+        boolean confermaTutorAcc = rs.getBoolean("confermaTutorAcc");
+        boolean confermaTutorAz = rs.getBoolean("confermaTutorAz");
+        boolean confermaUff = rs.getBoolean("confermaUff");
+        
+        registri.add(new RegistroBean(id, nome, descrizione, primaIstituzione, ultimoAgg, consegna, confermaTutorAcc, confermaTutorAz, confermaUff));
+      }
+      
+    } finally {
+      try {
+        if (ps != null)
+          ps.close();
+      } finally {
+        DriverManagerConnectionPool.releaseConnection(connection);
+      }
+    }
+    
+    return registri;
+  }
+    
+  public boolean isStudenteRegistro(String text, int code) throws SQLException {
+    Connection connection = null;
+    PreparedStatement ps = null;
+    ResultSet rs = null;
+    boolean isStudenteRegistro = false;
+    
+    try {
+      connection = DriverManagerConnectionPool.getConnection();
+      ps = connection.prepareStatement(RegistroSQL.IS_STUDENTE_REGISTRO);
+      
+      ps.setString(1, text);
+      ps.setInt(2, code);
+      
+      rs = ps.executeQuery();
+      
+      if (rs.next()) {
+        isStudenteRegistro = true;
+      }
+      
+    } finally {
+      try {
+        if (ps != null)
+          ps.close();
+      } finally {
+        DriverManagerConnectionPool.releaseConnection(connection);
+      }
+    }
+    
+    return isStudenteRegistro;
+  }
+  
+  public boolean isTutorAccRegistro(int idTutorAcc, int registro) throws SQLException {
+    Connection connection = null;
+    PreparedStatement ps = null;
+    ResultSet rs = null;
+    boolean isTutorAccRegistro = false;
+    
+    try {
+      connection = DriverManagerConnectionPool.getConnection();
+      ps = connection.prepareStatement(RegistroSQL.IS_TUTOR_ACC_REGISTRO);
+      
+      ps.setInt(1, idTutorAcc);
+      ps.setInt(2, registro);
+      
+      rs = ps.executeQuery();
+      
+      if (rs.next()) {
+        isTutorAccRegistro = true;
+      }
+      
+    } finally {
+      try {
+        if (ps != null)
+          ps.close();
+      } finally {
+        DriverManagerConnectionPool.releaseConnection(connection);
+      }
+    }
+    
+    return isTutorAccRegistro;
+  }
+  
+  public boolean isTutorAzRegistro(int idTutorAz, int registro) throws SQLException {
+    Connection connection = null;
+    PreparedStatement ps = null;
+    ResultSet rs = null;
+    boolean isTutorAzRegistro = false;
+    
+    try {
+      connection = DriverManagerConnectionPool.getConnection();
+      ps = connection.prepareStatement(RegistroSQL.IS_TUTOR_AZ_REGISTRO);
+      
+      ps.setInt(1, idTutorAz);
+      ps.setInt(2, registro);
+      
+      rs = ps.executeQuery();
+      
+      if (rs.next()) {
+        isTutorAzRegistro = true;
+      }
+      
+    } finally {
+      try {
+        if (ps != null)
+          ps.close();
+      } finally {
+        DriverManagerConnectionPool.releaseConnection(connection);
+      }
+    }
+    
+    return isTutorAzRegistro;
+  }
+  
+  public boolean isUfficioRegistro(int ufficioID, int registroID) throws SQLException {
+    Connection connection = null;
+    PreparedStatement ps = null;
+    ResultSet rs = null;
+    boolean isUfficioRegistro = false;
+    
+    try {
+      connection = DriverManagerConnectionPool.getConnection();
+      ps = connection.prepareStatement(RegistroSQL.IS_UFFICIO_REGISTRO);
+      
+      ps.setInt(1, ufficioID);
+      ps.setInt(2, registroID);
+      
+      rs = ps.executeQuery();
+      
+      if (rs.next()) {
+        isUfficioRegistro = true;
+      }
+      
+    } finally {
+      try {
+        if (ps != null)
+          ps.close();
+      } finally {
+        DriverManagerConnectionPool.releaseConnection(connection);
+      }
+    }
+    
+    return isUfficioRegistro;
   }
 }

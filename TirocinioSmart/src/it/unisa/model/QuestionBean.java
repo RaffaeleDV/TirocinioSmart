@@ -1,12 +1,14 @@
 package it.unisa.model;
 
 import java.io.Serializable;
+import java.util.logging.Logger;
+import java.util.logging.Level;
 
-public class QuestionBean extends AbstractBean implements Serializable {
+public class QuestionBean extends AbstractBean implements Serializable, Cloneable {
 
   private int id;
-  private int max_chooses;
-  private int max_answers;
+  private int maxChooses;
+  private int maxAnswers;
   private String question;
   private String description;
   
@@ -14,19 +16,24 @@ public class QuestionBean extends AbstractBean implements Serializable {
     
   }
   
-  public QuestionBean(int id, String question, String description, int max_chooses, int max_answers) {
+  public QuestionBean(
+      int id, 
+      int maxChooses, 
+      int maxAnswers, 
+      String question, 
+      String description) {
     this.id = id;
     this.question = question;
     this.description = description;
-    this.max_chooses = max_chooses;
-    this.max_answers = max_answers;
+    this.maxChooses = maxChooses;
+    this.maxAnswers = maxAnswers;
   }
 
-  public int getId() {
+  public int getID() {
     return id;
   }
 
-  public void setId(int id) {
+  public void setID(int id) {
     this.id = id;
   }
 
@@ -46,30 +53,66 @@ public class QuestionBean extends AbstractBean implements Serializable {
     this.description = description;
   }
 
-  public int getMax_chooses() {
-    return max_chooses;
+  public int getMaxChooses() {
+    return maxChooses;
   }
 
-  public void setMax_chooses(int max_chooses) {
-    this.max_chooses = max_chooses;
+  public void setMaxChooses(int maxChooses) {
+    this.maxChooses = maxChooses;
   }
 
-  public int getMax_answers() {
-    return max_answers;
+  public int getMaxAnswers() {
+    return maxAnswers;
   }
 
-  public void setMax_answers(int max_answers) {
-    this.max_answers = max_answers;
+  public void setMaxAnswers(int maxAnswers) {
+    this.maxAnswers = maxAnswers;
   }
 
+  @Override
   public String toString() {
     StringBuilder str = new StringBuilder();
-    str.append(getClass().getName() + "{");
+    str.append(getClass().getName() + "[");
     str.append("id=" + id + ", ");
+    str.append("maxChooses=" + maxChooses + ", ");
+    str.append("maxAnswers=" + maxAnswers + ", ");
     str.append("question=" + question + ", ");
-    str.append("description=" + description + ", ");
-    str.append("max_chooses=" + max_chooses + ", ");
-    str.append("max_answers=" + max_answers + "}");
+    str.append("description=" + description + "]");
     return str.toString();
+  }
+  
+  @Override
+  public boolean equals(Object o) {
+    
+    if (o == null)
+      return false;
+    
+    if (!getClass().getName().equals(o.getClass().getName()))
+      return false;
+    
+    QuestionBean questionBean = (QuestionBean) o;
+    
+    if (
+        id == questionBean.getID() &&
+        maxChooses == questionBean.getMaxChooses() &&
+        maxAnswers == questionBean.getMaxAnswers() &&
+        question.equals(questionBean.getQuestion()) &&
+        description.equals(questionBean.getDescription()))
+      return true;
+    
+    return false;
+  }
+  
+  @Override
+  public QuestionBean clone() throws CloneNotSupportedException {
+    QuestionBean questionBean = null;
+    
+    try {
+      questionBean = (QuestionBean) super.clone();
+    } catch (CloneNotSupportedException e) {
+      Logger.getGlobal().log(Level.SEVERE, e.getMessage());
+    }
+    
+    return questionBean;
   }
 }

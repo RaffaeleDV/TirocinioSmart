@@ -1,5 +1,5 @@
-<%@ page language="java" contentType="text/html; charset=ISO-8859-1"
-    pageEncoding="ISO-8859-1"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -10,10 +10,10 @@
 	<p align = "center">
 	<img id = "logo" src="images/logo.png">
 	</p>
-	<p id = "introduzione"> Il sistema che offre tutti i servizi che coinvolgono l'attivit‡ di tirocinio degli studenti
-	del dipartimento di Informatica dell'Universit‡ degli studi di Salerno. Per poter usufruire del nostro sistema occorre 
+	<p id = "introduzione"> Il sistema che offre tutti i servizi che coinvolgono l'attivit√† di tirocinio degli studenti
+	del dipartimento di Informatica dell'Universit√† degli studi di Salerno. Per poter usufruire del nostro sistema occorre 
 	compilare il form di registrazione, per registrarsi al nostro sistema
-	o di login se si Ë gia registrati. </p>
+	o di login se si √® gia registrati. </p>
 	
 	<form class="wrap">
 	  <input type="radio" class="radiob" id="radio_stud" name="tipo" value="studente"> Studente<br>

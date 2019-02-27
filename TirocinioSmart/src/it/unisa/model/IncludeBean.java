@@ -1,42 +1,77 @@
 package it.unisa.model;
 
 import java.io.Serializable;
+import java.util.logging.Logger;
+import java.util.logging.Level;
 
 public class IncludeBean extends AbstractBean implements Serializable {
-  private int questionario;
-  private int question;
+  
+  private int questionarioID;
+  private int questionID;
   
   public IncludeBean() {
     
   }
   
-  public IncludeBean(int questionario, int question) {
-    this.questionario = questionario;
-    this.question = question;
+  public IncludeBean(int questionarioID, int questionID) {
+    this.questionarioID = questionarioID;
+    this.questionID = questionID;
   }
 
-  public int getQuestionario() {
-    return questionario;
+  public int getQuestionarioID() {
+    return questionarioID;
   }
 
-  public void setQuestionario(int questionario) {
-    this.questionario = questionario;
+  public void setQuestionarioID(int questionarioID) {
+    this.questionarioID = questionarioID;
   }
 
-  public int getQuestion() {
-    return question;
+  public int getQuestionID() {
+    return questionID;
   }
 
-  public void setQuestion(int question) {
-    this.question = question;
+  public void setQuestionID(int questionID) {
+    this.questionID = questionID;
   }
   
   @Override
   public String toString() {
     StringBuilder str = new StringBuilder();
-    str.append(getClass().getName() + "{");
-    str.append("questionario=" + questionario + ", ");
-    str.append("question=" + question + "}");
+    str.append(getClass().getName() + "[");
+    str.append("questionarioID=" + questionarioID + ", ");
+    str.append("questionID=" + questionID + "]");
     return str.toString();
+  }
+  
+  @Override
+  public boolean equals(Object o) {
+    
+    if (o == null)
+      return false;
+    
+    if (!getClass().getName().equals(o.getClass().getName()))
+      return false;
+    
+    IncludeBean includeBean = (IncludeBean) o;
+    
+    if (
+        questionarioID == includeBean.getQuestionarioID() &&
+        questionID == includeBean.getQuestionID())
+      return true;
+    
+    return false;
+  }
+  
+  @Override
+  public IncludeBean clone() throws CloneNotSupportedException {
+    IncludeBean includeBean = null;
+    
+    try {
+      includeBean = (IncludeBean) super.clone();
+    } catch (CloneNotSupportedException e) {
+      Logger.getGlobal().log(Level.SEVERE, e.getMessage());
+    }
+    
+    return includeBean;
   }
 }

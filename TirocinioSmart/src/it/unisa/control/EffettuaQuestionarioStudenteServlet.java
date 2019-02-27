@@ -16,6 +16,7 @@ import javax.servlet.http.HttpSession;
 import it.unisa.model.QuestionarioBean;
 import it.unisa.model.QuestionarioModelDM;
 import it.unisa.model.StudenteBean;
+import it.unisa.model.AbstractBean;
 import it.unisa.model.AnswerBean;
 import it.unisa.model.ChooseBean;
 import it.unisa.model.ChooseModelDM;
@@ -23,12 +24,15 @@ import it.unisa.model.QuestionBean;
 import it.unisa.model.QuestionModelDM;
 
 /**
- * Servlet implementation class QuestionarioServlet
+ * Servlet implementation class EffettuaQuestionarioStudenteServlet
  */
 @WebServlet("/EffettuaQuestionarioStudenteServlet")
 public class EffettuaQuestionarioStudenteServlet extends HttpServlet {
-  private static final long serialVersionUID = 1L;
-       
+  
+  private static final QuestionModelDM questionModelDM = new QuestionModelDM();
+  private static final ChooseModelDM chooseModelDM = new ChooseModelDM();
+  private static final QuestionarioModelDM questionarioModelDM = new QuestionarioModelDM();
+  
   /**
    * @see HttpServlet#HttpServlet()
    */
@@ -39,6 +43,7 @@ public class EffettuaQuestionarioStudenteServlet extends HttpServlet {
   /**
    * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
    */
+  @Override
   protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 	doPost(request, response);
   }
@@ -46,75 +51,127 @@ public class EffettuaQuestionarioStudenteServlet extends HttpServlet {
   /**
    * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
    */
+  @Override
   protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-	HttpSession session = request.getSession(false);
-    String questionarioName = (String) request.getParameter("questionario").toString();
-    StudenteBean studente = null;
-    QuestionarioBean questionario = null;
-    HashMap<QuestionBean, List<ChooseBean>> questChoosesMap =
-        new HashMap<QuestionBean, List<ChooseBean>>();
+	HttpSession session = null;
+    String questionarioNome = null;
+    StudenteBean studenteBean = null;
+    QuestionarioBean questionarioBean = null;
+    HashMap<AbstractBean, List<AbstractBean>> questChoosesMap =
+        new HashMap<AbstractBean, List<AbstractBean>>();
     
+    getServletContext().setAttribute("ContextQuestionarioModelDM", questionarioModelDM);
+    getServletContext().setAttribute("ContextQuestionModelDM", questionModelDM);
+    getServletContext().setAttribute("ContextChooseModelDM", chooseModelDM);
+    
+    session = request.getSession(false);
     if (session != null) {
-      studente = (StudenteBean) session.getAttribute("SessionUser");
-      if (questionarioName != null) {
-        if (!questionarioName.equals("")) {
-          QuestionarioModelDM qmDM = new QuestionarioModelDM();
+      Object user = session.getAttribute("SessionUser");
+      
+      if (user != null) {
+        if (!user.getClass().getName().equals(StudenteBean.class.getName())) {
+          Logger.getGlobal().log(Level.INFO, "L' utente non risulta loggato come studente");
+          RequestDispatcher view = request.getRequestDispatcher("login-page.jsp");
+          view.forward(request, response);
+        } else {
+          studenteBean = (StudenteBean) user;
+        }
+      } else {
+        Logger.getGlobal().log(Level.INFO, "Nessun utente loggato");
+        RequestDispatcher view = request.getRequestDispatcher("login-page.jsp");
+        view.forward(request, response);
+      }
+      
+      questionarioNome = (String) request.getParameter("questionario").toString();
+      if (questionarioNome != null) {
+        if (!questionarioNome.equals("")) {
           try {
-            questionario = (QuestionarioBean) qmDM.loadQuestionarioByNome(questionarioName);
-            session.setAttribute("SessionQuestionario", questionario);
+            questionarioBean = (QuestionarioBean) questionarioModelDM.doRetrieveByNome(questionarioNome);
           } catch (SQLException e) {
             Logger.getGlobal().log(Level.SEVERE, e.getMessage());
-            RequestDispatcher disp = request.getRequestDispatcher("login-page.jsp");
+            //redirect to an [error] page
+            //set del valore per SessionErrorMessage500
+            RequestDispatcher disp = request.getRequestDispatcher("500-page.jsp");
             disp.forward(request, response);
           }
         } else {
-          Logger.getGlobal().log(Level.SEVERE, "Ricevuto un nome di questionario vuoto");
-          RequestDispatcher disp = request.getRequestDispatcher("login-page.jsp");
+          Logger.getGlobal().log(Level.SEVERE, "Ricevuto un nome di questionario come stringa vuota");
+          //redirect to an [error] page
+          //set del valore per SessionErrorMessage404
+          RequestDispatcher disp = request.getRequestDispatcher("404-page.jsp");
           disp.forward(request, response);
         }
       } else {
         Logger.getGlobal().log(Level.SEVERE, "Nessun nome di questionario specificato, per poter effettuare un questionario");
-        RequestDispatcher disp = request.getRequestDispatcher("login-page.jsp");
+        //redirect to an [error] page
+        //set del valore per SessionErrorMessage404
+        RequestDispatcher disp = request.getRequestDispatcher("404-page.jsp");
         disp.forward(request, response);
       }
       
-      List<QuestionBean> questions = null;
-      if (questionario != null) {
+      List<AbstractBean> questions = null;
+      if (questionarioBean != null) {
         try {
-          questions = (List<QuestionBean>) QuestionModelDM.retreiveQuestionsByQuestionario(questionario);
+          questions = (List<AbstractBean>) questionModelDM.doRetrieveByQuestionario(questionarioBean.getID());
         } catch(SQLException e) {
           Logger.getGlobal().log(Level.SEVERE, e.getMessage());
+          //redirect to an [error] page
+          //set del valore per SessionErrorMessage500
+          RequestDispatcher view = request.getRequestDispatcher("500-page.jsp");
+          view.forward(request, response);
         }
       } else {
         Logger.getGlobal().log(Level.SEVERE, "Nessun questionario trovato");
-        RequestDispatcher disp = request.getRequestDispatcher("login-page.jsp");
+        //redirect to an [error] page
+        //set del valore per SessionErrorMessage404
+        RequestDispatcher disp = request.getRequestDispatcher("404-page.jsp");
         disp.forward(request, response);
       }
       
-      for (QuestionBean question: questions) {
-        List<ChooseBean> questionChooses = null;
-        if (question != null) {
+      for (AbstractBean product: questions) {
+        QuestionBean questionBean = null;
+        if (product instanceof QuestionBean) {
+          questionBean = (QuestionBean) product;
+        } else {
+          //redirect to an [error] page
+          //set del valore per SessionErrorMessage500
+          RequestDispatcher view = request.getRequestDispatcher("500-page.jsp");
+          view.forward(request, response);
+        }
+        
+        List<AbstractBean> questionChooses = null;
+        if (questionBean != null) {
           try {
-            ChooseModelDM cmDM = new ChooseModelDM();
-            questionChooses = (List<ChooseBean>) cmDM.retreiveQuestionChooses(question);
+            questionChooses = (List<AbstractBean>) chooseModelDM.doRetrieveByQuestion(questionBean.getID());
             if (questionChooses != null) {
-              questChoosesMap.put(question, questionChooses);
+              questChoosesMap.put(questionBean, questionChooses);
             }
           } catch(SQLException e) {
             Logger.getGlobal().log(Level.SEVERE, e.getMessage());
-            RequestDispatcher disp = request.getRequestDispatcher("login-page.jsp");
+            //redirect to an [error] page
+            //set del valore per SessionErrorMessage500
+            RequestDispatcher disp = request.getRequestDispatcher("500-page.jsp");
             disp.forward(request, response);
           }
+        } else {
+          //redirect to an [error] page
+          //set del valore per SessionErrorMessage404
+          RequestDispatcher view = request.getRequestDispatcher("404-page.jsp");
+          view.forward(request, response);
         }
       }
       
       session.setAttribute("SessionQuestionChoosesMap", questChoosesMap);
       
     } else {
-      //redirect to an [login] page
+      Logger.getGlobal().log(Level.INFO, "Nessuna sessione nello svolgimento di un questionario da parte di uno studente");
+      RequestDispatcher view = request.getRequestDispatcher("login-page.jsp");
+      view.forward(request, response);
     }
     
-    RequestDispatcher view = request.getRequestDispatcher("/questionario-page.jsp");
-    view.forward(request, response);
+    //RequestDispatcher view = request.getRequestDispatcher("questionario-page.jsp");
+    //view.forward(request, response);
+    Logger.getGlobal().log(Level.INFO, questChoosesMap.toString());
+    response.sendRedirect(request.getContextPath() + "/questionario-page.jsp");
   }
 }

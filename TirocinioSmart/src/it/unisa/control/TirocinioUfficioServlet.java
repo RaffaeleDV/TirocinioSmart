@@ -14,14 +14,38 @@ import it.unisa.model.StudenteBean;
 import it.unisa.model.RegistroBean;
 import it.unisa.model.ProgettoFormativoBean;
 import it.unisa.model.ProgettoFormativoModelDM;
+import it.unisa.model.StudenteModelDM;
+import it.unisa.model.RegistroModelDM;
 
+/**
+ * Servlet implementation class TirocinioUfficioServlet
+ */
 @WebServlet("/TirocinioUfficioServlet")
 public class TirocinioUfficioServlet extends HttpServlet {
 
+  private static final ProgettoFormativoModelDM progettoFormativoModelDM = new ProgettoFormativoModelDM();
+  private static final StudenteModelDM studenteModelDM = new StudenteModelDM();
+  private static final RegistroModelDM registroModelDM = new RegistroModelDM();
+  
+  /**
+   * @see HttpServlet#HttpServlet()
+   */
+  public TirocinioUfficioServlet() {
+    super();
+  }
+  
+  /**
+   * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
+   */
+  @Override
   protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
     doPost(request, response);
   }
   
+  /**
+   * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
+   */
+  @Override
   protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
     HttpSession session = request.getSession(false);
     UfficioBean ufficioBean = null;
@@ -42,33 +66,20 @@ public class TirocinioUfficioServlet extends HttpServlet {
     
     if (session != null) {
       ufficioBean = (UfficioBean)session.getAttribute("SessionUfficio");
-      login = (Boolean)session.getAttribute("Loggato");
-      
-      if (login != null) {
-        if (login != new Boolean(true)) {
-          RequestDispatcher view = request.getRequestDispatcher("login-page.jsp");
-          view.forward(request, response);
-          return;
-        }
-      } else {
-        RequestDispatcher view = request.getRequestDispatcher("login-page.jsp");
-        view.forward(request, response);
-        return;
-      }
       
       if (ufficioBean != null) {
-        progettoFormativoBean = (ProgettoFormativoBean)session.getAttribute("SessionTirocinio");
+        progettoFormativoBean = (ProgettoFormativoBean) session.getAttribute("SessionTirocinio");
         if (progettoFormativoBean == null) {
           try {
-            progettoFormativoBean = ProgettoFormativoModelDM.loadTirocinio(idTirocinio);
+            progettoFormativoBean = (ProgettoFormativoBean) progettoFormativoModelDM.doRetrieveByKey(idTirocinio);
             session.setAttribute("SessionTirocinio", progettoFormativoBean);
           } catch(SQLException e) {
             //redirect to an [error] page
           }
         } else {
-          if (progettoFormativoBean.getId() != idTirocinio) {
+          if (progettoFormativoBean.getID() != idTirocinio) {
             try {
-              progettoFormativoBean = ProgettoFormativoModelDM.loadTirocinio(idTirocinio);
+              progettoFormativoBean = (ProgettoFormativoBean) progettoFormativoModelDM.doRetrieveByKey(idTirocinio);
               session.setAttribute("SessionTirocinio", progettoFormativoBean);
             } catch(SQLException e) {
               //redirect to an [error] page
@@ -78,8 +89,8 @@ public class TirocinioUfficioServlet extends HttpServlet {
         
         if (progettoFormativoBean != null) {
           try {
-            studenteBean = ProgettoFormativoModelDM.loadStudente(progettoFormativoBean);
-            registroBean = ProgettoFormativoModelDM.loadRegistro(progettoFormativoBean);
+            studenteBean = (StudenteBean) studenteModelDM.doRetrieveByProgettoFormativo(progettoFormativoBean.getID());
+            registroBean = (RegistroBean) registroModelDM.doRetrieveByProgettoFormativo(progettoFormativoBean.getID());
           } catch (SQLException e) {
             //redirect to an [error] page
             e.printStackTrace();
@@ -97,7 +108,6 @@ public class TirocinioUfficioServlet extends HttpServlet {
           //redirect to an [error] page
         }
       } else {
-        session.setAttribute("Loggato", new Boolean(false));
         RequestDispatcher view = request.getRequestDispatcher("login-page.jsp");
         view.forward(request, response);
         return;

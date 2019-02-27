@@ -2,64 +2,105 @@ package it.unisa.model;
 
 import java.io.Serializable;
 import java.sql.Date;
+import java.util.logging.Logger;
+import java.util.logging.Level;
 
-public class AnswerBean extends AbstractBean implements Serializable {
-  private int quest;
-  private int utente;
-  private int choose;
-  private Date a_date;
+public class AnswerBean extends AbstractBean implements Serializable, Cloneable {
+  
+  private int questionID;
+  private int studenteID;
+  private int chooseID;
+  private Date answerDate;
   
   public AnswerBean() {
     
   }
   
-  public AnswerBean(int quest, int utente, int choose, Date a_date) {
-    this.quest = quest;
-    this.utente= utente;
-    this.choose = choose;
-    this.a_date = a_date;
+  public AnswerBean(
+      int questionID,
+      int studenteID, 
+      int chooseID, 
+      Date answerDate) {
+    this.questionID = questionID;
+    this.studenteID = studenteID;
+    this.chooseID = chooseID;
+    this.answerDate = answerDate;
   }
 
-  public int getQuest() {
-    return quest;
+  public int getQuestionID() {
+    return questionID;
   }
 
-  public void setQuest(int quest) {
-    this.quest = quest;
+  public void setQuestionID(int questionID) {
+    this.questionID = questionID;
   }
 
-  public int getUtente() {
-    return utente;
+  public int getStudenteID() {
+    return studenteID;
   }
 
-  public void setUtente(int utente) {
-    this.utente = utente;
+  public void setStudenteID(int studenteID) {
+    this.studenteID = studenteID;
   }
 
-  public int getChoose() {
-    return choose;
+  public int getChooseID() {
+    return chooseID;
   }
 
-  public void setChoose(int choose) {
-    this.choose = choose;
+  public void setChooseID(int chooseID) {
+    this.chooseID = chooseID;
   }
 
-  public Date getA_date() {
-    return a_date;
+  public Date getAnswerDate() {
+    return answerDate;
   }
 
-  public void setA_date(Date a_date) {
-    this.a_date = a_date;
+  public void setAnswerDate(Date answerDate) {
+    this.answerDate = answerDate;
   }
 
   @Override
   public String toString() {
     StringBuilder str = new StringBuilder();
-    str.append(getClass().getName() + "{");
-    str.append("quest=" + quest + ", ");
-    str.append("utente=" + utente + ", ");
-    str.append("choose=" + choose + ", ");
-    str.append("a_date=" + a_date.toString() + "}");
+    str.append(getClass().getName() + "[");
+    str.append("questionID=" + questionID + ", ");
+    str.append("studenteID=" + studenteID + ", ");
+    str.append("chooseID=" + chooseID + ", ");
+    str.append("answerDate=" + answerDate.toString() + "]");
     return str.toString();
   }
+  
+   @Override
+   public boolean equals(Object o) {
+     
+     if (o == null)
+       return false;
+     
+     if (!getClass().getName().equals(o.getClass().getName()))
+       return false;
+     
+     AnswerBean answerBean = (AnswerBean) o;
+     
+     if (
+         questionID == answerBean.getQuestionID() &&
+         studenteID == answerBean.getStudenteID() &&
+         chooseID == answerBean.getChooseID() &&
+         answerDate.equals(answerBean.getAnswerDate()))
+       return true;
+     
+     return false;
+   }
+   
+   @Override
+   public AnswerBean clone() throws CloneNotSupportedException {
+     AnswerBean answerBean = null;
+     
+     try {
+       answerBean = (AnswerBean) super.clone();
+     } catch (CloneNotSupportedException e) {
+       Logger.getGlobal().log(Level.SEVERE, e.getMessage());
+     }
+     
+     return answerBean;
+   }
 }

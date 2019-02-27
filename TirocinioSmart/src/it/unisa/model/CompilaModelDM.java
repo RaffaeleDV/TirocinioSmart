@@ -22,8 +22,37 @@ public class CompilaModelDM implements BeansModel {
 
   @Override
   public Collection<AbstractBean> doRetrieveAll(String order) throws SQLException {
-    // TODO Auto-generated method stub
-    return null;
+    Connection connection = null;
+    PreparedStatement ps = null;
+    ResultSet rs = null;
+    Collection<AbstractBean> compilato = null;
+    
+    try {
+      connection = DriverManagerConnectionPool.getConnection();
+      ps = connection.prepareStatement(CompilaSQL.DO_RETRIEVE_ALL);
+      
+      rs = ps.executeQuery();
+      
+      compilato = new ArrayList<AbstractBean>();
+      
+      while (rs.next()) {
+        int studenteID = rs.getInt("studenteID");
+        int questionarioID = rs.getInt("questionarioID");
+        Date dataCompilazione = rs.getDate("dataCompilazione");
+        
+        compilato.add(new CompilaBean(studenteID, questionarioID, dataCompilazione));
+      }
+      
+    } finally {
+      try {
+        if (ps != null)
+          ps.close();
+      } finally {
+        DriverManagerConnectionPool.getConnection();
+      }
+    }
+    
+    return compilato;
   }
 
   @Override
@@ -33,24 +62,24 @@ public class CompilaModelDM implements BeansModel {
   
   @Override
   public void doSave(AbstractBean product) throws SQLException {
+    Connection connection = null;
+    PreparedStatement ps = null;
     CompilaBean compila = (CompilaBean) product;
-    Connection connection = null;
-    PreparedStatement ps = null;
     
     try {
       
       connection = DriverManagerConnectionPool.getConnection();
-      ps = connection.prepareStatement(CompilaSQL.doSave);
-      ps.setString(1, compila.getUtente());
-      ps.setInt(2, compila.getQuestionario());
-      ps.setDate(3, compila.getData_inizio());
-      ps.setDate(4, compila.getData_fine());
+      ps = connection.prepareStatement(CompilaSQL.DO_SAVE);
       
-      int rowCount = ps.executeUpdate();
+      ps.setInt(1, compila.getStudenteID());
+      ps.setInt(2, compila.getQuestionarioID());
+      ps.setDate(3, compila.getDataCompilazione());
       
-      if (!(rowCount >= 1)) {
-        Logger.getGlobal().log(Level.SEVERE, "CompilaBean has not been saved");
+      if (!(ps.executeUpdate() > 0)) {
+        Logger.getGlobal().log(Level.INFO, "L' oggetto CompilaBean non è stato memorizzato");
       }
+      
+      connection.commit();
       
     } finally {
       try {
@@ -62,26 +91,28 @@ public class CompilaModelDM implements BeansModel {
     }
   }
   
-  public Collection<CompilaBean> retreiveByUtente(CompilaBean compila) throws SQLException {
+  public Collection<AbstractBean> doRetrieveByStudente(int code) throws SQLException {
     Connection connection = null;
     PreparedStatement ps = null;
     ResultSet rs = null;
-    Collection<CompilaBean> comps = new ArrayList<CompilaBean>();
+    Collection<AbstractBean> compilato = null;
     
     try {
-      
       connection = DriverManagerConnectionPool.getConnection();
-      ps = connection.prepareStatement(CompilaSQL.retreiveByUtente);
-      ps.setString(1, compila.getUtente());
+      ps = connection.prepareStatement(CompilaSQL.DO_RETRIEVE_BY_STUDENTE);
+      
+      ps.setInt(1, code);
+      
       rs = ps.executeQuery();
       
+      compilato = new ArrayList<AbstractBean>();
+      
       while (rs.next()) {
-        String utente = rs.getString("studente");
-        int questionario = rs.getInt("questionario");
-        Date data_inizio = rs.getDate("data_inizio");
-        Date data_fine = rs.getDate("data_fine");
-        CompilaBean c = new CompilaBean(utente, questionario, data_inizio, data_fine);
-        comps.add(c);
+        int studente = rs.getInt("studenteID");
+        int questionario = rs.getInt("questionarioID");
+        Date dataCompilazione = rs.getDate("dataCompilazione");
+        
+        compilato.add(new CompilaBean(studente, questionario, dataCompilazione));
       }
       
     } finally {
@@ -93,29 +124,32 @@ public class CompilaModelDM implements BeansModel {
       }
     }
     
-    return comps;
+    return compilato;
   }
   
-  public Collection<CompilaBean> retreiveByQuestionario(CompilaBean compila) throws SQLException {
+  public Collection<AbstractBean> doRetrieveByQuestionario(int code) throws SQLException {
     Connection connection = null;
     PreparedStatement ps = null;
     ResultSet rs = null;
-    Collection<CompilaBean> comps = new ArrayList<CompilaBean>();
+    Collection<AbstractBean> compilato = null;
     
     try {
       
       connection = DriverManagerConnectionPool.getConnection();
-      ps = connection.prepareStatement(CompilaSQL.retreiveByQuestionario);
-      ps.setInt(1, compila.getQuestionario());
+      ps = connection.prepareStatement(CompilaSQL.DO_RETRIEVE_BY_QUESTIONARIO);
+      
+      ps.setInt(1, code);
+      
       rs = ps.executeQuery();
       
+      compilato = new ArrayList<AbstractBean>();
+      
       while (rs.next()) {
-        String studente = rs.getString("studente");
-        int questionario = rs.getInt("questionario");
-        Date data_inizio = rs.getDate("data_inizio");
-        Date data_fine = rs.getDate("data_fine");
-        CompilaBean c = new CompilaBean(studente, questionario, data_inizio, data_fine);
-        comps.add(c);
+        int studenteID = rs.getInt("studenteID");
+        int questionarioID = rs.getInt("questionarioID");
+        Date dataCompilazione = rs.getDate("dataCompilazione");
+        
+        compilato.add(new CompilaBean(studenteID, questionarioID, dataCompilazione));
       }
       
     } finally {
@@ -127,6 +161,43 @@ public class CompilaModelDM implements BeansModel {
       }
     }
     
-    return comps;
+    return compilato;
+  }
+  
+  public Collection<AbstractBean> doRetrieveByDataCompilazioneBetween(Date startDate, Date endDate) throws SQLException {
+    Connection connection = null;
+    PreparedStatement ps = null;
+    ResultSet rs = null;
+    Collection<AbstractBean> compilato = null;
+    
+    try {
+      connection = DriverManagerConnectionPool.getConnection();
+      ps = connection.prepareStatement(CompilaSQL.DO_RETRIEVE_BY_DATA_COMPILAZIONE_BETWEEN);
+      
+      ps.setDate(1, startDate);
+      ps.setDate(2, endDate);
+      
+      rs = ps.executeQuery();
+      
+      compilato = new ArrayList<AbstractBean>();
+      
+      while (rs.next()) {
+        int studenteID = rs.getInt("studenteID");
+        int questionarioID = rs.getInt("questionarioID");
+        Date dataCompilazione = rs.getDate("dataCompilazione");
+        
+        compilato.add(new CompilaBean(studenteID, questionarioID, dataCompilazione));
+      }
+      
+    } finally {
+      try {
+        if (ps != null)
+          ps.close();
+      } finally {
+        DriverManagerConnectionPool.releaseConnection(connection);
+      }
+    }
+    
+    return compilato;
   }
 }

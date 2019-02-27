@@ -84,9 +84,21 @@ nav > ul > li {
 	padding-left: 5px;
 }
 
+b {
+	color: black;
+	font-size: 16px;
+}
+
 div > nav > ul > li > a {
 	text-decoration: none;
 	color: #f9f5e5;
+}
+
+#questionari-wrapper {
+	margin: -8px;
+	border-radius: 0px;
+	margin-top: 8px;
+	padding: 15px;
 }
 
 #input {
@@ -132,15 +144,62 @@ div > nav > ul > li > a {
 	width:100%;
 }
 
+#user-icon-wrapper {
+	padding: 5px;
+}
+
+#user-icon {
+	width: 60px;
+	height: 50px;
+}
+
+#user-log-wrapper {
+	background-color: #FFFFFF;
+	padding: 7px;
+	display: -webkit-box;
+	margin: -8px;
+	-webkit-box-align: end;
+	-webkit-box-pack: justify;
+}
+
+#user-log-info-wrapper {
+	margin-left: 60px;
+}
+
+#user-name {
+	color: black;
+	display: inline;
+	font-size: 14px;
+	font-weight: 100;
+}
+
+#user-log-command-wrapper {
+	padding-right: 35px;
+}
+
+#user-log-button {
+	color: white;
+	border-radius: 3px;
+	border-bottom: 2px solid #4e9a06;
+	background-color: #73d216;
+	font-weight: 450;
+	font-size: 16px;
+	min-width: 90px;
+}
+
+#user-log-button:hover {
+	background-color: #80e31e;
+}
+
 #header-wrapper {
 	color: #fefbe9;
 	background-size: 100%;
 	background-color: #09005a;
-	margin: -10px;
-	margin-bottom: 5px;
-	padding: 10px;
+	margin: -8px;
+	margin-bottom: 0px;
+	padding: 0px;
 	display: -webkit-box;
-	-webkit-box-align: start;
+	-webkit-box-align: center;
 	-webkit-box-pack: justify;
 }
 
@@ -169,20 +228,22 @@ div > nav > ul > li > a {
 	color: #ffffff;
 }
 
-#info-wrapper {
-	
+#user-info-wrapper {
+	border-radius: 3px;
+	padding: 15px;
 }
 
-#user-name {
-	display: inline;
-}
+
 
 #quest-heading {
-	font-size: 24px;
+	font-size: 28px;
+	font-weight: 250;
 	color: black;
+	padding: 30px;
 }
 
 #footer-wrapper {
+	margin: -8px;
 	display: block;
 	-webkit-box-align: center;
 	background-color: #888a85;
@@ -220,8 +281,8 @@ div > nav > ul > li > a {
 	color: #000000;
 	text-color: #000000;
 	border: 1px thick black;
-	padding: 20px;
-	margin: 10px;
+	padding: 30px;
+	margin: 30px;
 	border-style: solid;
 	border-width: 2px;
 	border-radius: 15px;
@@ -234,8 +295,8 @@ div > nav > ul > li > a {
 	color: #000000;
 	text-color: #000000;
 	border: 1px thick black;
-	padding: 5px;
-	margin: 5px;
+	padding: 30px;
+	margin: 30px;
 	border-style: solid;
 	border-width: 2px;
 	border-radius: 15px;
@@ -243,12 +304,65 @@ div > nav > ul > li > a {
 }
 
 #questionari-wrapper {
+	
 }
 
 #quest-info {
 	font-size: 14px;
 	color: #000000;
 	margin: -10px;
+}
+
+#registro-heading {
+	padding: 15px;
+}
+
+#registro-heading-icon {
+	padding: 70px;
+	display: inline;
+	width: 70px;
+	height: 50px;
+}
+
+#progetto-formativo-heading {
+	padding: 15px;
+}
+
+#progetto-formativo-heading-icon {
+	padding: 70px;
+	display: inline;
+	width: 130px;
+	height: 130px;
+}
+
+#id-progetti-wrapper {
+	margin: 25px;
+	padding: 35px;
+}
+
+#id-progetto-wrapper {
+	margin: 30px;
+	padding-bottom: 5px;
+	margin-bottom: 10px;
+	text-size: 12px;
+	border-style: solid;
+	border-width: 1px;
+	border-radius: 3px;
+	border-color: #204a87;
+	display: -webkit-box;
+	-webkit-box-align: center;
+	-webkit-box-pack: center;
+}
+
+#progetto-icon {
+	width: 80px;
+	height: 80px;
+}
+
+#id-progetto-info {
+	color: black;
+	margin: 15px;
+	font-size: 14px;
 }
 
 #reg-tirocinio {
@@ -259,11 +373,18 @@ div > nav > ul > li > a {
 }
 
 #reg-info-wrapper {
-	padding: 25px;
+	width: 80%;
+	margin: 25px;
+	padding: 15px;
+	border: 3px solid black;
+	border-radius: 5px;
+	display: -webkit-box;
+	-webkit-box-align: start;
+	-webkit-box-pack: justify;
 }
 
 #reg-info {
-	padding: 0px;
+	padding: 5px;
 	margin: 0px;
 	font-size: 16px;
 	font-weight: 100;
@@ -284,6 +405,26 @@ div > nav > ul > li > a {
 	border-width: 1px;
 	border-radius: 3px;
 	border-color: #204a87;
+	display: -webkit-box;
+	-webkit-box-align: center;
+	-webkit-box-pack: center;
+}
+
+#ts-input-reg-wrapper {
+    padding: 75px;
+    margin: 10px;
+}
+
+#navbar-list {
+	display: -webkit-box;
+	-webkit-box-align: start;
+	-webkit-box-pack: justify;
+}
+
+#registro-icon {
+	width: 60px;
+	height: 60px;
+	padding-right: 30px;
 }
 
 #nome-registro-info {
@@ -310,12 +451,18 @@ div > nav > ul > li > a {
 	border-width: 1px;
 }
 
-#button-questionario {
-	font-weight: 900;
-	font-size: 18px;
-	color: #ffffff;
-	background-color: #65a29b;
+#scelta-progetto-wrapper {
+	margin-left: 30%;
+	margin-right: 10%;
+	padding: 45px;
+}
+
+#search-input {
 	border-radius: 0px;
+	border-style: solid;
+	border-color: #80cbc2;
+	border-width: 1px;
+	padding: 11px;
 }
 
 #scelta-registro-wrapper {
@@ -324,19 +471,150 @@ div > nav > ul > li > a {
 	padding: 45px;
 }
 
-#id-reg-input {
-	border-radius: 0px;
-	border-style: solid;
-	border-color: #80cbc2;
-	border-width: 1px;
+#button {
+	padding: 10px;
+	margin: 10px;
+	background-color: #65a29b;
+	color: white;
+	font-size: 16px;
+	font-weight: 750;
+	border-radius: 10px;
+	border-bottom: 4px solid #607875;
 }
 
-#button-registro {
-	font-weight: 900;
-	font-size: 18px;
-	color: #ffffff;
-	background-color: #65a29b;
-	border-radius: 0px;
+#button:hover {
+	background-color: #60baaf;
+}
+
+#registro-tirocinio {
+	padding: 30px;
+}
+
+#reg-attivita-wrapper {
+	background-color: #ffffff;
+	padding: 75px;
+	margin: 15px;
+}
+
+#reg-attivita {
+		
+}
+
+#reg-attivita-row {
+	padding: 15px;
+}
+
+#reg-attivita-head {
+	padding: 25px;
+}
+
+#reg-attivita-data {
+	padding: 25px;
+}
+
+#reg-attivita-row-counter {
+	padding: 15px;
+	padding-right: 55px;
+}
+
+#consegna-icon {
+	width: 100px;
+	height: 100px;
+}
+
+#footer-bar {
+	padding: 140px;
+}
+
+#footerbar-link {
+	color: white;
+	font-weight: 800;
+	padding: 10px;
+	text-decoration: none;
+}
+
+#footerbar-link:hover {
+    text-decoration: underline;
+    color: #e9b96e;
+    padding: 20px;
+}
+
+#true-false-icon {
+	display: block;
+	width: 60px;
+	height: 60px;
+	margin-left: 50%;
+	margin-right: 50%;
+}
+
+#true-false-icon-approvazione {
+	display: block;
+	width: 60px;
+	height: 60px;
+	margin-left: 50%;
+	margin-right: 50%;
+}
+
+#progetto-formativo {
+	padding: 80px;
+}
+
+#progetto-formativo-info {
+	color: black;
+	margin: 15px;
+	font-size: 14px;
+}
+
+#progetto-formativo-wrapper {
+	width: 80%;
+	margin: 25px;
+	padding: 15px;
+	border: 3px solid black;
+	border-radius: 5px;
+	display: -webkit-box;
+	-webkit-box-align: center;
+	-webkit-box-pack: justify;
+}
+
+#prog-form-info {
+	padding: 5px;
+	margin: 0px;
+	font-size: 16px;
+	font-weight: 100;
+	color: black;
+}
+
+#approvazione-info {
+	padding: 5px;
+	margin: 0px;
+	font-size: 16px;
+	font-weight: 850;
+	color: black;
+}
+
+#prog-form-button-wrapper {
+	display: inline;
+	padding: 35px;
+	margin-right: 70%;
+	margin-left: 30%;
+}
+
+#modifica-registro-wrapper {
+	border: 1px solid #555753;
+	padding: 75px;
+	margin: 15px;
+}
+
+#modifica-registro-info {
+	font-size: 14px;
+	color: black;
+}
+
+#login-icon {
+	width: 45px;
+	height: 45px;
+	padding: 15px;
+	margin-right: 25px;
 }
 
 .wrap {

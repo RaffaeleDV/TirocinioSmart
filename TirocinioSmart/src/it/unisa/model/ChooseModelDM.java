@@ -5,6 +5,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Collection;
+import java.util.logging.Logger;
+import java.util.logging.Level;
 import it.unisa.database.DriverManagerConnectionPool;
 import it.unisa.sql.ChooseSQL;
 import java.util.ArrayList;
@@ -13,23 +15,27 @@ public class ChooseModelDM implements BeansModel {
 
   @Override
   public AbstractBean doRetrieveByKey(int code) throws SQLException {
-    String description = null;
-    String tipo = null;
-    ChooseBean choose = new ChooseBean();
     Connection connection = null;
     PreparedStatement ps = null;
+    ResultSet rs = null;
+    ChooseBean chooseBean = null;
     
     try {
-      
       connection = (Connection) DriverManagerConnectionPool.getConnection();
-      ps = connection.prepareStatement(ChooseSQL.doRetrieveByKey);
+      ps = connection.prepareStatement(ChooseSQL.DO_RETRIEVE_BY_KEY);
+      
       ps.setInt(1, code);
-      ResultSet rs = ps.executeQuery();
+      
+      rs = ps.executeQuery();
       
       if (rs.next()) {
-        choose.setId(code);
-        choose.setDescription(rs.getString("description"));
-        choose.setTipo(rs.getString("tipo"));
+        int id = rs.getInt("id");
+        String description = rs.getString("description");
+        String tipo = rs.getString("tipo");
+        
+        chooseBean = new ChooseBean(id, description, tipo);
+      } else {
+        Logger.getGlobal().log(Level.INFO, "Oggetto ChooseBean non trovato con l' id specificato");
       }
       
     } finally {
@@ -41,31 +47,31 @@ public class ChooseModelDM implements BeansModel {
       }
     }
     
-    return choose;
+    return chooseBean;
   }
 
   @Override
   public Collection<AbstractBean> doRetrieveAll(String order) throws SQLException {
-    Collection<AbstractBean> chooses = new ArrayList<AbstractBean>();
     Connection connection = null;
     PreparedStatement ps = null;
+    ResultSet rs = null;
+    Collection<AbstractBean> chooses = null;
     
     try {
       
       connection = DriverManagerConnectionPool.getConnection();
-      ps = connection.prepareStatement(ChooseSQL.doRetrieveAll);
+      ps = connection.prepareStatement(ChooseSQL.DO_RETRIEVE_ALL);
       
-      /*
-       * codice per settare il ps in base al valore di order
-       */
+      rs = ps.executeQuery();
       
-      ResultSet rs = ps.executeQuery();
+      chooses = new ArrayList<AbstractBean>();
       
       while(rs.next()) {
         int id = rs.getInt("id");
         String description = rs.getString("description");
         String tipo = rs.getString("tipo");
-        chooses.add(new ChooseBean(id, description, tipo));
+        
+       chooses.add(new ChooseBean(id, description, tipo));
       }
       
     } finally {
@@ -82,20 +88,24 @@ public class ChooseModelDM implements BeansModel {
 
   @Override
   public void doSave(AbstractBean product) throws SQLException {
-    ChooseBean choose = (ChooseBean) product;
     Connection connection = null;
     PreparedStatement ps = null;
+    ChooseBean choose = (ChooseBean) product;
     
     try {
       
       connection = DriverManagerConnectionPool.getConnection();
-      ps = connection.prepareStatement(ChooseSQL.doSave);
+      ps = connection.prepareStatement(ChooseSQL.DO_SAVE);
     
       ps.setInt(1, choose.getId());
       ps.setString(2, choose.getDescription());
       ps.setString(3, choose.getTipo());
     
-      ps.executeUpdate();
+      if (!(ps.executeUpdate() > 0)) {
+        Logger.getGlobal().log(Level.INFO, "Oggetto ChooseBean non memorizzato");
+      }
+      
+      connection.commit();
     
     } finally {
       try {
@@ -104,7 +114,6 @@ public class ChooseModelDM implements BeansModel {
       } finally {
         DriverManagerConnectionPool.releaseConnection(connection);
       }
-        
     }
   }
 
@@ -112,16 +121,21 @@ public class ChooseModelDM implements BeansModel {
   public boolean doDelete(int code) throws SQLException {
     Connection connection = null;
     PreparedStatement ps = null;
-    int rowCount = -1;
+    boolean deleted = false;
     
     try {
-      
       connection = DriverManagerConnectionPool.getConnection();
-      ps = connection.prepareStatement(ChooseSQL.doDelete);
+      ps = connection.prepareStatement(ChooseSQL.DO_DELETE);
     
       ps.setInt(1, code);
     
-      rowCount = ps.executeUpdate();
+      if (ps.executeUpdate() > 0) {
+        deleted = true;
+      } else {
+        Logger.getGlobal().log(Level.INFO, "Oggetto ChooseBean non rimosso");
+      }
+      
+      connection.commit();
 
     } finally {
       try {
@@ -132,28 +146,137 @@ public class ChooseModelDM implements BeansModel {
       }
     }
     
-    if (rowCount >= 1)
-      return true;
-    return false;
+    return deleted;
   }
   
-  public static Collection<ChooseBean> retreiveQuestionChooses(QuestionBean question) throws SQLException {
-    Collection<ChooseBean> chooses = new ArrayList<ChooseBean>();
+  public boolean doUpdate(AbstractBean product) throws SQLException{
+    Connection connection = null;
+    PreparedStatement ps = null;
+    ChooseBean chooseBean = (ChooseBean) product;
+    boolean updated = false;
+    
+    try {
+      connection = DriverManagerConnectionPool.getConnection();
+      ps = connection.prepareStatement(ChooseSQL.DO_UPDATE);
+      
+      ps.setString(1, chooseBean.getDescription());
+      ps.setString(2, chooseBean.getTipo());
+      ps.setInt(3, chooseBean.getId());
+      
+      if (ps.executeUpdate() > 0) {
+        updated = true;
+      } else {
+        Logger.getGlobal().log(Level.INFO, "Oggetto ChooseBean non aggiornato");
+      }
+      
+      connection.commit();
+      
+    } finally {
+      try {
+        if (ps != null)
+          ps.close();
+      } finally {
+        DriverManagerConnectionPool.releaseConnection(connection);
+      }
+    }
+    
+    return updated;
+  }
+  
+  public Collection<AbstractBean> doRetrieveByDescription(String text) throws SQLException {
     Connection connection = null;
     PreparedStatement ps = null;
     ResultSet rs = null;
+    Collection<AbstractBean> chooses = null;
     
     try {
       connection = (Connection) DriverManagerConnectionPool.getConnection();
-      ps = connection.prepareStatement(ChooseSQL.retreiveQuestionChooses);
-      ps.setInt(1, question.getId());
+      ps = connection.prepareStatement(ChooseSQL.DO_RETRIEVE_BY_DESCRIPTION);
+      
+      ps.setString(1, text);
+      
       rs = ps.executeQuery();
+      
+      chooses = new ArrayList<AbstractBean>();
+      
       while (rs.next()) {
         int id = rs.getInt("id");
         String description = rs.getString("description");
         String tipo = rs.getString("tipo");
-        ChooseBean choose = new ChooseBean(id, description, tipo);
-        chooses.add(choose);
+        
+        chooses.add(new ChooseBean(id, description, tipo));
+      }
+      
+    } finally {
+      try {
+        if (ps != null)
+          ps.close();
+      } finally {
+        DriverManagerConnectionPool.releaseConnection(connection);
+      }
+    }
+    
+    return chooses;
+  }
+  
+  public Collection<AbstractBean> doRetrieveByTipo(String text) throws SQLException {
+    Connection connection = null;
+    PreparedStatement ps = null;
+    ResultSet rs = null;
+    Collection<AbstractBean> chooses = null;
+    
+    try {
+      connection = (Connection) DriverManagerConnectionPool.getConnection();
+      ps = connection.prepareStatement(ChooseSQL.DO_RETRIEVE_BY_TIPO);
+      
+      ps.setString(1, text);
+      
+      rs = ps.executeQuery();
+      
+      chooses = new ArrayList<AbstractBean>();
+      
+      while (rs.next()) {
+        int id = rs.getInt("id");
+        String description = rs.getString("description");
+        String tipo = rs.getString("tipo");
+        
+        chooses.add(new ChooseBean(id, description, tipo));
+      }
+      
+    } finally {
+      try {
+        if (ps != null)
+          ps.close();
+      } finally {
+        DriverManagerConnectionPool.releaseConnection(connection);
+      }
+    }
+    
+    return chooses;
+  }
+  
+  public Collection<AbstractBean> doRetrieveByQuestion(int code) throws SQLException {
+    Connection connection = null;
+    PreparedStatement ps = null;
+    ResultSet rs = null;
+    Collection<AbstractBean> chooses = null;
+    
+    try {
+      connection = DriverManagerConnectionPool.getConnection();
+      ps = connection.prepareStatement(ChooseSQL.DO_RETRIEVE_BY_QUESTION);
+      
+      ps.setInt(1, code);
+      
+      rs = ps.executeQuery();
+      
+      chooses = new ArrayList<AbstractBean>();
+      
+      while (rs.next()) {
+        int id = rs.getInt("id");
+        String description = rs.getString("description");
+        String tipo = rs.getString("tipo");
+        
+        chooses.add(new ChooseBean(id, description, tipo));
       }
       
     } finally {

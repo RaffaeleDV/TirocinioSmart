@@ -1,42 +1,79 @@
 package it.unisa.model;
 
 import java.io.Serializable;
+import java.util.logging.Logger;
+import java.util.logging.Level;
 
-public class RispondeBean extends AbstractBean implements Serializable {
-  private int quest;
-  private int choose;
+public class RispondeBean extends AbstractBean implements Serializable, Cloneable {
+  
+  private int questionID;
+  private int chooseID;
   
   public RispondeBean() {
     
   }
   
-  public RispondeBean(int quest, int choose) {
-    this.quest = quest;
-    this.choose = choose;
+  public RispondeBean(
+      int questionID,
+      int chooseID) {
+    this.questionID = questionID;
+    this.chooseID = chooseID;
   }
 
-  public int getQuest() {
-    return quest;
+  public int getQuestionID() {
+    return questionID;
   }
 
-  public void setQuest(int quest) {
-    this.quest = quest;
+  public void setQuestionID(int questionID) {
+    this.questionID = questionID;
   }
 
-  public int getChoose() {
-    return choose;
+  public int getChooseID() {
+    return chooseID;
   }
 
-  public void setChoose(int choose) {
-    this.choose = choose;
+  public void setChooseID(int chooseID) {
+    this.chooseID = chooseID;
   }
   
   @Override
   public String toString() {
     StringBuilder str = new StringBuilder();
-    str.append(getClass().getName() + "{");
-    str.append("quest=" + quest + ", ");
-    str.append("choose=" + choose + "}");
+    str.append(getClass().getName() + "[");
+    str.append("questionID=" + questionID + ", ");
+    str.append("chooseID=" + chooseID + "]");
     return str.toString();
+  }
+  
+  @Override
+  public boolean equals(Object o) {
+    
+    if (o == null)
+      return false;
+    
+    if (!getClass().getName().equals(o.getClass().getName()))
+      return false;
+    
+    RispondeBean rispondeBean = (RispondeBean) o;
+    
+    if (
+        questionID == rispondeBean.getQuestionID() &&
+        chooseID == rispondeBean.getChooseID())
+      return true;
+    
+    return false;
+  }
+  
+  @Override
+  public RispondeBean clone() throws CloneNotSupportedException {
+    RispondeBean rispondeBean = null;
+    
+    try {
+      rispondeBean = (RispondeBean) super.clone();
+    } catch(CloneNotSupportedException e) {
+      Logger.getGlobal().log(Level.SEVERE, e.getMessage());
+    }
+    
+    return rispondeBean;
   }
 }

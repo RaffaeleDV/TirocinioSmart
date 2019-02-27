@@ -12,13 +12,32 @@ import javax.servlet.http.HttpSession;
 import it.unisa.model.StudenteBean;
 import it.unisa.model.StudenteModelDM;
 import it.unisa.model.UfficioBean;
+import it.unisa.model.UfficioModelDM;
 import it.unisa.model.RegistroBean;
+import it.unisa.model.RegistroModelDM;
 import it.unisa.model.ProgettoFormativoBean;
 import it.unisa.model.ProgettoFormativoModelDM;
 
+/**
+ * Servlet implementation class TirocinioStudenteServlet
+ */
 @WebServlet("/TirocinioStudenteServlet")
 public class TirocinioStudenteServlet extends HttpServlet {
 
+  private static final ProgettoFormativoModelDM progettoFormativoModelDM = new ProgettoFormativoModelDM();
+  private static final RegistroModelDM registroModelDM = new RegistroModelDM();
+  private static final UfficioModelDM ufficioModelDM = new UfficioModelDM();
+  
+  /**
+   * @see HttpServlet#HttpServlet()
+   */
+  public TirocinioStudenteServlet() {
+    super();
+  }
+  
+  /**
+   * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
+   */
   @Override
   protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException{
     HttpSession session = request.getSession(false);
@@ -28,7 +47,6 @@ public class TirocinioStudenteServlet extends HttpServlet {
     RegistroBean registroBean = null;
     ProgettoFormativoBean progettoBean = null;
     String id = (String)request.getParameter("id").toString();
-    Boolean login = new Boolean(false);
     int idTirocinio = -1;
     
     if (id != null) {
@@ -40,26 +58,12 @@ public class TirocinioStudenteServlet extends HttpServlet {
     
     if (session != null) {
       studenteBean = (StudenteBean)session.getAttribute("SessionStudente");
-      login = (Boolean)session.getAttribute("Loggato");
-      
-      if (login != null) {
-        if (login != new Boolean(true)) {
-          RequestDispatcher view = request.getRequestDispatcher("login-page.jsp");
-          view.forward(request, response);
-          return;
-        }
-      } else {
-        RequestDispatcher view = request.getRequestDispatcher("login-page.jsp");
-        view.forward(request, response);
-        return;
-      }
-      
       if (studenteBean != null) {
-        tirocinioBean = (ProgettoFormativoBean)session.getAttribute("SessionTirocinio");
+        tirocinioBean = (ProgettoFormativoBean) session.getAttribute("SessionTirocinio");
         if (tirocinioBean == null) {
           try {
-            if (ProgettoFormativoModelDM.tirocinioStudente(studenteBean.getMatricola(), idTirocinio)) {
-              tirocinioBean = ProgettoFormativoModelDM.loadTirocinio(idTirocinio);
+            if (progettoFormativoModelDM.isStudenteProgettoFormativo(studenteBean.getID(), idTirocinio)) {
+              tirocinioBean = (ProgettoFormativoBean) progettoFormativoModelDM.doRetrieveByKey(idTirocinio);
               session.setAttribute("SessionTirocinio", tirocinioBean);
             } else {
               //redirect to an [error] page
@@ -68,10 +72,10 @@ public class TirocinioStudenteServlet extends HttpServlet {
             //redirect to an [error] page
           }
         } else {
-          if (tirocinioBean.getId() != idTirocinio) {
+          if (tirocinioBean.getID() != idTirocinio) {
             try {
-              if (ProgettoFormativoModelDM.tirocinioStudente(studenteBean.getMatricola(), idTirocinio)) {
-                tirocinioBean = ProgettoFormativoModelDM.loadTirocinio(idTirocinio);
+              if (progettoFormativoModelDM.isStudenteProgettoFormativo(studenteBean.getID(), idTirocinio)) {
+                tirocinioBean = (ProgettoFormativoBean) progettoFormativoModelDM.doRetrieveByKey(idTirocinio);
                 session.setAttribute("SessionTirocinio", tirocinioBean);
               }else {
                 //redirect to an [error] page
@@ -84,8 +88,8 @@ public class TirocinioStudenteServlet extends HttpServlet {
         
         if (tirocinioBean != null) {
           try {
-            ufficioBean = ProgettoFormativoModelDM.loadUfficio(tirocinioBean);
-            registroBean = ProgettoFormativoModelDM.loadRegistro(tirocinioBean);
+            ufficioBean = (UfficioBean) ufficioModelDM.doRetrieveByProgettoFormativo(tirocinioBean.getID());
+            registroBean = (RegistroBean) registroModelDM.doRetrieveByProgettoFormativo(tirocinioBean.getID());
           } catch (SQLException e) {
             //redirect to an [error] page
             e.printStackTrace();
@@ -95,14 +99,13 @@ public class TirocinioStudenteServlet extends HttpServlet {
           //redirect to an [error] page
         }
         
-        if (login == new Boolean(true) && ufficioBean != null && registroBean != null && progettoBean != null) {
+        if (ufficioBean != null && registroBean != null && progettoBean != null) {
           RequestDispatcher view = request.getRequestDispatcher("tirocinio-page.jsp");
           view.forward(request, response);
         } else {
           //redirect to an [error] page
         }
       } else {
-        session.setAttribute("Loggato", new Boolean(false));
         RequestDispatcher view = request.getRequestDispatcher("login-page.jsp");
         view.forward(request, response);
         return;
@@ -115,6 +118,9 @@ public class TirocinioStudenteServlet extends HttpServlet {
     //redirect to an [error] page
   }
   
+  /**
+   * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
+   */
   @Override
   protected void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
     doGet(request, response);
