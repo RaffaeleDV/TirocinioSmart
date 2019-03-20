@@ -3,12 +3,19 @@
 <section id="404-error-wrapper">
   <%
     String errorMessage404 = (String) session.getAttribute("SessionErrorMessage404");
+
+    if (errorMessage404 != null) {
+      if (!errorMessage404.equals("")) {
+        %>
+        <div id="404-error-message-wrapper">
+          <p id="404-error-message"><%= errorMessage404.toString() %></p>
+        </div>
+        <div>
+          <p id="404-info"> Page Not Found </p>
+          <p id="404-text"> 404 </p>
+        </div>
+        <%
+      }
+    }
   %>
-  <div id="404-error-message-wrapper">
-    <p id="404-error-message"><%= errorMessage404.toString() %></p>
-  </div>
-  <div>
-    <p id="404-info"> Page Not Found </p>
-    <p id="404-text"> 404 </p>
-  </div>
 </section>

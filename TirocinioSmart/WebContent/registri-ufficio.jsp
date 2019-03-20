@@ -66,7 +66,7 @@
           </div>
           <div>
             <p id="nome-registro-info" class="info"> ID Registro: <b id="id-reg"><%= registroBean.getID() %></b>
-            <p id="nome-registro-info" class="info"> Nome Registro: <b id="nome-reg"><%= registroBean.getNome() %></b></p>
+            <p id="nome-registro-info" class="info"> Nome Registro: <b id="nome-reg" class="selector"><%= registroBean.getNome() %></b></p>
           </div>
           <div>
           
@@ -79,6 +79,10 @@
   
   <script type="text/javascript">
     function vaiRegistro() {
+      var a = $('#button').closest('#id-reg').innerHTML;
+      
+      alert("" + a);
+    	
       var idReg = $('#id-reg-input').val();
       
       $.ajax({

@@ -50,16 +50,17 @@ public class ModificaRegistroTirocinioStudenteServlet extends HttpServlet {
     HttpSession session = null;
     RegistroBean registroBean = null;
     StudenteBean studenteBean = null;
-    String oldIDRegistro = (String) request.getParameter("old_id").toString();
     String idRegistro = (String) request.getParameter("id").toString();
     String nome = (String) request.getParameter("nome").toString();
     String descrizione = (String) request.getParameter("descrizione").toString();
+    String oldIDRegistro = (String) request.getParameter("old_id").toString();
     Date ultimoAggiornamento = null;
     boolean modifica = false;
     int id = -1;
     int oldID = -1;
     
-    Logger.getGlobal().log(Level.INFO, "Richiesta di modifica di un registro di tiroinio di uno studente");
+    Logger.getGlobal().log(Level.INFO, "Richiesta di modifica di un registro di tiroinio di uno studente con: \n"
+    		+ "id:" + idRegistro + ", nome:" + nome + ", descrizione:" + descrizione + "oldIDRegistro:" + oldIDRegistro);
     
     getServletContext().setAttribute("ContextRegistroModelDM", registroModelDM);
     
@@ -89,7 +90,7 @@ public class ModificaRegistroTirocinioStudenteServlet extends HttpServlet {
       view.forward(request, response);
     }
     
-    if (nome == null) {
+    if (nome != null) {
       if (nome.equals("")) {
         Logger.getGlobal().log(Level.INFO, "Nome come stringa vuota nella modifica di un registro");
         //redirect to an [error] page
@@ -105,7 +106,7 @@ public class ModificaRegistroTirocinioStudenteServlet extends HttpServlet {
       view.forward(request, response);      
     }
     
-    if (descrizione == null) {
+    if (descrizione != null) {
       if (descrizione.equals("")) {
         Logger.getGlobal().log(Level.INFO, "Descrizione come stringa vuota nella modifica di un registro");
         //redirect to an [error] page
@@ -123,7 +124,15 @@ public class ModificaRegistroTirocinioStudenteServlet extends HttpServlet {
     
     if (oldIDRegistro != null) {
       if (!oldIDRegistro.equals("")) {
-        oldID = Integer.valueOf(oldIDRegistro);
+        try {
+          oldID = Integer.valueOf(oldIDRegistro);
+        } catch (NumberFormatException e) {
+          Logger.getGlobal().log(Level.SEVERE, e.getMessage());
+          //redirect to an [error] page
+          //set del valore per SessionErrorMessage404
+          RequestDispatcher view = request.getRequestDispatcher("404-page.jsp");
+          view.forward(request, response);
+        }
       } else {
         Logger.getGlobal().log(Level.INFO, "oldIDRegistro come stringa vuota nella modifica di un registro da parte di uno studente");
         //redirect to an [error] page

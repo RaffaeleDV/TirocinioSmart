@@ -63,8 +63,8 @@ p{
 }
 
 section {
+	margin: -8px;
 	background-color: #f4f4f9;
-	border-radius: 14px;
 }
 
 select {
@@ -144,49 +144,6 @@ div > nav > ul > li > a {
 	width:100%;
 }
 
-#user-icon-wrapper {
-	padding: 5px;
-}
-
-#user-icon {
-	width: 60px;
-	height: 50px;
-}
-
-#user-log-wrapper {
-	background-color: #FFFFFF;
-	padding: 7px;
-	display: -webkit-box;
-	margin: -8px;
-	-webkit-box-align: end;
-	-webkit-box-pack: justify;
-}
-
-#user-log-info-wrapper {
-	margin-left: 60px;
-}
-
-#user-name {
-	color: black;
-	display: inline;
-	font-size: 14px;
-	font-weight: 100;
-}
-
-#user-log-command-wrapper {
-	padding-right: 35px;
-}
-
-#user-log-button {
-	color: white;
-	border-radius: 3px;
-	border-bottom: 2px solid #4e9a06;
-	background-color: #73d216;
-	font-weight: 450;
-	font-size: 16px;
-	min-width: 90px;
-}
-
 #user-log-button:hover {
 	background-color: #80e31e;
 }
@@ -228,13 +185,6 @@ div > nav > ul > li > a {
 	color: #ffffff;
 }
 
-#user-info-wrapper {
-	border-radius: 3px;
-	padding: 15px;
-}
-
-
-
 #quest-heading {
 	font-size: 28px;
 	font-weight: 250;
@@ -261,6 +211,22 @@ div > nav > ul > li > a {
 	padding: 10px;
 	background-color: #444444;
 	border-radius: 8px;
+}
+
+#conferma-wrapper {
+	padding: 60px;
+	margin: 10px;
+}
+
+#conferma-registro-info {
+	color: white;
+	font-weight: 750;
+	background-color: #00bf00;
+	border-bottom: 3px solid #008000;
+}
+
+#conferma-registro-info:hover {
+	background-color: #00df00;
 }
 
 #navbar {
@@ -304,7 +270,7 @@ div > nav > ul > li > a {
 }
 
 #questionari-wrapper {
-	
+	margin: -8px;
 }
 
 #quest-info {
@@ -336,8 +302,7 @@ div > nav > ul > li > a {
 }
 
 #id-progetti-wrapper {
-	margin: 25px;
-	padding: 35px;
+	padding: 55px;
 }
 
 #id-progetto-wrapper {
@@ -392,8 +357,9 @@ div > nav > ul > li > a {
 }
 
 #nomi-registri-wrapper {
-	margin: 25px;
-	padding: 35px;
+	margin-top: -20px;
+	margin: -8px;
+	padding: 55px;
 }
 
 #nome-registro-wrapper {
@@ -505,7 +471,8 @@ div > nav > ul > li > a {
 }
 
 #reg-attivita-head {
-	padding: 25px;
+	font-size: 16px;
+	padding: 15px;
 }
 
 #reg-attivita-data {
@@ -600,8 +567,9 @@ div > nav > ul > li > a {
 }
 
 #modifica-registro-wrapper {
+	position: relative;
 	border: 1px solid #555753;
-	padding: 75px;
+	padding: 55px;
 	margin: 15px;
 }
 

@@ -97,7 +97,7 @@ public class ConsegnaRegistroTirocinioServlet extends HttpServlet {
             if (registroModelDM.isStudenteRegistro(studenteBean.getMatricola(), id)) {
               registroBean = (RegistroBean) registroModelDM.doRetrieveByKey(id);
             } else {
-              Logger.getGlobal().log(Level.INFO, "Il registro non risulta dello studente nella consegna da parte di uno studente");
+              Logger.getGlobal().log(Level.INFO, "Il registro con id: " + id + " non risulta dello studente nella consegna da parte di uno studente");
               //redirect to an [error] page
               //set del valore per SessionErrorMessage404
               RequestDispatcher view = request.getRequestDispatcher("404-page.jsp");

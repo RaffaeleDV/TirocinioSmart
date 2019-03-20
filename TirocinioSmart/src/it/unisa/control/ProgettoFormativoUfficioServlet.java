@@ -21,7 +21,7 @@ import it.unisa.model.RegistroModelDM;
  * Servlet implementation class TirocinioUfficioServlet
  */
 @WebServlet("/TirocinioUfficioServlet")
-public class TirocinioUfficioServlet extends HttpServlet {
+public class ProgettoFormativoUfficioServlet extends HttpServlet {
 
   private static final ProgettoFormativoModelDM progettoFormativoModelDM = new ProgettoFormativoModelDM();
   private static final StudenteModelDM studenteModelDM = new StudenteModelDM();
@@ -30,7 +30,7 @@ public class TirocinioUfficioServlet extends HttpServlet {
   /**
    * @see HttpServlet#HttpServlet()
    */
-  public TirocinioUfficioServlet() {
+  public ProgettoFormativoUfficioServlet() {
     super();
   }
   

@@ -552,6 +552,7 @@ public class RegistroModelDM implements BeansModel {
       rs = ps.executeQuery();
       
       if (rs.next()) {
+        int id = rs.getInt("id");
         String nome = rs.getString("nome");
         String descrizione = rs.getString("descrizione");
         Date primaIstituzione = rs.getDate("primaIstituzione");
@@ -561,7 +562,7 @@ public class RegistroModelDM implements BeansModel {
         boolean confermaTutorAz = rs.getBoolean("confermaTutorAz");
         boolean confermaUff = rs.getBoolean("confermaUff");
         
-        registroBean = new RegistroBean(code, nome, descrizione, primaIstituzione, ultimoAgg, consegna, confermaTutorAcc, confermaTutorAz, confermaUff);        
+        registroBean = new RegistroBean(id, nome, descrizione, primaIstituzione, ultimoAgg, consegna, confermaTutorAcc, confermaTutorAz, confermaUff);        
       } else {
         Logger.getGlobal().log(Level.INFO, "Nessun registro trovato per lo studente specificato tramite id");
       }

@@ -190,7 +190,7 @@
               <input id="button" class="ts-button" name="vis-reg-tirocinio"
                   type="button" value="Visualizza" onclick="visualizzaRegistro()" />
               <input id="button" class="ts-button" name="modifica-reg-tirocinio"
-                  type="button" value="Modifica" onclick="modificaRegistro()"/>
+                  type="button" value="Modifica" onclick="modificaRegistro()"/> 
               <input id="button" class="ts-button" name="consegna-reg-tirocinio"
                   type="button" value="Consegna" onclick="consegnaRegistro()" />
             </div>
@@ -201,6 +201,9 @@
               <input id="mrid" type="text" placeholder="ID:" />
               <p id="modifica-registro-info">Descrizione: </p>
               <input id="mrdescrizione" type="text" placeholder="Descrizione:" />
+              <div id="conferma-wrapper" class="wrapper">
+                <input id="conferma-registro-info" type="button" value="Conferma" onclick="modificaRegistro()"/>
+              </div>
             </div>
             
             <div id="reg-attivita-wrapper" class="wrapper" >
@@ -208,16 +211,16 @@
               <%
                 if (attivitaTirocinioRegistro == null) {
               %>
-                  <p style="color: black; padding-bottom: 60px;">Nessuna Attivita Trovata Per Il Registro</p>
+                  <p style="font-weight: 400; font-size: 28px; color: black; padding-bottom: 60px;">Nessuna Attivita Trovata Per Il Registro</p>
               <%  
                 } else {
                   if (attivitaTirocinioRegistro.isEmpty()) {
                   %>
-                    <p style="color: black; padding-bottom: 60px;">Nessuna Attivita Trovata Per Il Registro</p>
+                    <p style="font-weight: 400; font-size: 28px; color: black; padding-bottom: 60px;">Nessuna Attivita Trovata Per Il Registro</p>
                   <%
                   } else {
                   %>
-                    <p  style="color: black; padding-bottom: 60px;">Attivita Svolte Del Tirocinio</p>
+                    <p  style="font-weight: 400; font-size: 28px; color: black; padding-bottom: 60px;">Attivita Svolte Del Tirocinio</p>
                   <%  
                   }
                 }
@@ -290,37 +293,36 @@
         
         if(h == false){
           document.getElementById("modifica-registro-wrapper").hidden = false;
-          console.log()
-        }else{
-          var oldId = $('rid').val();
-          var id = $('#mrid').val();
-          var nome = $('#mrnome').val();
-          var descrizione = $('#mrdescrizione').val();
-          
-          console.log("Effettuando modifica del registro");
-          
-          $.ajax({
-              type : "POST",
-              url : "ModificaRegistroTirocinioStudenteServlet",
-              contentType: "application/x-www-form-urlencoded",
-              datatype : "json", 
-              data: "id="+id+"&nome="+nome+"&descrizione="+descrizione+"&old_id="+oldId,
-              success: function(data) {
-    	        var json = data;
-    	        var modifica = json.modifica;
-    	        
-    	        if (modifica) {
-                  document.getElementById("reg-info-id").innerHTML = id;
-                  document.getElementById("reg-info-nome").innerHTML = nome;
-                  document.getElementById("reg-info-descrizione").innerHTML = descrizione;
-                  document.getElementById("modifica-registro-wrapper").hidden = true;
-                }
-              },
-              error: function(error) {
-                console.log("Errore:"+ error);
-              }
-          })
         }
+        
+        var oldId = $('#rid').val();
+        var id = $('#mrid').val();
+        var nome = $('#mrnome').val();
+        var descrizione = $('#mrdescrizione').val();
+        
+        console.log("rid: " + oldId);
+        
+        $.ajax({
+      	  type : "POST",
+      	  url : "ModificaRegistroTirocinioStudenteServlet",
+      	  contentType : "application/x-www-form-urlencoded",
+      	  datatype : "json",
+          data: "id="+id+"&nome="+nome+"&descrizione="+descrizione+"&old_id="+oldId,
+          success: function(data) {
+  	        var json = data;
+  	        var modifica = json.modifica;
+  	      
+  	        if (modifica) {
+              document.getElementById("reg-info-id").innerHTML = id;
+              document.getElementById("reg-info-nome").innerHTML = nome;
+              document.getElementById("reg-info-descrizione").innerHTML = descrizione;
+              document.getElementById("modifica-registro-wrapper").hidden = true;
+            }
+          },
+          error: function(error) {
+            console.log("Errore:"+ error);
+          }
+        })
       }
       
       function consegnaRegistro(){

@@ -49,20 +49,6 @@
       </ul>
     </nav>
   </div>
-  <div id="log-wrapper">
-    <img id="login-icon" src="images/login-icon.png" onclick="visualizzaUserLog()"/>
-  </div>
-  <script type="text/javascript">
-    function visualizzaUserLog() {
-      var h = document.getElementById("user-log-wrapper").hidden;
-      console.log("visualizzaUserLog invocato");
-      if (h == false) {
-        document.getElementById("user-log-wrapper").hidden = true;
-      } else {
-        document.getElementById("user-log-wrapper").hidden = false;
-      }
-    }
-  </script>
 </header>
 
 

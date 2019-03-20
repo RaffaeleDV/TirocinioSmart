@@ -7,7 +7,6 @@
 </head>
 <body>
   <%@ include file = "header.jsp" %>
-  <%@ include file = "user-log.jsp" %>
   <%@ include file = "questionari.jsp" %>
   <%
     AbstractBean convenzioniUtente = (AbstractBean) session.getAttribute("SessionUser");
