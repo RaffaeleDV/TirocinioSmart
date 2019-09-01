@@ -7,12 +7,17 @@ import java.sql.SQLException;
 import java.util.Collection;
 import java.util.logging.Logger;
 import it.unisa.database.DriverManagerConnectionPool;
-import it.unisa.sql.StudenteSQL;
 import it.unisa.sql.TutorSQL;
 import java.util.logging.Level;
 import java.util.ArrayList;
 
 public class TutorModelDM implements BeansModel {
+
+  public static final TutorModelDM INSTANCE = new TutorModelDM();
+
+  private TutorModelDM() {
+
+  }
 
   @Override
   public AbstractBean doRetrieveByKey(int code) throws SQLException {
@@ -34,11 +39,10 @@ public class TutorModelDM implements BeansModel {
         String nome = rs.getString("nome");
         String pass = rs.getString("pass");
         String tipo = rs.getString("tipo");
-        int convenzioneID = rs.getInt("convenzioneID");
         
-        tutorBean = new TutorBean(code, convenzioneID, email, nome, pass, tipo);
+        tutorBean = new TutorBean(code, email, nome, pass, tipo);
       } else {
-        Logger.getGlobal().log(Level.INFO, "Tutor con l' id specificato non trovato");
+        Logger.getGlobal().log(Level.SEVERE, "Oggetto TutorBean Non Trovato.");
       }
       
     } finally {
@@ -74,9 +78,8 @@ public class TutorModelDM implements BeansModel {
         String nome = rs.getString("nome");
         String pass = rs.getString("pass");
         String tipo = rs.getString("tipo");
-        int convenzioneID = rs.getInt("convenzioneID");
         
-        tutors.add(new TutorBean(id, convenzioneID, email, nome, pass, tipo));
+        tutors.add(new TutorBean(id, email, nome, pass, tipo));
       }
       
     } finally {
@@ -87,7 +90,6 @@ public class TutorModelDM implements BeansModel {
         DriverManagerConnectionPool.releaseConnection(connection);
       }
     }
-    
     return tutors;
   }
 
@@ -104,14 +106,13 @@ public class TutorModelDM implements BeansModel {
       tutorBean = (TutorBean) product;
       
       ps.setInt(1, tutorBean.getID());
-      ps.setInt(2, tutorBean.getConvenzioneID());
-      ps.setString(3, tutorBean.getEmail());
-      ps.setString(4, tutorBean.getNome());
-      ps.setString(5, tutorBean.getPass());
-      ps.setString(6, tutorBean.getTipo());
+      ps.setString(2, tutorBean.getEmail());
+      ps.setString(3, tutorBean.getNome());
+      ps.setString(4, tutorBean.getPass());
+      ps.setString(5, tutorBean.getTipo());
       
       if (!(ps.executeUpdate() > 0)) {
-        Logger.getGlobal().log(Level.INFO, "Oggetto TutorBean non memorizzato");
+        Logger.getGlobal().log(Level.SEVERE, "Oggetto TutorBean Non Memorizzato.");
       }
       
       connection.commit();
@@ -141,7 +142,7 @@ public class TutorModelDM implements BeansModel {
       if (ps.executeUpdate() > 0) {
         deleted = true;
       } else {
-        Logger.getGlobal().log(Level.INFO, "Oggetto TutorBean non rimosso");
+        Logger.getGlobal().log(Level.SEVERE, "Oggetto TutorBean Non Rimosso.");
       }
       
       connection.commit();
@@ -154,11 +155,10 @@ public class TutorModelDM implements BeansModel {
         DriverManagerConnectionPool.releaseConnection(connection);
       }
     }
-    
     return deleted;
   }
   
-  public boolean doUpdate(AbstractBean product) throws SQLException {
+  public boolean doUpdate(AbstractBean product, int tutorID) throws SQLException {
     Connection connection = null;
     PreparedStatement ps = null;
     TutorBean tutorBean = (TutorBean) product;
@@ -168,17 +168,17 @@ public class TutorModelDM implements BeansModel {
       connection = DriverManagerConnectionPool.getConnection();
       ps = connection.prepareStatement(TutorSQL.DO_UPDATE);
 
-      ps.setInt(1, tutorBean.getConvenzioneID());
+      ps.setInt(1, tutorBean.getID());
       ps.setString(2, tutorBean.getEmail());
       ps.setString(3, tutorBean.getNome());
       ps.setString(4, tutorBean.getPass());
       ps.setString(5, tutorBean.getTipo());
-      ps.setInt(6, tutorBean.getID());
+      ps.setInt(6, tutorID);
       
       if (ps.executeUpdate() > 0) {
         updated = true;
       } else {
-        Logger.getGlobal().log(Level.INFO, "Oggetto TirocinioBean non aggiornato");
+        Logger.getGlobal().log(Level.SEVERE, "Oggetto TirocinioBean Non Aggiornato.");
       }
       
       connection.commit();
@@ -191,11 +191,10 @@ public class TutorModelDM implements BeansModel {
         DriverManagerConnectionPool.releaseConnection(connection);
       }
     }
-    
     return updated;
   }
   
-  public AbstractBean doRetrieveTutorByEmail(String email) throws SQLException {
+  public AbstractBean doRetrieveTutorByEmail(String text) throws SQLException {
     Connection connection = null;
     PreparedStatement ps = null;
     ResultSet rs = null;
@@ -203,22 +202,22 @@ public class TutorModelDM implements BeansModel {
     
     try {
       connection = DriverManagerConnectionPool.getConnection();
-      ps = connection.prepareStatement(TutorSQL.DO_RETRIEVE_TUTORS_BY_EMAIL);
+      ps = connection.prepareStatement(TutorSQL.DO_RETRIEVE_BY_EMAIL);
       
-      ps.setString(1, email);
+      ps.setString(1, text);
       
       rs = ps.executeQuery();
       
       if (rs.next()) {
         int id = rs.getInt("id");
+        String email = rs.getString("email");
         String nome = rs.getString("nome");
         String pass = rs.getString("pass");
         String tipo = rs.getString("tipo");
-        int convenzioneID = rs.getInt("convenzioneID");
         
-        tutorBean = new TutorBean(id, convenzioneID, email, nome, pass, tipo);
+        tutorBean = new TutorBean(id, email, nome, pass, tipo);
       } else {
-        Logger.getGlobal().log(Level.INFO, "Nessun tutor trovato con quella email");
+        Logger.getGlobal().log(Level.SEVERE, "Oggetto TutorBean Non Trovato.");
       }
       
     } finally {
@@ -229,11 +228,10 @@ public class TutorModelDM implements BeansModel {
         DriverManagerConnectionPool.releaseConnection(connection);
       }
     }
-    
     return tutorBean;
   }
   
-  public AbstractBean doRetrieveTutorByNome(String nome) throws SQLException {
+  public AbstractBean doRetrieveTutorByNome(String text) throws SQLException {
     Connection connection = null;
     PreparedStatement ps = null;
     ResultSet rs = null;
@@ -241,9 +239,9 @@ public class TutorModelDM implements BeansModel {
     
     try {
       connection = DriverManagerConnectionPool.getConnection();
-      ps = connection.prepareStatement(TutorSQL.DO_RETRIEVE_TUTORS_BY_NOME);
+      ps = connection.prepareStatement(TutorSQL.DO_RETRIEVE_BY_NOME);
       
-      ps.setString(1, nome);
+      ps.setString(1, text);
       
       rs = ps.executeQuery();
       
@@ -251,13 +249,13 @@ public class TutorModelDM implements BeansModel {
       if (rs.next()) {
         int id = rs.getInt("id");
         String email = rs.getString("email");
+        String nome = rs.getString("nome");
         String pass = rs.getString("pass");
         String tipo = rs.getString("tipo");
-        int convenzioneID = rs.getInt("convenzioneID");
         
-        tutorBean = new TutorBean(id, convenzioneID, email, nome, pass, tipo);
+        tutorBean = new TutorBean(id, email, nome, pass, tipo);
       } else {
-        Logger.getGlobal().log(Level.INFO, "Nessun Tutor trovato con il nome specificato");
+        Logger.getGlobal().log(Level.SEVERE, "Oggetto TutorBean Non Trovato.");
       }
       
     } finally {
@@ -268,11 +266,10 @@ public class TutorModelDM implements BeansModel {
         DriverManagerConnectionPool.releaseConnection(connection);
       }
     }
-    
     return tutorBean;
   }
   
-  public Collection<AbstractBean> doRetrieveTutorByTipo(String tipo) throws SQLException {
+  public Collection<AbstractBean> doRetrieveTutorByTipo(String text) throws SQLException {
     Connection connection = null;
     PreparedStatement ps = null;
     ResultSet rs = null;
@@ -280,47 +277,9 @@ public class TutorModelDM implements BeansModel {
    
     try {
       connection = DriverManagerConnectionPool.getConnection();
-      ps = connection.prepareStatement(TutorSQL.DO_RETRIEVE_TUTORS_BY_TIPO);
+      ps = connection.prepareStatement(TutorSQL.DO_RETRIEVE_BY_TIPO);
       
-      ps.setString(1, tipo);
-      
-      rs = ps.executeQuery();
-      
-      tutors = new ArrayList<AbstractBean>();
-      
-      while (rs.next()) {
-        int id = rs.getInt("id");
-        String email = rs.getString("email");
-        String nome = rs.getString("nome");
-        String pass = rs.getString("pass");
-        int convenzioneID = rs.getInt("convenzioneID");
-        
-        tutors.add(new TutorBean(id, convenzioneID, email, nome, pass, tipo));
-      }
-      
-    } finally {
-      try {
-        if (ps != null)
-          ps.close();
-      } finally {
-        DriverManagerConnectionPool.releaseConnection(connection);
-      }
-    }
-    
-    return tutors;
-  }
-  
-  public Collection<AbstractBean> doRetrieveTutorByConvenzione(int code) throws SQLException {
-    Connection connection = null;
-    PreparedStatement ps = null;
-    ResultSet rs = null;
-    Collection<AbstractBean> tutors = null;
-    
-    try {
-      connection = DriverManagerConnectionPool.getConnection();
-      ps = connection.prepareStatement(TutorSQL.DO_RETRIEVE_TUTORS_BY_CONVENZIONE);
-      
-      ps.setInt(1, code);
+      ps.setString(1, text);
       
       rs = ps.executeQuery();
       
@@ -333,7 +292,7 @@ public class TutorModelDM implements BeansModel {
         String pass = rs.getString("pass");
         String tipo = rs.getString("tipo");
         
-        tutors.add(new TutorBean(id, code, email, nome, pass, tipo));
+        tutors.add(new TutorBean(id, email, nome, pass, tipo));
       }
       
     } finally {
@@ -344,7 +303,49 @@ public class TutorModelDM implements BeansModel {
         DriverManagerConnectionPool.releaseConnection(connection);
       }
     }
-    
     return tutors;
+  }
+  
+  public Collection<AbstractBean> doRetrieveQuestionari(AbstractBean abstractBean) throws SQLException {
+    Connection connection = null;
+    PreparedStatement ps = null;
+    ResultSet rs = null;
+    TutorBean tutorBean = null;
+    Collection<AbstractBean> questionari = null;
+    
+    if (abstractBean != null &&
+        abstractBean.getClass().getName().equals(TutorBean.class.getName())) {
+      tutorBean = (TutorBean) abstractBean;
+    }
+    
+    try {
+      connection = DriverManagerConnectionPool.getConnection();
+      ps = connection.prepareStatement(TutorSQL.DO_RETRIEVE_QUESTIONARI_BY_UTENTE);
+      
+      ps.setInt(1, tutorBean.getID());
+      
+      questionari = new ArrayList<AbstractBean>();
+      
+      rs = ps.executeQuery();
+      
+      while (rs.next()) {
+        int id = rs.getInt("id");
+        int questions = rs.getInt("questions");
+        int nstudenti = rs.getInt("nstudenti");
+        String nome = rs.getString("nome");
+        String description = rs.getString("description");
+        String tematica = rs.getString("tematica");
+        
+        questionari.add(new QuestionarioBean(id, questions, nstudenti, nome, description, tematica));
+      }
+    } finally {
+      try {
+        if (ps != null)
+          ps.close();
+      } finally {
+        DriverManagerConnectionPool.releaseConnection(connection);
+      }
+    }
+    return questionari;
   }
 }

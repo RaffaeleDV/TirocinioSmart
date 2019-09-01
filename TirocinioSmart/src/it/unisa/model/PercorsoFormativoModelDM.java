@@ -13,6 +13,12 @@ import it.unisa.sql.PercorsoFormativoSQL;
 
 public class PercorsoFormativoModelDM implements BeansModel {
 
+  public static final PercorsoFormativoModelDM INSTANCE = new PercorsoFormativoModelDM();
+
+  private PercorsoFormativoModelDM() {
+
+  }
+
   @Override
   public AbstractBean doRetrieveByKey(int code) throws SQLException {
     Connection connection = null;
@@ -34,7 +40,7 @@ public class PercorsoFormativoModelDM implements BeansModel {
         
         percorsoFormativoBean = new PercorsoFormativoBean(code, progettoFormativoID, percorso);
       } else {
-        Logger.getGlobal().log(Level.INFO, "Oggetto PercorsoFormativoBean con l' id specificato non trovato");
+        Logger.getGlobal().log(Level.SEVERE, "Oggetto PercorsoFormativoBean Non Trovato.");
       }
       
     } finally {
@@ -99,7 +105,7 @@ public class PercorsoFormativoModelDM implements BeansModel {
       ps.setString(3, percorsoFormativoBean.getPercorso());
       
       if (!(ps.executeUpdate() > 0)) {
-        Logger.getGlobal().log(Level.INFO, "Oggetto PercorsoFormativoBean non memorizzato");
+        Logger.getGlobal().log(Level.SEVERE, "Oggetto PercorsoFormativoBean Non Memorizzato.");
       }
       
       connection.commit();
@@ -129,7 +135,7 @@ public class PercorsoFormativoModelDM implements BeansModel {
       if (ps.executeUpdate() > 0) {
         deleted = true;
       } else {
-        Logger.getGlobal().log(Level.INFO, "Oggetto PercorsoFormativoBean non rimosso");
+        Logger.getGlobal().log(Level.SEVERE, "Oggetto PercorsoFormativoBean Non Rimosso.");
       }
       
       connection.commit();
@@ -142,11 +148,10 @@ public class PercorsoFormativoModelDM implements BeansModel {
         DriverManagerConnectionPool.releaseConnection(connection);
       }
     }
-    
     return deleted;
   }
   
-  public boolean doUpdate(AbstractBean product) throws SQLException {
+  public boolean doUpdate(AbstractBean product, int codePercorsoFormativo) throws SQLException {
     Connection connection = null;
     PreparedStatement ps = null;
     PercorsoFormativoBean percorsoFormativoBean = (PercorsoFormativoBean) product;
@@ -156,14 +161,15 @@ public class PercorsoFormativoModelDM implements BeansModel {
       connection = DriverManagerConnectionPool.getConnection();
       ps = connection.prepareStatement(PercorsoFormativoSQL.DO_UPDATE);
       
-      ps.setInt(1, percorsoFormativoBean.getProgettoFormativoID());
-      ps.setString(2, percorsoFormativoBean.getPercorso());
-      ps.setInt(3, percorsoFormativoBean.getID());
+      ps.setInt(1, percorsoFormativoBean.getID());
+      ps.setInt(2, percorsoFormativoBean.getProgettoFormativoID());
+      ps.setString(3, percorsoFormativoBean.getPercorso());
+      ps.setInt(4, codePercorsoFormativo);
       
       if (ps.executeUpdate() > 0) {
         updated = true;
       } else {
-        Logger.getGlobal().log(Level.INFO, "Oggetto PercorsoFormativoBean non aggiornato");
+        Logger.getGlobal().log(Level.SEVERE, "Oggetto PercorsoFormativoBean Non Aggiornato.");
       }
       
       connection.commit();
@@ -176,7 +182,6 @@ public class PercorsoFormativoModelDM implements BeansModel {
         DriverManagerConnectionPool.releaseConnection(connection);
       }
     }
-    
     return updated;
   }
 
@@ -210,7 +215,6 @@ public class PercorsoFormativoModelDM implements BeansModel {
         DriverManagerConnectionPool.releaseConnection(connection);
       }
     }
-    
     return percorsi;
   }
   
@@ -246,7 +250,6 @@ public class PercorsoFormativoModelDM implements BeansModel {
         DriverManagerConnectionPool.releaseConnection(connection);
       }
     }
-    
     return percorsi;
   }
 }

@@ -6,7 +6,7 @@ import java.util.logging.Logger;
 import java.util.logging.Level;
 
 public class SvoltoInBean extends AbstractBean implements Serializable, Cloneable {
-
+  private static final long serialVersionUID = 1L;
   private int progettoFormativoID;
   private int strutturaOspitanteID;
   private int tutorAzID;
@@ -14,7 +14,7 @@ public class SvoltoInBean extends AbstractBean implements Serializable, Cloneabl
   private Date terminePeriodo;
   
   public SvoltoInBean() {
-    
+    super();
   }
   
   public SvoltoInBean(
@@ -23,6 +23,7 @@ public class SvoltoInBean extends AbstractBean implements Serializable, Cloneabl
       int tutorAzID,
       Date inizioPeriodo, 
       Date terminePeriodo) {
+    super();
     this.progettoFormativoID = progettoFormativoID;
     this.strutturaOspitanteID = strutturaOspitanteID;
     this.tutorAzID = tutorAzID;
@@ -73,47 +74,39 @@ public class SvoltoInBean extends AbstractBean implements Serializable, Cloneabl
   @Override
   public String toString() {
     StringBuilder str = new StringBuilder();
-    str.append(getClass().getName() + "[");
+    str.append(getClass().getName() + "{");
     str.append("progettoFormativoID=" + progettoFormativoID + ", ");
     str.append("strutturaOspitanteID=" + strutturaOspitanteID + ", ");
     str.append("tutorAzID=" + tutorAzID + ", ");
     str.append("inizioPeriodo=" + inizioPeriodo + ", ");
-    str.append("terminePeriodo=" + terminePeriodo + "]");
+    str.append("terminePeriodo=" + terminePeriodo + "}");
     return str.toString();
   }
   
   @Override
   public boolean equals(Object o) {
-    
     if (o == null)
       return false;
-    
     if (!getClass().getName().equals(o.getClass().getName()))
       return false;
-    
     SvoltoInBean svoltoInBean = (SvoltoInBean) o;
-    
-    if (
-        progettoFormativoID == svoltoInBean.getProgettoFormativoID() &&
+    if (progettoFormativoID == svoltoInBean.getProgettoFormativoID() &&
         strutturaOspitanteID == svoltoInBean.getStrutturaOspitanteID() &&
         tutorAzID == svoltoInBean.getTutorAzID() &&
         inizioPeriodo.equals(svoltoInBean.getInizioPeriodo()) &&
         terminePeriodo.equals(svoltoInBean.getTerminePeriodo()))
       return true;
-    
     return false;
   }
   
   @Override
   public SvoltoInBean clone() throws CloneNotSupportedException {
     SvoltoInBean svoltoInBean = null;
-    
     try {
       svoltoInBean = (SvoltoInBean) super.clone();
     } catch (CloneNotSupportedException e) {
-      Logger.getGlobal().log(Level.INFO, e.getMessage());
+      Logger.getGlobal().log(Level.SEVERE, e.getMessage());
     }
-    
     return svoltoInBean;
   }
 }

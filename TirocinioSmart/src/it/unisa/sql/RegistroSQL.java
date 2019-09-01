@@ -23,28 +23,28 @@ public class RegistroSQL {
   
   public static final String DO_UPDATE = 
       "UPDATE " + TABLE_NAME + " " + 
-      "SET nome = ?, descrizione = ?, primaIstituzione = ?, ultimoAgg = ?, consegna = ?, confermaTutorAcc = ?, confermaTutorAz = ?, confermaUff = ? " + 
+      "SET id = ?, nome = ?, descrizione = ?, primaIstituzione = ?, ultimoAgg = ?, consegna = ?, confermaTutorAcc = ?, confermaTutorAz = ?, confermaUff = ? " + 
       "WHERE id = ?;";
   
   public static final String DO_RETRIEVE_BY_NOME = 
     "SELECT * " + 
     "FROM " + TABLE_NAME + " " + 
-    "WHERE nome = ?;";
+    "WHERE nome LIKE ?;";
   
   public static final String DO_RETRIEVE_BY_DESCRIZIONE = 
     "SELECT * " + 
     "FROM " + TABLE_NAME + " " + 
-    "WHERE descrizione = ?;";
+    "WHERE descrizione LIKE ?;";
   
   public static final String DO_RETRIEVE_BY_PRIMA_ISTITUZIONE = 
     "SELECT * " + 
     "FROM " + TABLE_NAME + " " + 
-    "WHERE primaIstituzione = ?;";
+    "WHERE primaIstituzione BETWEEN ? AND ?;";
   
   public static final String DO_RETRIEVE_BY_ULTIMO_AGG = 
     "SELECT * " + 
     "FROM " + TABLE_NAME + " " + 
-    "WHERE ultimoAgg = ?;";
+    "WHERE ultimoAgg BETWEEN ? AND ?;";
   
   public static final String DO_RETRIEVE_BY_CONSEGNA = 
     "SELECT * " + 
@@ -61,10 +61,10 @@ public class RegistroSQL {
     "FROM " + TABLE_NAME + " " + 
     "WHERE confermaTutorAz = ?;";
   
-  public static final String DO_RETRIEVE_BY_CONFERMA_TUTOR_UFF = 
+  public static final String DO_RETRIEVE_BY_CONFERMA_UFF = 
     "SELECT * " + 
     "FROM " + TABLE_NAME + " " + 
-    "WHERE confermaTutorUff = ?;";
+    "WHERE confermaUff = ?;";
   
   public static final String DO_RETRIEVE_BY_STUDENTE =
     "SELECT " + TABLE_NAME + ".* " +

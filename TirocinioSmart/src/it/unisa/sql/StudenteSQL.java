@@ -23,23 +23,23 @@ public class StudenteSQL {
   
   public static final String DO_UPDATE =
     "UPDATE " + TABLE_NAME + " " +
-    "SET matricola = ?, nome = ?, cfu = ?, pass = ?, occupazione = ?, tutorAccID = ?, tutorAzID = ?, progettoFormativoID = ?, registroID = ? " +
+    "SET id = ?, matricola = ?, nome = ?, cfu = ?, pass = ?, occupazione = ?, tutorAccID = ?, tutorAzID = ?, progettoFormativoID = ?, registroID = ? " +
     "WHERE id = ?;";
   
   public static final String DO_RETRIEVE_BY_MATRICOLA = 
     "SELECT * " + 
     "FROM " + TABLE_NAME + " " + 
-    "WHERE matricola = ?;";
+    "WHERE matricola LIKE ?;";
   
   public static final String DO_RETRIEVE_BY_NOME = 
     "SELECT * " + 
     "FROM " + TABLE_NAME + " " + 
-    "WHERE nome = ?;";
+    "WHERE nome LIKE ?;";
   
   public static final String DO_RETRIEVE_BY_CFU = 
     "SELECT * " + 
     "FROM " + TABLE_NAME + " " + 
-    "WHERE cfu = ?;";
+    "WHERE cfu LIKE ?;";
   
   public static final String DO_RETRIEVE_BY_OCCUPAZIONE = 
     "SELECT * " + 
@@ -56,18 +56,18 @@ public class StudenteSQL {
     "FROM " + TABLE_NAME + " " + 
     "WHERE tutorAzID = ?;";
   
-  public static final String DO_RETRIEVE_BY_TIROCINIO = 
-    "SELECT * " + 
-    "FROM " + TABLE_NAME + " " + 
-    "WHERE tirocinio = ?;";
-  
   public static final String DO_RETRIEVE_BY_REGISTRO = 
     "SELECT * " + 
     "FROM " + TABLE_NAME + " " + 
-    "WHERE registro = ?;";
+    "WHERE registroID = ?;";
   
   public static final String DO_RETRIEVE_BY_PROGETTO_FORMATIVO =
     "SELECT * " +
     "FROM " + TABLE_NAME + " " +
-    "WHERE tirocinio = ?;";
+    "WHERE progettoFormativoID = ?;";
+  
+  public static final String DO_RETRIEVE_QUESTIONARI_BY_UTENTE =
+    "SELECT " + QuestionarioSQL.TABLE_NAME + ".* " +
+    "FROM " + QuestionarioSQL.TABLE_NAME + ", " + CompilaSQL.TABLE_NAME + " " +
+    "WHERE " + QuestionarioSQL.TABLE_NAME + ".id = " + CompilaSQL.TABLE_NAME + ".questionarioID AND " + CompilaSQL.TABLE_NAME + ".utenteID = ?;";
 }

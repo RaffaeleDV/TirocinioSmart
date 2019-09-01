@@ -6,7 +6,7 @@ import java.sql.Date;
 import java.util.logging.Logger;
 
 public class AttivitaTirocinioBean extends AbstractBean implements Serializable, Cloneable {
-  
+  private static final long serialVersionUID = 1L;
   private int id;
   private int registroID;
   private int strutturaOspitanteID;
@@ -15,7 +15,7 @@ public class AttivitaTirocinioBean extends AbstractBean implements Serializable,
   private int ore;
   
   public AttivitaTirocinioBean() {
-    
+    super();
   }
   
   public AttivitaTirocinioBean(
@@ -25,6 +25,7 @@ public class AttivitaTirocinioBean extends AbstractBean implements Serializable,
       String descrizione,
       Date data,
       int ore) {
+    super();
     this.id = id;
     this.registroID = registroID;
     this.strutturaOspitanteID = strutturaOspitanteID;
@@ -84,49 +85,41 @@ public class AttivitaTirocinioBean extends AbstractBean implements Serializable,
   @Override
   public String toString() {
     StringBuilder str = new StringBuilder();
-    str.append(getClass().getName() + "[");
+    str.append(getClass().getName() + "{");
     str.append("id=" + id + ", ");
     str.append("registroID=" + registroID + ", ");
     str.append("strutturaOspitanteID=" + strutturaOspitanteID + ", ");
     str.append("descrizione=" + descrizione + ", ");
     str.append("data=" + data + ", ");
-    str.append("ore=" + ore + "]");
+    str.append("ore=" + ore + "}");
     return str.toString();
   }
   
   @Override
   public boolean equals(Object o) {
-    
     if (o == null)
       return false;
-    
     if (!getClass().getName().equals(o.getClass().getName()))
       return false;
-    
     AttivitaTirocinioBean attivitaTirocinioBean = (AttivitaTirocinioBean) o;
-    
-    if (
-        id == attivitaTirocinioBean.getID() &&
+    if (id == attivitaTirocinioBean.getID() &&
         registroID == attivitaTirocinioBean.getRegistroID() &&
         strutturaOspitanteID == attivitaTirocinioBean.getStrutturaOspitanteID() &&
         descrizione.equals(attivitaTirocinioBean.getDescrizione()) &&
         data.equals(attivitaTirocinioBean.getData()) &&
         ore == attivitaTirocinioBean.getOre())
       return true;
-    
     return false;
   }
   
   @Override
   public AttivitaTirocinioBean clone() throws CloneNotSupportedException {
     AttivitaTirocinioBean attivitaTirocinioBean = null;
-    
     try {
       attivitaTirocinioBean = (AttivitaTirocinioBean) super.clone();
     } catch (CloneNotSupportedException e) {
       Logger.getGlobal().log(Level.SEVERE, e.getMessage());
     }
-    
     return attivitaTirocinioBean;
   }
 }

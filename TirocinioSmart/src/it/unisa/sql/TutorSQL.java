@@ -15,7 +15,7 @@ public class TutorSQL {
   
   public static final String DO_SAVE = 
     "INSERT INTO " + TABLE_NAME + " " + 
-    "VALUES (?, ?, ?, ?, ?, ?);";
+    "VALUES (?, ?, ?, ?, ?);";
   
   public static final String DO_DELETE = 
     "DELETE FROM " + TABLE_NAME + " " + 
@@ -23,26 +23,26 @@ public class TutorSQL {
   
   public static final String DO_UPDATE =
     "UPDATE " + TABLE_NAME + " " +
-    "SET convenzioneID = ?, email = ?, nome = ?, pass = ?, tipo = ? " +
+    "SET id = ?, email = ?, nome = ?, pass = ?, tipo = ? " +
     "WHERE id = ?";
   
-  public static final String DO_RETRIEVE_TUTORS_BY_EMAIL = 
+  public static final String DO_RETRIEVE_BY_EMAIL = 
     "SELECT * " + 
     "FROM " + TABLE_NAME + " " + 
-    "WHERE email = ?;";
+    "WHERE email LIKE ?;";
   
-  public static final String DO_RETRIEVE_TUTORS_BY_NOME = 
+  public static final String DO_RETRIEVE_BY_NOME = 
     "SELECT * " + 
     "FROM " + TABLE_NAME + " " + 
-    "WHERE nome = ?;";
+    "WHERE nome LIKE ?;";
   
-  public static final String DO_RETRIEVE_TUTORS_BY_TIPO = 
+  public static final String DO_RETRIEVE_BY_TIPO = 
     "SELECT * " + 
     "FROM " + TABLE_NAME + " " + 
-    "WHERE tipo = ?;";
+    "WHERE tipo LIKE ?;";
   
-  public static final String DO_RETRIEVE_TUTORS_BY_CONVENZIONE = 
-    "SELECT * " + 
-    "FROM " + TABLE_NAME + " " + 
-    "WHERE convenzioneID = ?;";
+  public static final String DO_RETRIEVE_QUESTIONARI_BY_UTENTE =
+    "SELECT " + QuestionarioSQL.TABLE_NAME + ".* " +
+    "FROM " + QuestionarioSQL.TABLE_NAME + ", " + CompilaSQL.TABLE_NAME + " " +
+    "WHERE " + QuestionarioSQL.TABLE_NAME + ".id = " + CompilaSQL.TABLE_NAME + ".questionarioID AND " + CompilaSQL.TABLE_NAME + ".utenteID = ?;";
 }

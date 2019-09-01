@@ -23,26 +23,26 @@ public class UfficioSQL {
   
   public static final String DO_UPDATE =
     "UPDATE " + TABLE_NAME + " " +
-    "SET idStrutturaOspitante = ?, email = ?, nome = ?, pass = ? " +
+    "SET id = ?, strutturaOspitanteID = ?, email = ?, nome = ?, pass = ? " +
     "WHERE id = ?;";
   
   public static final String DO_RETRIEVE_BY_STRUTTURA_OSPITANTE = 
     "SELECT * " + 
     "FROM " + TABLE_NAME + " " + 
-    "WHERE idStrutturaOspitante = ?;";
+    "WHERE strutturaOspitanteID = ?;";
   
   public static final String DO_RETRIEVE_BY_EMAIL = 
     "SELECT * " + 
     "FROM " + TABLE_NAME + " " + 
-    "WHERE email = ?;";
+    "WHERE email LIKE ?;";
   
   public static final String DO_RETRIEVE_BY_NOME = 
     "SELECT * " + 
     "FROM " + TABLE_NAME + " " + 
     "WHERE nome LIKE ?;";
   
-  public static final String DO_RETRIEVE_BY_PROGETTO_FORMATIVO =
-    "SELECT * " +
-    "FROM " + TABLE_NAME + " " +
-    "WHERE ufficioID = ?;";
+  public static final String DO_RETRIEVE_QUESTIONARI_BY_UTENTE =
+    "SELECT " + QuestionarioSQL.TABLE_NAME + ".* " +
+    "FROM " + QuestionarioSQL.TABLE_NAME + ", " + CompilaSQL.TABLE_NAME + " " +
+    "WHERE " + QuestionarioSQL.TABLE_NAME + ".id = " + CompilaSQL.TABLE_NAME + ".questionarioID AND " + CompilaSQL.TABLE_NAME + ".utenteID = ?;";
 }

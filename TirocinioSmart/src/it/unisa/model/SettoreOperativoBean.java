@@ -5,17 +5,18 @@ import java.util.logging.Logger;
 import java.util.logging.Level;
 
 public class SettoreOperativoBean extends AbstractBean implements Serializable, Cloneable {
-
+  private static final long serialVersionUID = 1L;
   private int id;
   private String descrizione;
   
   public SettoreOperativoBean() {
-    
+    super();
   }
   
   public SettoreOperativoBean(
       int id,
       String descrizione) {
+    super();
     this.id = id;
     this.descrizione = descrizione;
   }
@@ -39,41 +40,33 @@ public class SettoreOperativoBean extends AbstractBean implements Serializable, 
   @Override
   public String toString() {
     StringBuilder str = new StringBuilder();
-    str.append(getClass().getName() + "[");
+    str.append(getClass().getName() + "{");
     str.append("id=" + id + ", ");
-    str.append("descrizione=" + descrizione + "]");
+    str.append("descrizione=" + descrizione + "}");
     return str.toString();
   }
   
   @Override
   public boolean equals(Object o) {
-    
     if (o == null)
       return false;
-    
-    if (getClass().getName().equals(o.getClass().getName()))
+    if (!getClass().getName().equals(o.getClass().getName()))
       return false;
-    
     SettoreOperativoBean settoreOperativoBean = (SettoreOperativoBean) o;
-    
-    if (
-        id == settoreOperativoBean.getID() &&
+    if (id == settoreOperativoBean.getID() &&
         descrizione.equals(settoreOperativoBean.getDescrizione()))
       return true;
-    
     return false;
   }
   
   @Override
   public SettoreOperativoBean clone() throws CloneNotSupportedException {
     SettoreOperativoBean settoreOperativoBean = null;
-    
     try {
       settoreOperativoBean = (SettoreOperativoBean) super.clone();
     } catch (CloneNotSupportedException e) {
       Logger.getGlobal().log(Level.SEVERE, e.getMessage());
     }
-    
     return settoreOperativoBean;
   }
 }

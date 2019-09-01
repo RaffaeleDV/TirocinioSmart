@@ -5,15 +5,18 @@ import java.util.logging.Logger;
 import java.util.logging.Level;
 
 public class IncludeBean extends AbstractBean implements Serializable {
-  
+  private static final long serialVersionUID = 1L;
   private int questionarioID;
   private int questionID;
   
   public IncludeBean() {
-    
+    super();
   }
   
-  public IncludeBean(int questionarioID, int questionID) {
+  public IncludeBean(
+      int questionarioID,
+      int questionID) {
+    super();
     this.questionarioID = questionarioID;
     this.questionID = questionID;
   }
@@ -37,41 +40,33 @@ public class IncludeBean extends AbstractBean implements Serializable {
   @Override
   public String toString() {
     StringBuilder str = new StringBuilder();
-    str.append(getClass().getName() + "[");
+    str.append(getClass().getName() + "{");
     str.append("questionarioID=" + questionarioID + ", ");
-    str.append("questionID=" + questionID + "]");
+    str.append("questionID=" + questionID + "}");
     return str.toString();
   }
   
   @Override
   public boolean equals(Object o) {
-    
     if (o == null)
       return false;
-    
     if (!getClass().getName().equals(o.getClass().getName()))
       return false;
-    
     IncludeBean includeBean = (IncludeBean) o;
-    
-    if (
-        questionarioID == includeBean.getQuestionarioID() &&
+    if (questionarioID == includeBean.getQuestionarioID() &&
         questionID == includeBean.getQuestionID())
       return true;
-    
     return false;
   }
   
   @Override
   public IncludeBean clone() throws CloneNotSupportedException {
     IncludeBean includeBean = null;
-    
     try {
       includeBean = (IncludeBean) super.clone();
     } catch (CloneNotSupportedException e) {
       Logger.getGlobal().log(Level.SEVERE, e.getMessage());
     }
-    
     return includeBean;
   }
 }

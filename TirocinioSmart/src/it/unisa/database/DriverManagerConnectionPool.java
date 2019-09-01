@@ -5,6 +5,8 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.logging.Logger;
+import java.util.logging.Level;
 
 public class DriverManagerConnectionPool {
   private static List<Connection> freeDbConnections;
@@ -15,8 +17,7 @@ public class DriverManagerConnectionPool {
     try {
       Class.forName("com.mysql.jdbc.Driver");
     } catch (ClassNotFoundException e) {
-      System.out.println("DB driver not found:" + e.getMessage());
-      e.printStackTrace();
+      Logger.getGlobal().log(Level.SEVERE, "DB driver not found:" + e.getMessage());
     }
   }
 
@@ -29,13 +30,12 @@ public class DriverManagerConnectionPool {
     String db = "dbtirocinio";
     String username = "root";
     String password = "raffaele";
-
-    newConnection = DriverManager.getConnection("jdbc:mysql://localhost:3306/dbtirocinio",
+    
+    newConnection = DriverManager.getConnection("jdbc:mysql://" + ip + ":" + port + "/" + db,
         username, password);
     newConnection.setAutoCommit(false);
     return newConnection;
   }
-
 
   public static synchronized Connection getConnection() throws SQLException {
     Connection connection;
@@ -50,6 +50,7 @@ public class DriverManagerConnectionPool {
       } catch (SQLException e) {
         connection.close();
         connection = getConnection();
+        Logger.getGlobal().log(Level.SEVERE, e.getMessage());
       }
     } else {
       connection = createDBConnection();

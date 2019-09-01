@@ -5,35 +5,29 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class TutorBean extends AbstractBean implements Serializable, Cloneable {
-
-  /**
-   * 
-   */
   private static final long serialVersionUID = 7743978606183893973L;
   private int id;
-  private int convenzioneID;
   private String email;
   private String nome;
   private String pass;
   private String tipo;
 
   public TutorBean() {
-    
+    super();
   }
   
   public TutorBean(
       int id,
-      int convenzioneID,
       String email,
       String nome,
       String pass,
       String tipo) {
+    super();
     this.id = id;
     this.email = email;
     this.nome = nome;
     this.pass = pass;
     this.tipo = tipo;
-    this.convenzioneID = convenzioneID;
   }
   
   public String getNome() {
@@ -68,18 +62,6 @@ public class TutorBean extends AbstractBean implements Serializable, Cloneable {
     this.tipo = tipo;
   }
 
-  public int getConvenzioneID() {
-    return convenzioneID;
-  }
-
-  public void setConvenzioneID(int convenzioneID) {
-    this.convenzioneID = convenzioneID;
-  }
-
-  public static long getSerialversionuid() {
-    return serialVersionUID;
-  }
-
   public int getID() {
     return id;
   }
@@ -90,43 +72,40 @@ public class TutorBean extends AbstractBean implements Serializable, Cloneable {
 
   @Override
   public String toString() {
-    return "TutorBean [id=" + id + ", email=" + email + ", nome=" + nome + ", pass=" + pass + ", tipo=" + tipo
-        + ", convenzioneID=" + convenzioneID + "]";
+    StringBuilder str = new StringBuilder();
+    str.append(getClass().getName() + "{");
+    str.append("id=" + id + ", ");
+    str.append("email=" + email + ", ");
+    str.append("nome=" + nome + ", ");
+    str.append("pass=" + pass + ", ");
+    str.append("tipo=" + tipo + "}");
+    return str.toString();
   }
 
   @Override
   public boolean equals(Object o) {
-    
     if (o == null)
       return false;
-    
     if (!getClass().getName().equals(o.getClass().getName()))
       return false;
-    
     TutorBean tutorBean = (TutorBean) o;
-    
-    if (
-        id == tutorBean.getID() &&
-        convenzioneID == tutorBean.getConvenzioneID() &&
+    if (id == tutorBean.getID() &&
         email.equals(tutorBean.getEmail()) &&
         nome.equals(tutorBean.getNome()) &&
         pass.equals(tutorBean.getPass()) &&
         tipo.equals(tutorBean.getTipo()))
       return true;
-      
     return false;
   }
 
   @Override
-  public TutorBean clone() throws CloneNotSupportedException {
+  public Object clone() throws CloneNotSupportedException {
     TutorBean tutorBean = null;
-    
     try {
       tutorBean = (TutorBean) super.clone();
     } catch (CloneNotSupportedException e) {
       Logger.getGlobal().log(Level.SEVERE, e.getMessage());
     }
-    
     return tutorBean;
   }
 }

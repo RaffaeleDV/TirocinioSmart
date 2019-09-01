@@ -1,355 +1,404 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"
-    isThreadSafe="false"
-    import="it.unisa.model.RegistroBean"
-    import="it.unisa.model.StudenteBean"
-    import="it.unisa.model.AbstractBean"
-    import="it.unisa.model.TutorBean"
-    import="it.unisa.model.UfficioBean"
-    import="it.unisa.model.AttivitaTirocinioBean"
-    import="it.unisa.model.AttivitaTirocinioModelDM"
-    import="it.unisa.model.StrutturaOspitanteBean"
-    import="it.unisa.model.StrutturaOspitanteModelDM"
-    import="java.sql.SQLException"
-    import="it.unisa.model.RegistroModelDM"
-    import="java.util.List"
-    import="java.util.logging.Logger"
-    import="java.util.logging.Level"%>
-<section id="registro-tirocinio" >
-    <div id="wrap-registro-tirocinio" align="center" >
-    	<div id="registro-heading" align="center" style="padding:50px;">
-    		<h3 style="padding: 35px; font-size: 24px; color: black;">Registro Del Tirocinio</h3>
-    	    <img id="registro-heading-icon" src="images/register-icon.png"/>
-    	</div>
-        <div id="reg-tirocinio">
-            <div id="wrap-reg-tirocinio">
-            	<%
-			      AbstractBean utenteRegistro = (AbstractBean) session.getAttribute("SessionUser");
-            	  RegistroBean registroBean = null;
-            	  List<AbstractBean> attivitaTirocinioRegistro = null;
-            	  RegistroModelDM registroModelDM = (RegistroModelDM) getServletContext().getAttribute("ContextRegistroModelDM");
-            	  AttivitaTirocinioModelDM attivitaTirocinioModelDM = (AttivitaTirocinioModelDM) getServletContext().getAttribute("ContextAttivitaModelDM");
-            	  StrutturaOspitanteModelDM strutturaOspitanteModelDM = (StrutturaOspitanteModelDM) getServletContext().getAttribute("ContextStrutturaOspitanteModelDM");
-            	  StudenteBean studenteRegistro = null;
-            	  
-            	  if (registroModelDM == null) {
-            	    registroModelDM = new RegistroModelDM();
-            	    session.setAttribute("SessionRegistroModelDM", registroModelDM);
-            	  }
-            	  
-            	  if (attivitaTirocinioModelDM == null) {
-            	    attivitaTirocinioModelDM = new AttivitaTirocinioModelDM();
-            	    session.setAttribute("SessionAttivitaTirocinioModelDM", attivitaTirocinioModelDM);
-            	  }
-            	  
-            	  if (strutturaOspitanteModelDM == null) {
-            	    strutturaOspitanteModelDM = new StrutturaOspitanteModelDM();
-            	    session.setAttribute("SessionStrutturaOspitanteModelDM", strutturaOspitanteModelDM);
-            	  }
-			      
-            	  if (registroBean == null) {
-			        if (utenteRegistro != null) {
-			          if (utenteRegistro instanceof StudenteBean) {
-			            studenteRegistro = (StudenteBean) utenteRegistro;
-			            try {
-			              registroBean = (RegistroBean) registroModelDM.doRetrieveByStudente(studenteRegistro.getID());
-			            } catch (SQLException e) {
-			              Logger.getGlobal().log(Level.SEVERE, e.getMessage());
-			              //redirect to an [error] page
-			            }
-			          } else {
-			            //redirect to an [error] page
-			          }
-			        } else {
-			          //redirect to an [login] page
-			          RequestDispatcher view = request.getRequestDispatcher("login-page.jsp");
-			          view.forward(request, response);
-			        }
-            	  }
-            	  
-            	  if (registroBean != null) {
-           	        try {
-           	          attivitaTirocinioRegistro = (List<AbstractBean>) attivitaTirocinioModelDM.doRetrieveByRegistro(registroBean.getID());
-           	        } catch (SQLException e) {
-                      Logger.getGlobal().log(Level.SEVERE, e.getMessage());
-                      //redirect to an [error] page
-           	        }
-            	  } else {
-            	    //redirect to an [error] page
-            	  }
-            	%>
-                <div id="reg-info-wrapper" class="wrapper" >
-                	<p id="reg-info" class="info">Nome: </p><b id="reg-info-nome" class="info" name="nome" ><%= registroBean.getNome() %></b>
-                </div>
-                <div id="registro-info" hidden >
-                  <div id="reg-info-wrapper" class="wrapper" >
-	            	<p id="reg-info">ID: </p><b id="reg-info-id" class="info" name="id" ><b id="rid"><%= registroBean.getID() %></b></b>
-            	  </div>
-                  <div id="reg-info-wrapper" class="wrapper" >
-                  	<p id="reg-info" class="info">Descrizione: </p><b id="reg-info-descrizione" class="info" name="descrizione" ><%= registroBean.getDescrizione() %></b>
-                  </div>
-            	  <div id="reg-info-wrapper" class="wrapper" >
-              		<p id="reg-info" class="info" name="consegna" >Consegna:   </p>
-              		<b id="reg-info-consegna" class="info" >
-	           		<%
-	           			if (registroBean.getConsegna()) {
-	           		%>
-	           			  <%= "Il Registro Delle Attività Risulta Consegnato".toString() %>
-	           			  <p><img id="consegna-icon" src="images/supplemento.jpg"/></p>
-	           		<%
-	           			} else {
-	           		%>
-	           			  <%= "Il Registro Delle Attività Non Risulta Consegnato".toString() %>
-	           		<%
-	           			}
-	           		%>
-	           		</b>
-            	  </div>
-            	  <div id="reg-info-wrapper" class="wrapper" >
-            		<p id="reg-info" class="info" name="confermaAcc" >Conferma Del Tutor Accademico: </p>
-            		<b id="reg-info" class="info">
-	           		<%
-	           			if (registroBean.getConfermaTutorAcc()) {
-	           	    %>
-	           				<%= "Confermato Dal Tutor Accademico".toString() %>
-	           				<p><img id="true-false-icon" src="images/true.png"/></p>
-	           		<%
-	           			} else {
-	           		%>
-	           				<%= "Non Confermato Dal Tutor Accademico".toString() %>
-	           				<p><img id="true-false-icon" src="images/false.png"/></p>
-	           		<%
-	           			}
-	           		%>
-	           		</b>
-            	  </div>
-            	  <div id="reg-info-wrapper" class="wrapper" >
-            		<p id="reg-info" class="info" name="confermaAz">Conferma Del Tutor Aziendale: </p>
-            		<b id="reg-info" class="info">
-	           		<%
-	           			if (registroBean.getConfermaTutorAz()) {
-	           		%>
-	           				<%= "Confermato Dal Tutor Aziendale".toString() %>
-	           				<p><img id="true-false-icon" src="images/true.png"/></p>
-	           		<%
-	           			} else {
-	           		%>
-	           				<%= "Non Confermato Dal Tutor Aziendale".toString() %>
-	           				<p><img id="true-false-icon" src="images/false.png"/></p>
-	           		<%
-	           			}
-	           		%>
-	           		</b>
-            	  </div>
-            	  <div id="reg-info-wrapper" class="wrapper" >
-            	    <p id="reg-info" class="info" name="confermaUff">Conferma Dell' Ufficio: </p>
-            	    <b id="reg-info" class="info">
-            	    <%
-            	        if (registroBean.getConfermaUff()) {
-            	    %>
-            	            <%= "Confermato Dall' Ufficio".toString() %>
-            	            <p><img id="true-false-icon" src="images/true.png"/></p>
-            	    <%
-            	        } else {
-            	    %>
-            	            <%= "Non Confermato Dall' Ufficio".toString() %>
-            	            <p><img id="true-false-icon" src="images/false.png"/></p>
-            	    <%
-            	        }
-            	    %>
-            	    </b>
-            	  </div>
-            	  <div id="reg-info-wrapper" class="wrapper" >
-            	    <p id="reg-info" class="info" name="dataCreazione">Data Creazione Del Registro: </p>
-            	    <b id="reg-info-data-creazione" class="info">
-            	      <%= registroBean.getPrimaIstituzione() %>
-            	    </b>
-            	  </div>
-            	  <div id="reg-info-wrapper" class="wrapper" >
-            	    <p id="reg-info" class="info" name="ultimoAggiornamento">Data Di Ultimo Aggiornamento: </p>
-            	    <b id="reg-info-ultimo-aggiornamento" class="info">
-            	      <%= registroBean.getUltimoAgg().toString() %>
-            	    </b>
-            	  </div>
-                </div>
-            </div>
-            <!--<div id="ts-input-reg-wrapper">
-                <a href="#reg-tirocinio" style="text-decoration: none;">
-                  <input id="button" class="ts-button" name="vis-reg-tirocinio"
-                      type="button" value="Visualizza" onclick="visualizzaRegistro()" />
-                </a>
-                <a href="#modifica-registro-wrapper" style="text-decoration: none;">
-                  <input id="button" class="ts-button" name="modifica-reg-tirocinio"
-                      type="button" value="Modifica" onclick="modificaRegistro()"/>
-                </a>
-                <input id="button" class="ts-button" name="consegna-reg-tirocinio"
-                    type="button" value="Consegna" onclick="consegnaRegistro()" />
-            </div>
-            -->
-            <div id="ts-input-reg-wrapper">
-              <input id="button" class="ts-button" name="vis-reg-tirocinio"
-                  type="button" value="Visualizza" onclick="visualizzaRegistro()" />
-              <input id="button" class="ts-button" name="modifica-reg-tirocinio"
-                  type="button" value="Modifica" onclick="modificaRegistro()"/> 
-              <input id="button" class="ts-button" name="consegna-reg-tirocinio"
-                  type="button" value="Consegna" onclick="consegnaRegistro()" />
-            </div>
-            <div id="modifica-registro-wrapper" hidden>
-              <p id="modifica-registro-info">Nome: </p>
-              <input id="mrnome" type="text" placeholder="Nome:" />
-              <p id="modifica-registro-info">ID: </p>
-              <input id="mrid" type="text" placeholder="ID:" />
-              <p id="modifica-registro-info">Descrizione: </p>
-              <input id="mrdescrizione" type="text" placeholder="Descrizione:" />
-              <div id="conferma-wrapper" class="wrapper">
-                <input id="conferma-registro-info" type="button" value="Conferma" onclick="modificaRegistro()"/>
-              </div>
-            </div>
-            
-            <div id="reg-attivita-wrapper" class="wrapper" >
-              <!-- tabella del registro delle attivita con il nome della struttura ospitante in cui si svolgera l' attivita -->
-              <%
-                if (attivitaTirocinioRegistro == null) {
-              %>
-                  <p style="font-weight: 400; font-size: 28px; color: black; padding-bottom: 60px;">Nessuna Attivita Trovata Per Il Registro</p>
-              <%  
-                } else {
-                  if (attivitaTirocinioRegistro.isEmpty()) {
-                  %>
-                    <p style="font-weight: 400; font-size: 28px; color: black; padding-bottom: 60px;">Nessuna Attivita Trovata Per Il Registro</p>
-                  <%
-                  } else {
-                  %>
-                    <p  style="font-weight: 400; font-size: 28px; color: black; padding-bottom: 60px;">Attivita Svolte Del Tirocinio</p>
-                  <%  
-                  }
-                }
-              %>
-              <%
-                if (attivitaTirocinioRegistro != null) {
-                  if (!attivitaTirocinioRegistro.isEmpty()) {
-              %>
-		              <table id="reg-attivita">
-		                <thead id="reg-attivita-thead">
-		                  <tr id="reg-attivita-row">
-		                    <th> </th>
-		                    <th id="reg-attivita-head" style="background-color: #3AD1D3;">ID</th>
-		                    <th id="reg-attivita-head" style="background-color: #5BE599;">Nome Registro</th>
-		                    <th id="reg-attivita-head" style="background-color: #D5BE59;">Struttura Ospitante</th>
-		                    <th id="reg-attivita-head" style="background-color: #E4E55B;">Descrizione</th>
-		                    <th id="reg-attivita-head" style="background-color: #92DB50;">Data</th>
-		                    <th id="reg-attivita-head" style="background-color: #E06969;">Ore</th>
-		                  </tr>
-		                </thead>
-		                <tbody id="reg-attivita-tbody">
-		                <%
-		                  int rowCounter = 1;
-		                
-		                  if (attivitaTirocinioRegistro != null) {
-		                    for (AbstractBean product: attivitaTirocinioRegistro) {
-		                      AttivitaTirocinioBean attivitaTirocinioBean = (AttivitaTirocinioBean) product;
-		                      StrutturaOspitanteBean strutturaOspitanteBean = (StrutturaOspitanteBean) strutturaOspitanteModelDM.doRetrieveByAttivitaTirocinio(attivitaTirocinioBean.getID());
-		                      if (attivitaTirocinioBean != null) {
-		                %>
-		                        <tr id="reg-attivita-row">
-		                          <th id="reg-attivita-row-counter"> <%= rowCounter++ %> </th>
-		                          <td id="reg-attivita-data"> <%= attivitaTirocinioBean.getID() %> </td>
-		                          <td id="reg-attivita-data"> <%= registroBean.getNome() %> </td>
-		                          <td id="reg-attivita-data"> <%= strutturaOspitanteBean.getNome() %> </td>
-		                          <td id="reg-attivita-data"> <%= attivitaTirocinioBean.getDescrizione() %> </td>
-		                          <td id="reg-attivita-data"> <%= attivitaTirocinioBean.getData() %> </td>
-		                          <td id="reg-attivita-data"> <%= attivitaTirocinioBean.getOre() %> </td>
-		                        </tr>
-		                <%
-		                      }
-		                    }
-		                  } else {
-		                    Logger.getGlobal().log(Level.INFO, "Nessuna attivita di tirocinio trovata");
-		                  }
-		                %>
-		                </tbody>
-		              </table>
-	          <%
-                  }
-                }
-	          %>
-            </div>
-        </div>
-    </div>
-    <script type="text/javascript">
-      function visualizzaRegistro(){
-        var h = document.getElementById("registro-info").hidden;
-        
-        if(h == true){
-          document.getElementById("registro-info").hidden = false;
-        }else{
-          document.getElementById("registro-info").hidden = true;
-          document.getElementById("modifica-registro-wrapper").hidden = true;
-        }
-      }
+  pageEncoding="UTF-8"
+  isThreadSafe="false"
+  import="it.unisa.model.RegistroBean"
+  import="it.unisa.model.StudenteBean"
+  import="it.unisa.model.AbstractBean"
+  import="it.unisa.model.TutorBean"
+  import="it.unisa.model.UfficioBean"
+  import="it.unisa.model.AttivitaTirocinioBean"
+  import="it.unisa.model.AttivitaTirocinioModelDM"
+  import="it.unisa.model.StrutturaOspitanteBean"
+  import="it.unisa.model.StrutturaOspitanteModelDM"
+  import="java.sql.SQLException"
+  import="it.unisa.model.RegistroModelDM"
+  import="java.util.List"
+  import="java.util.logging.Logger"
+  import="java.util.logging.Level"%>
+<section id="registro-wrapper" class="wrapper">
+  <div id="registro-heading-wrapper" class="wrapper">
+    <img id="registro-heading-icon" src="images/register-icon.png" class="icon"/>
+    <h3 id="registro-heading" class="heading"></h3>
+  </div>
+    <%
+      RegistroBean registroBean = null;
+      List<AbstractBean> attivitaTirocinioRegistro = null;
+      AbstractBean utenteRegistroBean = (AbstractBean) session.getAttribute("SessionUser");
+      StudenteBean studenteRegistroBean = null;
+      TutorBean tutorRegistroBean = null;
+      UfficioBean ufficioRegistroBean = null;
+      int idRegistro = -1;
       
-      function modificaRegistro(){
-        var h = document.getElementById("registro-info").hidden;
-        
-        if(h == false){
-          document.getElementById("modifica-registro-wrapper").hidden = false;
-        }
-        
-        var oldId = $('#rid').val();
-        var id = $('#mrid').val();
-        var nome = $('#mrnome').val();
-        var descrizione = $('#mrdescrizione').val();
-        
-        console.log("rid: " + oldId);
-        
-        $.ajax({
-      	  type : "POST",
-      	  url : "ModificaRegistroTirocinioStudenteServlet",
-      	  contentType : "application/x-www-form-urlencoded",
-      	  datatype : "json",
-          data: "id="+id+"&nome="+nome+"&descrizione="+descrizione+"&old_id="+oldId,
-          success: function(data) {
-  	        var json = data;
-  	        var modifica = json.modifica;
-  	      
-  	        if (modifica) {
-              document.getElementById("reg-info-id").innerHTML = id;
-              document.getElementById("reg-info-nome").innerHTML = nome;
-              document.getElementById("reg-info-descrizione").innerHTML = descrizione;
-              document.getElementById("modifica-registro-wrapper").hidden = true;
+      if (utenteRegistroBean != null) {
+        if (utenteRegistroBean instanceof StudenteBean) {
+          studenteRegistroBean = (StudenteBean) utenteRegistroBean;
+          registroBean = (RegistroBean) session.getAttribute("SessionRegistro");
+          if (registroBean == null) {
+            try {
+              registroBean = (RegistroBean) RegistroModelDM.INSTANCE.doRetrieveByStudente(studenteRegistroBean.getID());
+            } catch (SQLException e) {
+              Logger.getGlobal().log(Level.SEVERE, e.getMessage());
+              //redirect to an [error] page
             }
-          },
-          error: function(error) {
-            console.log("Errore:"+ error);
+          } else if (utenteRegistroBean instanceof TutorBean) {
+            if (idRegistro >= 0) {
+              try {
+            	  if (tutorRegistroBean.getTipo().equals("Accademico")) {
+                  if (RegistroModelDM.INSTANCE.isTutorAccRegistro(tutorRegistroBean.getID(), idRegistro)) {
+                    registroBean = (RegistroBean) RegistroModelDM.INSTANCE.doRetrieveByKey(idRegistro);
+                  } else {
+                	  Logger.getGlobal().log(Level.SEVERE, "Accesso Negato Al Registro: ID Registro Risulta Di Un' Altro Tutor");
+                	  //redirect to an [error] page
+                  }
+            	  } else if (tutorRegistroBean.getTipo().equals("Aziendale")) {
+            		  if (RegistroModelDM.INSTANCE.isTutorAzRegistro(tutorRegistroBean.getID(), idRegistro)) {
+            			  registroBean = (RegistroBean) RegistroModelDM.INSTANCE.doRetrieveByKey(idRegistro);
+            		  } else {
+            			  Logger.getGlobal().log(Level.SEVERE, "Accesso Negato Al Registro: ID Registro Risulta Di Un' Altro Tutor");
+            			  //redirect to an [error] page
+            		  }
+            	  } else {
+            		  Logger.getGlobal().log(Level.SEVERE, "Accesso Negato Al Registro: Istanza Di Tutor Non Valida");
+            		  //redirect to an [error] page
+            	  }
+              } catch (SQLException e) {
+                Logger.getGlobal().log(Level.SEVERE, e.getMessage());
+                //redirect to an [error] page
+              }
+            } else {
+              Logger.getGlobal().log(Level.SEVERE, "Accesso Negato Al Registro: ID Negativo");
+              //redirect to an [error] page
+            }
+          } else if (utenteRegistroBean instanceof UfficioBean) {
+            idRegistro = (int) session.getAttribute("SessionRegistroID");
+            if (idRegistro >= 0) {
+              try {
+            	  if (RegistroModelDM.INSTANCE.isUfficioRegistro(ufficioRegistroBean.getID(), idRegistro)) {
+                  registroBean = (RegistroBean) RegistroModelDM.INSTANCE.doRetrieveByKey(idRegistro);
+            	  } else {
+            		  Logger.getGlobal().log(Level.SEVERE, "Accesso Negato Al Registro: ID Registro Risulta Di Un' Altro Ufficio");
+            		  //redirect to an [error] page
+            	  }
+              } catch (SQLException e) {
+                Logger.getGlobal().log(Level.SEVERE, e.getMessage());
+                //redirect to an [error] page
+              }
+            } else {
+            	Logger.getGlobal().log(Level.SEVERE, "Accesso Negato Al Registro Con ID Negativo");
+              //redirect to an [error] page
+            }
+          } else {
+        	  Logger.getGlobal().log(Level.SEVERE, "Istanza Di Utente Non Valida");
+            //redirect to an [error] page
           }
-        })
+        } else {
+          //redirect to an [error] page
+        }
+      } else {
+    	  Logger.getGlobal().log(Level.SEVERE, "Nessun Utente Registrato Al Login");
+        RequestDispatcher view = request.getRequestDispatcher("login-page.jsp");
+        view.forward(request, response);
       }
-      
-      function consegnaRegistro(){
-    	var id = document.getElementById("rid").innerHTML;
-    	
-    	$.ajax({
-    	  type : "POST",
-    	  url : "ConsegnaRegistroTirocinioServlet",
-    	  contentType : "application/x-www-form-urlencoded",
-    	  datatype : "json",
-    	  data : "id="+id,
-    	  success : function(data){
-            var json = data;
-            var consegna = json.consegna;
-            
-            if(consegna){
-              console.log("Consegna effettuata");
-              document.getElementById("reg-info-consegna").innerHTML = "Il Registro Delle Attività Risulta Consegnato" + "<p><img id=\"consegna-icon\" src=\"images/supplemento.jpg\"/></p>";
-            }else{
-              console.log("Consegna non effettuata");
-              document.getElementById("reg-info-consegna").innerHTML = "Il Registro Delle Attività Non Risulta Consegnato";
-			}
-          },
-          error : function(error){
-            console.log("Errore:"+ error);
+
+      if (registroBean != null) {
+        if (studenteRegistroBean instanceof StudenteBean) {
+          session.setAttribute("SessionRegistro", registroBean);
+        }
+        try {
+          attivitaTirocinioRegistro = (List<AbstractBean>) AttivitaTirocinioModelDM.INSTANCE.doRetrieveByRegistro(registroBean.getID());
+        } catch (SQLException e) {
+          Logger.getGlobal().log(Level.SEVERE, e.getMessage());
+          //redirect to an [error] page
+        }
+      } else {
+        //redirect to an [error] page
+      }
+ 	  %>
+ 	<div id="registro-info-container" class="wrapper" hidden=true>
+    <div id="registro-info-wrapper" class="wrapper">
+      <a id="registro-info-heading" class="info-heading">Nome</a>
+      <p id="registro-info-nome" class="info">
+        <%= registroBean.getNome() %>
+      </p>
+    </div>
+    <div id="registro-info-wrapper" class="wrapper">
+      <a id="registro-info-heading" class="info-heading">ID</a>
+      <p id="registro-info-id" class="info">
+        <%= registroBean.getID() %>
+      </p>
+    </div>
+    <div id="registro-info-wrapper" class="wrapper">
+      <a id="registro-info-heading" class="info-heading">Descrizione</a>
+      <p id="registro-info-descrizione" class="info">
+        <%= registroBean.getDescrizione() %>
+      </p>
+    </div>
+    <div id="registro-info-wrapper" class="wrapper">
+      <a id="registro-info-heading" class="info-heading">Consegna</a>
+      <p id="registro-info-consegna" class="info">
+        <%
+          if (registroBean.getConsegna()) {
+        %>
+            <img id="tf-consegna" class="tf-icon" src="images/true.png"/>
+        <%
+          } else {
+        %>
+            <img id="tf-consegna" class="tf-icon" src="images/false.png"/>
+        <%
           }
-        })
-      }
-    </script>
+        %>
+      </p>
+    </div>
+    <div id="registro-info-wrapper" class="wrapper">
+      <a id="registro-info-heading" class="info-heading">Conferma Del Tutor Accademico</a>
+      <p id="registro-info-conferma" class="info">
+        <%
+          if (registroBean.getConfermaTutorAcc()) {
+        %>
+            <img id="tf-caccademico" class="tf-icon" src="images/true.png"/>
+        <%
+          } else {
+        %>
+            <img id="tf-caccademico" class="tf-icon" src="images/false.png"/>
+        <%
+          }
+        %>
+      </p>
+    </div>
+    <div id="registro-info-wrapper" class="wrapper">
+      <a id="registro-info-heading" class="info-heading">Conferma Del Tutor Aziendale</a>
+      <p id="registro-info-conferma" class="info">
+        <%
+          if (registroBean.getConfermaTutorAz()) {
+        %>
+            <img id="tf-caziendale" class="tf-icon" src="images/true.png"/>
+        <%
+          } else {
+        %>
+            <img id="tf-caziendale" class="tf-icon" src="images/false.png"/>
+        <%
+          }
+        %>
+      </p>
+    </div>
+    <div id="registro-info-wrapper" class="wrapper">
+      <a id="registro-info-heading" class="info-heading">Conferma Dell' Ufficio</a>
+      <p id="registro-info-conferma" class="info">
+        <%
+          if (registroBean.getConfermaUff()) {
+        %>
+            <img id="tf-cufficio" class="tf-icon" src="images/true.png"/>
+        <%
+          } else {
+        %>
+            <img id="tf-cufficio" class="tf-icon" src="images/false.png"/>
+        <%
+          }
+        %>
+      </p>
+    </div>
+    <div id="registro-info-wrapper" class="wrapper">
+      <a id="registro-info-heading" class="info-heading">Data Creazione Del Registro</a>
+      <p id="registro-info-data-istituzione" class="info">
+        <%= registroBean.getPrimaIstituzione() %>
+      </p>
+    </div>
+    <div id="registro-info-wrapper" class="wrapper">
+      <a id="registro-info-heading" class="info-heading">Data Di Ultimo Aggiornamento</a>
+      <p id="registro-info-data-aggiornamento" class="info">
+        <%= registroBean.getUltimoAgg().toString() %>
+      </p>
+    </div>
+  </div>
+  <div id="modifica-registro-wrapper" class="wrapper" hidden=true>
+    <p id="modifica-registro-info">Nome: </p>
+    <input id="mrnome" type="text" placeholder="inserire nome" 
+        oninput="goodNome()"/>
+    <p id="modifica-registro-info">ID: </p>
+    <input id="mrid" type="text" placeholder="inserire id"
+        oninput="goodID()"/>
+    <p id="modifica-registro-info">Descrizione: </p>
+    <input id="mrdescrizione" type="text" placeholder="inserire descrizione"
+        oninput="goodDescrizione()"/>
+    <div id="conferma-wrapper" class="wrapper">
+      <input id="conferma-registro-info" class="button" type="button" value="Conferma" onclick="modificaRegistro()"/>
+    </div>
+  </div>
+  <div id="registro-options-wrapper" class="wrapper" hidden=false>
+    <input id="ts-button" class="button"
+        type="button" value="Visualizza" onclick="visualizzaRegistroWrapper()"/>
+    <input id="ts-button" class="button"
+        type="button" value="Modifica" onclick="modificaRegistro()"/>
+    <input id="ts-button" class="button"
+        type="button" value="Consegna" onclick="consegnaRegistro()"/>
+  </div>
 </section>
+<script type="text/javascript">
+  var MAXREGID = 10;
+  var MAXREGNOME = 30;
+  var MAXREGDESCRIZIONE = 1024;
+  
+  goodID();
+  goodNome();
+  goodDescrizione();
+  
+  function goodID() {
+	  if (validateRegistroID() == true) {
+		  $("#mrid").css("border", "3px #80ff80 solid");
+	  } else {
+		  $("#mrid").css("border", "3px #ff4040 solid");
+	  }
+  };
+  
+  function goodNome() {
+	  if (validateRegistroNome() == true) {
+		  $("#mrnome").css("border", "3px #80ff80 solid");
+	  } else {
+		  $("#mrnome").css("border", "3px #ff4040 solid");
+	  }
+  };
+
+  function goodDescrizione() {
+	  if (validateRegistroDescrizione() == true) {
+		  $("#mrdescrizione").css("border", "3px #80ff80 solid");
+	  } else {
+		  $("#mrdescrizione").css("border", "3px #ff4040 solid");
+	  }
+  };
+  
+  function validateRegistroID() {
+	  var id = $("#mrid").val().trim();
+	  if (id != null) {
+		  var reID = /^[0-9]+$/;
+	    if (id.length <= MAXREGID && reID.exec(id)) {
+	      return true;
+	    }
+	  }
+	  return false;
+  };
+  
+  function validateRegistroNome() {
+	  var nome = $("#mrnome").val().trim();
+	  if (nome != null) {
+		  var reNome = /^[A-Za-z0-9]+$/;
+	    if (nome.length <= MAXREGNOME && reNome.exec(nome)) {
+	      return true;
+	    }
+	  }
+	  return false;
+  };
+  
+  function validateRegistroDescrizione() {
+	  var descrizione = $("#mrdescrizione").val().trim();
+	  if (descrizione != null) {
+		  var reDescrizione = /^[A-Za-z0-9\s]+$/g;
+	    if (descrizione.length <= MAXREGDESCRIZIONE && reDescrizione.exec(descrizione)) {
+	      return true;
+	    }
+	  }
+	  return false;
+  };
+  
+  function visualizzaRegistroWrapper() {
+	  var hRegistroWrapper = document.getElementById("registro-info-container").hidden;
+    if (hRegistroWrapper == true) {
+      hRegistroWrapper = false;
+      document.getElementById("registro-info-container").hidden = false;
+    } else {
+      hRegistroWrapper = true;
+      document.getElementById("registro-info-container").hidden = true;
+      document.getElementById("modifica-registro-wrapper").hidden = true;
+    }
+  };
+  
+  function visualizzaModificaRegistroWrapper() {
+	  var hidden = document.getElementById("modifica-registro-wrapper").hidden;
+    if (document.getElementById("registro-info-container").hidden == false &&
+      hidden == true) {
+      hidden = false;
+      document.getElementById("modifica-registro-wrapper").hidden = false;
+    } else {
+      hidden = true;
+      document.getElementById("modifica-registro-wrapper").hidden = true;
+    }
+  };
+  
+  function modificaRegistro() {
+    var hidden = document.getElementById("modifica-registro-wrapper").hidden;
+    if (hidden == true) {
+    	visualizzaModificaRegistroWrapper();
+    	return false;
+    } else {
+    	visualizzaModificaRegistroWrapper();
+    }
+    
+    var oldId = document.getElementById("registro-info-id").innerHTML.trim();
+    var id = $("#mrid").val().trim();
+    var nome = $("#mrnome").val().trim();
+    var descrizione = $("#mrdescrizione").val().trim();
+    if (!(validateRegistroNome() &&
+        validateRegistroID() &&
+        validateRegistroDescrizione())) {
+    	console.log("oldID: " + oldId);
+    	console.log("id: " + id);
+    	console.log("nome: " + nome);
+    	console.log("descrizione: " + descrizione);
+    	console.log("Nome, Descrizione o ID errati nella modifica del registro");
+    	return false;
+    }
+    
+    $.ajax({
+      type: "POST",
+      url: "ModificaRegistroTirocinioStudenteServlet",
+   	  contentType: "application/x-www-form-urlencoded",
+   	  datatype: "json",
+      data: "id="+id+"&nome="+nome+"&descrizione="+descrizione+"&old_id="+oldId,
+      success: function(data) {
+        if (data.modifica == true) {
+        	console.log("Modifica Avvenuta.");
+          document.getElementById("registro-info-id").innerHTML = id;
+          document.getElementById("registro-info-nome").innerHTML = nome;
+          document.getElementById("registro-info-descrizione").innerHTML = descrizione;
+          document.getElementById("modifica-registro-wrapper").hidden = true;
+        } else {
+        	console.log("Modifica Non Avvenuta.");
+        }
+      },
+      error: function(error) {
+        console.log("Errore:"+ error);
+      }
+    })
+  };
+
+  function consegnaRegistro() {
+    var id = document.getElementById("registro-info-id").innerHTML.trim();
+
+    $.ajax({
+      type : "POST",
+      url : "ConsegnaRegistroServlet",
+      contentType : "application/x-www-form-urlencoded",
+      datatype : "json",
+      data : "id="+id,
+      success : function (data) {
+        if (data.consegna == true) {
+          console.log("Consegna Effettuata.");
+          document.getElementById("tf-consegna").src = "images/true.png";
+        } else {
+          console.log("Consegna Non Effettuata.");
+          document.getElementById("tf-consegna").src = "images/false.png";
+        }
+      },
+      error : function(error) {
+        console.log("Errore:"+ error);
+      }
+    })
+  };
+  
+  if (typeof String.trim == "undefined") {
+	  String.prototype.trim = function() {
+		  return this.replace(/(^\s*)|(\s*$)/g, "");
+	  }
+  }
+</script>
+
+

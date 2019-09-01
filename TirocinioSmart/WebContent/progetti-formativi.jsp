@@ -23,11 +23,6 @@
     UfficioBean ufficioBean = null;
     AbstractBean userProgetti = (AbstractBean) session.getAttribute("SessionUser");
     List<AbstractBean> progetti = null;
-    ProgettoFormativoModelDM progettoFormativoModelDM = (ProgettoFormativoModelDM) getServletContext().getAttribute("SessionProgettoFormativoModelDM");
-    if (progettoFormativoModelDM == null) {
-      progettoFormativoModelDM = new ProgettoFormativoModelDM();
-      getServletContext().setAttribute("SessionProgettoFormativoModelDM", progettoFormativoModelDM);
-    }
     
     if (userProgetti != null) {
       if (userProgetti.getClass().getName().equals(TutorBean.class.getName())) {
@@ -48,14 +43,14 @@
     if (progetti == null) {
       if (tutorBean != null) {
         try {
-          progetti = (List<AbstractBean>) progettoFormativoModelDM.doRetrieveByTutor(tutorBean.getID());
+          progetti = (List<AbstractBean>) ProgettoFormativoModelDM.INSTANCE.doRetrieveByTutor(tutorBean);
         } catch (SQLException e) {
           Logger.getGlobal().log(Level.SEVERE, e.getMessage());
           //redirect to an [error] page
         }
       } else if (ufficioBean != null) {
         try {
-          progetti = (List<AbstractBean>) progettoFormativoModelDM.doRetrieveByUfficio(ufficioBean.getID());
+          progetti = (List<AbstractBean>) ProgettoFormativoModelDM.INSTANCE.doRetrieveByUfficio(ufficioBean.getID());
         } catch (SQLException e) {
           Logger.getGlobal().log(Level.SEVERE, e.getMessage());
           //redirect to an [error] page

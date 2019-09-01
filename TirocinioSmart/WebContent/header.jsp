@@ -15,18 +15,20 @@
       view.forward(request, response);
     }
   %>
-  <div id="logo-wrapper" class="wrapper">
-   <img id="logo" src="images/logo.png"/>
+  <div id="hlogo-wrapper" class="container">
+   <img id="hlogo" src="images/logo.png"/>
   </div>
-  <div id="navbar-wrapper" class="wrapper">
-    <nav id="navbar" class="wrapper">
+  <div id="hnav-wrapper" class="container">
+    <nav id="hnav" class="container">
       <ul id="navbar-list">
-        <li><a id="navbar-link" href="home-page.jsp">Home</a></li>
+        <li>
+          <a id="navbar-link" href="home-page.jsp">Home</a>
+        </li>
         <%
           if (userBean instanceof StudenteBean) {
         %>
-            <li><a id="navbar-link" href="registro-studente-page.jsp">Registro Del Tirocinio(Studente)</a></li>
-            <li><a id="navbar-link" href="progetto-formativo-studente-page.jsp">Progetto Formativo(Studente)</a>
+            <li><a id="navbar-link" href="registro-page.jsp">Registro Del Tirocinio(Studente)</a></li>
+            <li><a id="navbar-link" href="progetto-formativo-page.jsp">Progetto Formativo(Studente)</a>
         <%
           } else if (userBean instanceof TutorBean) {
         %>
@@ -36,7 +38,6 @@
           } else if (userBean instanceof UfficioBean) {
         %>
             <li><a id="navbar-link" href="registri-ufficio-page.jsp">Registri Del Tirocinio(Ufficio)</a></li>
-            <li><a id="navbar-link" href="progetti-formativi-ufficio-page.jsp">Progetti Formativi(Ufficio)</a></li>
             <li><a id="navbar-link" href="questionario-page.jsp">Questionario</a></li>
             <li><a id="navbar-link" href="convenzione-page.jsp">Convenzione</a></li>
         <%
@@ -50,6 +51,13 @@
     </nav>
   </div>
 </header>
+<script type="text/javascript">
+  if (typeof String.trim == "undefined") {
+    String.prototype.trim = function() {
+      return this.replace(/(^\s*)|(\s*$)/g, "");
+    }
+  }    
+</script>
 
 
 	

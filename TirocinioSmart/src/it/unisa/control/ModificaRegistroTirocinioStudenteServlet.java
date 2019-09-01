@@ -24,9 +24,8 @@ import it.unisa.model.AbstractBean;
  */
 @WebServlet("/ModificaRegistroTirocinioStudenteServlet")
 public class ModificaRegistroTirocinioStudenteServlet extends HttpServlet {
+  private static final long serialVersionUID = 1L;
 
-  private static final RegistroModelDM registroModelDM = new RegistroModelDM();
-  
   /**
    * @see HttpServlet#HttpServlet()
    */
@@ -50,100 +49,31 @@ public class ModificaRegistroTirocinioStudenteServlet extends HttpServlet {
     HttpSession session = null;
     RegistroBean registroBean = null;
     StudenteBean studenteBean = null;
-    String idRegistro = (String) request.getParameter("id").toString();
-    String nome = (String) request.getParameter("nome").toString();
-    String descrizione = (String) request.getParameter("descrizione").toString();
-    String oldIDRegistro = (String) request.getParameter("old_id").toString();
+    String idRegistro = (String) request.getParameter("id").toString().trim();
+    String nome = (String) request.getParameter("nome").toString().trim();
+    String descrizione = (String) request.getParameter("descrizione").toString().trim();
+    String oldIDRegistro = (String) request.getParameter("old_id").toString().trim();
     Date ultimoAggiornamento = null;
     boolean modifica = false;
     int id = -1;
     int oldID = -1;
     
-    Logger.getGlobal().log(Level.INFO, "Richiesta di modifica di un registro di tiroinio di uno studente con: \n"
-    		+ "id:" + idRegistro + ", nome:" + nome + ", descrizione:" + descrizione + "oldIDRegistro:" + oldIDRegistro);
-    
-    getServletContext().setAttribute("ContextRegistroModelDM", registroModelDM);
-    
-    if (idRegistro != null) {
-      if (!idRegistro.equals("")) {
-        try {
-          id = Integer.valueOf(idRegistro);
-        } catch (NumberFormatException e) {
-          Logger.getGlobal().log(Level.SEVERE, e.getMessage());
-          //redirect to an [error] page
-          //set del valore per SessionErrorMessage404
-          RequestDispatcher view = request.getRequestDispatcher("404-page.jsp");
-          view.forward(request, response);
-        }
-      } else {
-        Logger.getGlobal().log(Level.INFO, "idRegistro come stringa vuota nella modifica di un registro da parte di uno studente");
-        //redirect to an [error] page
-        //set del valore per SessionErrorMessage404
-        RequestDispatcher view = request.getRequestDispatcher("404-page.jsp");
-        view.forward(request, response);
-      }
-    } else {
-      Logger.getGlobal().log(Level.INFO, "idRegistro nullo nella modifica di un registro da parte di uno studente");
+    if (oldIDRegistro == null || idRegistro == null ||
+        nome == null || descrizione == null || nome.equals("")) {
+      Logger.getGlobal().log(Level.SEVERE, "Info. Non Valide Nella Modifica Di Un Registro.");
       //redirect to an [error] page
-      //set del valore per SessionErrorMessage404
-      RequestDispatcher view = request.getRequestDispatcher("404-page.jsp");
+      //set the error message
+      RequestDispatcher view = request.getRequestDispatcher("500-page.jsp");
       view.forward(request, response);
     }
     
-    if (nome != null) {
-      if (nome.equals("")) {
-        Logger.getGlobal().log(Level.INFO, "Nome come stringa vuota nella modifica di un registro");
-        //redirect to an [error] page
-        //set del valore per SessionErrorMessage404
-        RequestDispatcher view = request.getRequestDispatcher("404-page.jsp");
-        view.forward(request, response);
-      }
-    } else {
-      Logger.getGlobal().log(Level.INFO, "Nome come valore nullo nella modifica di un registro");
+    try {
+      oldID = Integer.valueOf(oldIDRegistro);
+      id = Integer.valueOf(idRegistro);
+    } catch (NumberFormatException e) {
+      Logger.getGlobal().log(Level.SEVERE, "ID RegistroBean Non Valido.");
       //redirect to an [error] page
-      //set del valore per SessionErrorMessage404
-      RequestDispatcher view = request.getRequestDispatcher("404-page.jsp");
-      view.forward(request, response);      
-    }
-    
-    if (descrizione != null) {
-      if (descrizione.equals("")) {
-        Logger.getGlobal().log(Level.INFO, "Descrizione come stringa vuota nella modifica di un registro");
-        //redirect to an [error] page
-        //set del valore per SessionErrorMessage404
-        RequestDispatcher view = request.getRequestDispatcher("404-page.jsp");
-        view.forward(request, response);
-      }
-    } else {
-      Logger.getGlobal().log(Level.INFO, "Descrizione come stringa nulla nella modifica di un registro");
-      //redirect to an [error] page
-      //set del valore per SessionErrorMessage404
-      RequestDispatcher view  = request.getRequestDispatcher("404-page.jsp");
-      view.forward(request, response);
-    }
-    
-    if (oldIDRegistro != null) {
-      if (!oldIDRegistro.equals("")) {
-        try {
-          oldID = Integer.valueOf(oldIDRegistro);
-        } catch (NumberFormatException e) {
-          Logger.getGlobal().log(Level.SEVERE, e.getMessage());
-          //redirect to an [error] page
-          //set del valore per SessionErrorMessage404
-          RequestDispatcher view = request.getRequestDispatcher("404-page.jsp");
-          view.forward(request, response);
-        }
-      } else {
-        Logger.getGlobal().log(Level.INFO, "oldIDRegistro come stringa vuota nella modifica di un registro da parte di uno studente");
-        //redirect to an [error] page
-        //set del valore per SessionErrorMessage404
-        RequestDispatcher view = request.getRequestDispatcher("404-page.jsp");
-        view.forward(request, response);
-      }
-    } else {
-      Logger.getGlobal().log(Level.INFO, "oldIDRegistro nullo nella modifica di un registro da parte di uno studente");
-      //redirect to an [error] page
-      //set del valore per SessionErrorMessage404
+      //set the error message
       RequestDispatcher view = request.getRequestDispatcher("404-page.jsp");
       view.forward(request, response);
     }
@@ -153,14 +83,12 @@ public class ModificaRegistroTirocinioStudenteServlet extends HttpServlet {
       AbstractBean userBean = (AbstractBean) session.getAttribute("SessionUser");
       if (userBean != null) {
         if (!userBean.getClass().getName().equals(StudenteBean.class.getName())) {
-          Logger.getGlobal().log(Level.INFO, "L' utente non risulta loggato come studente");
           RequestDispatcher view = request.getRequestDispatcher("login-page.jsp");
           view.forward(request, response);
         } else {
           studenteBean = (StudenteBean) userBean;
         }
       } else {
-        Logger.getGlobal().log(Level.INFO, "Nessun utente loggato");
         RequestDispatcher view = request.getRequestDispatcher("login-page.jsp");
         view.forward(request, response);
       }
@@ -168,10 +96,10 @@ public class ModificaRegistroTirocinioStudenteServlet extends HttpServlet {
       if (registroBean == null) {
         if (id >= 0) {
           try {
-            if (registroModelDM.isStudenteRegistro(studenteBean.getMatricola(), oldID)) {
-              registroBean = (RegistroBean) registroModelDM.doRetrieveByKey(oldID);
+            if (RegistroModelDM.INSTANCE.isStudenteRegistro(studenteBean.getMatricola(), oldID)) {
+              registroBean = (RegistroBean) RegistroModelDM.INSTANCE.doRetrieveByKey(oldID);
             } else {
-              Logger.getGlobal().log(Level.INFO, "Il registro non risulta dello studente nella modifica da parte di uno studente");
+              Logger.getGlobal().log(Level.SEVERE, "ID RegistroBean Non Valido.");
               //redirect to an [error] page
               //set del valore per SessionErrorMessage404
               RequestDispatcher view = request.getRequestDispatcher("404-page.jsp");
@@ -185,7 +113,7 @@ public class ModificaRegistroTirocinioStudenteServlet extends HttpServlet {
             view.forward(request, response);
           }
         } else {
-          Logger.getGlobal().log(Level.INFO, "id di registro negativo nella modifica di un registro da parte di uno studente");
+          Logger.getGlobal().log(Level.SEVERE, "ID RegistroBean Non Valido.");
           //redirect to an [error] page
           //set del valore per SessionErrorMessage400
           RequestDispatcher view = request.getRequestDispatcher("404-page.jsp");
@@ -202,13 +130,15 @@ public class ModificaRegistroTirocinioStudenteServlet extends HttpServlet {
           registroBean.setUltimoAgg(ultimoAggiornamento);
           
           try {
-            if (!registroModelDM.doUpdate(registroBean)) {
-              Logger.getGlobal().log(Level.INFO, "Registro non aggiornato nella consegna del registro da parte di uno studente");
+            if (!RegistroModelDM.INSTANCE.doUpdate(registroBean, oldID)) {
+              Logger.getGlobal().log(Level.INFO, "Registro Non Aggiornato.");
               //redirect to an [error] page
               //set del valore per SessionErrorMessage500
               RequestDispatcher view = request.getRequestDispatcher("500-page.jsp");
               view.forward(request, response);
-            } 
+            } else {
+              modifica = true;
+            }
           } catch (SQLException e) {
             Logger.getGlobal().log(Level.SEVERE, e.getMessage());
             //redirect to an [error] page
@@ -216,28 +146,26 @@ public class ModificaRegistroTirocinioStudenteServlet extends HttpServlet {
             RequestDispatcher view = request.getRequestDispatcher("500-page.jsp");
             view.forward(request, response);
           }
-          modifica = true;
         }
       } else {
-        modifica = false;
-        Logger.getGlobal().log(Level.INFO, "studente o registro nulli nella modifica di un registro da parte di uno studente");
+        Logger.getGlobal().log(Level.INFO, "Oggetto RegistroBean Non Trovato.");
         //redirect to an [error] page
         //set del valore per SessionErrorMessage404
         RequestDispatcher view = request.getRequestDispatcher("404-page.jsp");
         view.forward(request, response);
       }
     } else {
-      Logger.getGlobal().log(Level.INFO, "Nessuna session nella modifica di registro da parte di uno studente");
+      Logger.getGlobal().log(Level.INFO, "Oggetto HttpSession Non Trovato.");
       RequestDispatcher view = request.getRequestDispatcher("login-page.jsp");
       view.forward(request, response);
     }
 
     JSONObject json = new JSONObject();
-    if (modifica) {
-      json.put("modifica", "true");
+    if (modifica == true) {
+      json.put("modifica", true);
       json.put("ultimo_aggiornamento", ultimoAggiornamento);
     } else {
-      json.put("modifica", "false");
+      json.put("modifica", false);
     }
     response.setContentType("application/json");
     try {

@@ -13,6 +13,12 @@ import it.unisa.sql.RiguardaSQL;
 
 public class RiguardaModelDM implements BeansModel {
 
+  public static final RiguardaModelDM INSTANCE = new RiguardaModelDM();
+
+  private RiguardaModelDM() {
+
+  }
+
   @Override
   public AbstractBean doRetrieveByKey(int code) throws SQLException {
     return null;
@@ -49,7 +55,6 @@ public class RiguardaModelDM implements BeansModel {
         DriverManagerConnectionPool.releaseConnection(connection);
       }
     }
-    
     return segue;
   }
 
@@ -68,7 +73,7 @@ public class RiguardaModelDM implements BeansModel {
       ps.setInt(3, segueBean.getPriorita());
       
       if (!(ps.executeUpdate() > 0)) {
-        Logger.getGlobal().log(Level.INFO, "Oggetto SegueBean non memorizzato");
+        Logger.getGlobal().log(Level.SEVERE, "Oggetto RiguardaBean Non Memorizzato.");
       }
       
       connection.commit();
@@ -88,25 +93,23 @@ public class RiguardaModelDM implements BeansModel {
     return false;
   }
   
-  public boolean doDeleteByProgettoFormativo(int code) throws SQLException {
+  public boolean doDelete(int codeProgettoFormativoID, int codeSettoreOperativoID) throws SQLException {
     Connection connection = null;
     PreparedStatement ps = null;
     boolean deleted = false;
     
     try {
       connection = DriverManagerConnectionPool.getConnection();
-      ps = connection.prepareStatement(RiguardaSQL.DO_DELETE_BY_PROGETTO_FORMATIVO);
+      ps = connection.prepareStatement(RiguardaSQL.DO_DELETE);
       
-      ps.setInt(1, code);
+      ps.setInt(1, codeProgettoFormativoID);
+      ps.setInt(2, codeSettoreOperativoID);
       
-      if (ps.executeUpdate() > 0) {
-        deleted = true;
+      if(!(ps.executeUpdate() > 0)) {
+        Logger.getGlobal().log(Level.SEVERE, "Oggetto RiguardaBean Non Rimosso.");
       } else {
-        Logger.getGlobal().log(Level.INFO, "Oggetto SegueBean non rimosso");
+    	  deleted = true;
       }
-      
-      connection.commit();
-      
     } finally {
       try {
         if (ps != null)
@@ -115,29 +118,30 @@ public class RiguardaModelDM implements BeansModel {
         DriverManagerConnectionPool.releaseConnection(connection);
       }
     }
-    
     return deleted;
   }
   
-  public boolean doDeleteBySettoreOperativo(int code) throws SQLException {
+  public boolean doUpdate(AbstractBean abstractBean, int codeProgettoFormativo, int codeSettoreOperativo) throws SQLException {
     Connection connection = null;
     PreparedStatement ps = null;
-    boolean deleted = false;
+    RiguardaBean riguardaBean = (RiguardaBean) abstractBean;
+    boolean updated = false;
     
     try {
       connection = DriverManagerConnectionPool.getConnection();
-      ps = connection.prepareStatement(RiguardaSQL.DO_DELETE_BY_SETTORE_OPERATIVO);
+      ps = connection.prepareStatement(RiguardaSQL.DO_UPDATE);
       
-      ps.setInt(1, code);
+      ps.setInt(1, riguardaBean.getProgettoFormativoID());
+      ps.setInt(2, riguardaBean.getSettoreOperativoID());
+      ps.setInt(3, riguardaBean.getPriorita());
+      ps.setInt(4, codeProgettoFormativo);
+      ps.setInt(5, codeSettoreOperativo);
       
       if (ps.executeUpdate() > 0) {
-        deleted = true;
+        updated = true;
       } else {
-        Logger.getGlobal().log(Level.INFO, "Oggetto SegueBean non rimosso");
+        Logger.getGlobal().log(Level.SEVERE, "Oggetto RiguardaBean Non Aggiornato.");
       }
-      
-      connection.commit();
-     
     } finally {
       try {
         if (ps != null)
@@ -146,15 +150,48 @@ public class RiguardaModelDM implements BeansModel {
         DriverManagerConnectionPool.releaseConnection(connection);
       }
     }
+    return updated;
+  }
+  
+  public AbstractBean doRetrieveByKey(int codeProgettoFormativo, int codeSettoreOperativo) throws SQLException {
+    Connection connection = null;
+    PreparedStatement ps = null;
+    ResultSet rs = null;
+    RiguardaBean riguardaBean = null;
     
-    return deleted;
+    try {
+      connection = DriverManagerConnectionPool.getConnection();
+      ps = connection.prepareStatement(RiguardaSQL.DO_RETRIEVE_BY_KEY);
+      
+      ps.setInt(1, codeProgettoFormativo);
+      ps.setInt(2, codeSettoreOperativo);
+      
+      rs = ps.executeQuery();
+      
+      if (rs.next()) {
+        int progettoFormativoID = rs.getInt("progettoFormativoID");
+        int settoreOperativoID = rs.getInt("settoreOperativoID");
+        int priorita = rs.getInt("priorita");
+        riguardaBean = new RiguardaBean(progettoFormativoID, settoreOperativoID, priorita);
+      } else {
+        Logger.getGlobal().log(Level.SEVERE, "Oggetto RiguardaBean Non Trovato.");
+      }
+    } finally {
+      try {
+        if (ps != null)
+          ps.close();
+      } finally {
+        DriverManagerConnectionPool.releaseConnection(connection);
+      }
+    }
+    return riguardaBean;
   }
   
   public Collection<AbstractBean> doRetrieveByProgettoFormativo(int code) throws SQLException {
     Connection connection = null;
     PreparedStatement ps = null;
     ResultSet rs = null;
-    Collection<AbstractBean> segue = null;
+    Collection<AbstractBean> riguarda = null;
     
     try {
       connection = DriverManagerConnectionPool.getConnection();
@@ -164,13 +201,13 @@ public class RiguardaModelDM implements BeansModel {
       
       rs = ps.executeQuery();
       
-      segue = new ArrayList<AbstractBean>();
+      riguarda = new ArrayList<AbstractBean>();
       
       while (rs.next()) {
         int settoreOperativoID = rs.getInt("settoreOperativoID");
         int priorita = rs.getInt("priorita");
         
-        segue.add(new RiguardaBean(code, settoreOperativoID, priorita));
+        riguarda.add(new RiguardaBean(code, settoreOperativoID, priorita));
       }
       
     } finally {
@@ -181,8 +218,7 @@ public class RiguardaModelDM implements BeansModel {
         DriverManagerConnectionPool.releaseConnection(connection);
       }
     }
-    
-    return segue;
+    return riguarda;
   }
   
   public Collection<AbstractBean> doRetrieveBySettoreOperativo(int code) throws SQLException {
@@ -216,31 +252,32 @@ public class RiguardaModelDM implements BeansModel {
         DriverManagerConnectionPool.releaseConnection(connection);
       }
     }
-    
     return segue;
   }
   
-  public Collection<AbstractBean> doRetrieveByPriorita(int code) throws SQLException {
+  public Collection<AbstractBean> doRetrieveByPriorita(int starting, int ending) throws SQLException {
     Connection connection = null;
     PreparedStatement ps = null;
     ResultSet rs = null;
-    Collection<AbstractBean> segue = null;
+    Collection<AbstractBean> riguarda = null;
     
     try {
       connection = DriverManagerConnectionPool.getConnection();
       ps = connection.prepareStatement(RiguardaSQL.DO_RETRIEVE_BY_PRIORITA);
       
-      ps.setInt(1, code);
+      ps.setInt(1, starting);
+      ps.setInt(2, ending);
       
       rs = ps.executeQuery();
       
-      segue = new ArrayList<AbstractBean>();
+      riguarda = new ArrayList<AbstractBean>();
       
       while (rs.next()) {
         int settoreOperativoID = rs.getInt("settoreOperativoID");
         int progettoFormativoID = rs.getInt("progettoFormativoID");
+        int priorita = rs.getInt("priorita");
         
-        segue.add(new RiguardaBean(progettoFormativoID, settoreOperativoID, code));
+        riguarda.add(new RiguardaBean(progettoFormativoID, settoreOperativoID, priorita));
       }
       
     } finally {
@@ -251,7 +288,6 @@ public class RiguardaModelDM implements BeansModel {
         DriverManagerConnectionPool.releaseConnection(connection);
       }
     }
-    
-    return segue;
+    return riguarda;
   }
 }

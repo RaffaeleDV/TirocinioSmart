@@ -15,7 +15,7 @@ public class StrutturaOspitanteSQL {
   
   public static final String DO_SAVE = 
     "INSERT INTO " + TABLE_NAME + " " + 
-    "VALUES (?, ?, ?, ?, ?, ?, ?, ?);";
+    "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?);";
   
   public static final String DO_DELETE = 
     "DELETE FROM " + TABLE_NAME + " " + 
@@ -23,13 +23,13 @@ public class StrutturaOspitanteSQL {
   
   public static final String DO_UPDATE =
     "UPDATE " + TABLE_NAME + " " +
-    "SET ambitoLavorativo = ?, nazione = ?, regione = ?, citta = ?, via = ?, ncivico = ?, ndipendenti = ? " +
+    "SET id = ?, nome = ?, ambitoLavorativo = ?, nazione = ?, regione = ?, citta = ?, via = ?, ncivico = ?, ndipendenti = ? " +
     "WHERE id = ?;";
   
   public static final String DO_RETRIEVE_BY_INDIRIZZO = 
     "SELECT * " + 
     "FROM " + TABLE_NAME + " " + 
-    "WHERE nazione = ? AND regione = ? AND citta = ? AND via = ? AND ncivico = ?";
+    "WHERE nazione LIKE ? AND regione LIKE ? AND citta LIKE ? AND via LIKE ? AND ncivico BETWEEN ? AND ?;";
   
   public static final String DO_RETRIEVE_BY_AMBITO_LAVORATIVO = 
     "SELECT * " + 
@@ -39,7 +39,7 @@ public class StrutturaOspitanteSQL {
   public static final String DO_RETRIEVE_BY_NDIPENDENTI = 
     "SELECT * " + 
     "FROM " + TABLE_NAME + " " + 
-    "WHERE ndipendenti = ?;";
+    "WHERE ndipendenti BETWEEN ? AND ?;";
   
   public static final String DO_RETRIEVE_BY_NOME =
     "SELECT * " +

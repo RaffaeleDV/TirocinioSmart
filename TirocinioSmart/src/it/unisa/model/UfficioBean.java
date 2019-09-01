@@ -1,12 +1,10 @@
 package it.unisa.model;
 
 import java.io.Serializable;
+import java.util.logging.Logger;
+import java.util.logging.Level;
 
 public class UfficioBean extends AbstractBean implements Serializable, Cloneable {
-
-  /**
-  * 
-  */
   private static final long serialVersionUID = -3117662707685361390L;
   private int id;
   private int strutturaOspitanteID;
@@ -15,7 +13,7 @@ public class UfficioBean extends AbstractBean implements Serializable, Cloneable
   private String pass;
   
   public UfficioBean() {
-
+    super();
   }
 
   public UfficioBean(
@@ -24,6 +22,7 @@ public class UfficioBean extends AbstractBean implements Serializable, Cloneable
       String email,
       String nome, 
       String pass) {
+    super();
     this.id = id;
     this.email = email;
     this.nome = nome;
@@ -74,28 +73,23 @@ public class UfficioBean extends AbstractBean implements Serializable, Cloneable
   @Override
   public String toString() {
     StringBuilder str = new StringBuilder();
-    str.append(getClass().getName() + "[");
+    str.append(getClass().getName() + "{");
     str.append("id=" + id + ", ");
     str.append("strutturaOspitanteID=" + strutturaOspitanteID + ", ");
     str.append("email=" + email + ", ");
     str.append("nome=" + nome + ", ");
-    str.append("pass=" + pass + ", ");
+    str.append("pass=" + pass + "}");
     return str.toString();
   }
 
   @Override
   public boolean equals(Object other) {
-    
     if (other == null)
       return false;
-    
     if (!getClass().getName().equals(other.getClass().getName()))
       return false;
-    
     UfficioBean ufficioBean = (UfficioBean) other;
-    
-    if (
-        id == ufficioBean.getID() && 
+    if (id == ufficioBean.getID() && 
         nome.equals(ufficioBean.getNome()) &&
         pass.equals(ufficioBean.getPass()) &&  
         email.equals(ufficioBean.getEmail()) &&
@@ -108,13 +102,11 @@ public class UfficioBean extends AbstractBean implements Serializable, Cloneable
   @Override
   public UfficioBean clone() throws CloneNotSupportedException {
     UfficioBean other = null;
-    
     try {
       other = (UfficioBean) super.clone();
     } catch (CloneNotSupportedException e) {
-      e.printStackTrace();
+      Logger.getGlobal().log(Level.SEVERE, e.getMessage());
     }
-    
     return other;
   }
 }

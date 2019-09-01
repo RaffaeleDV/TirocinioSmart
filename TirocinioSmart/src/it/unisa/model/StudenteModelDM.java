@@ -13,6 +13,12 @@ import it.unisa.sql.StudenteSQL;
 
 public class StudenteModelDM implements BeansModel {
 
+  public static final StudenteModelDM INSTANCE = new StudenteModelDM();
+
+  private StudenteModelDM() {
+
+  }
+
   @Override
   public AbstractBean doRetrieveByKey(int code) throws SQLException {
     Connection connection = null;
@@ -42,7 +48,7 @@ public class StudenteModelDM implements BeansModel {
         
         studenteBean = new StudenteBean(id, matricola, pass, nome, cfu, occupazione, tutorAccID, tutorAzID, progettoFormativoID, registroID);
       } else 
-        Logger.getGlobal().log(Level.INFO, "Oggetto StudenteBean con l' id specificato non trovato");
+        Logger.getGlobal().log(Level.SEVERE, "Oggetto StudenteBean Non Trovato.");
       
     } finally {
       try {
@@ -52,7 +58,6 @@ public class StudenteModelDM implements BeansModel {
         DriverManagerConnectionPool.releaseConnection(connection);
       }
     }
-    
     return studenteBean;
   }
 
@@ -94,7 +99,6 @@ public class StudenteModelDM implements BeansModel {
         DriverManagerConnectionPool.releaseConnection(connection);
       }
     }
-    
     return studenti;
   }
 
@@ -110,9 +114,9 @@ public class StudenteModelDM implements BeansModel {
       
       ps.setInt(1, studenteBean.getID());
       ps.setString(2, studenteBean.getMatricola());
-      ps.setString(3, studenteBean.getPass());
-      ps.setString(4, studenteBean.getNome());
-      ps.setString(5, studenteBean.getCfu());
+      ps.setString(3, studenteBean.getNome());
+      ps.setString(4, studenteBean.getCfu());
+      ps.setString(5, studenteBean.getPass());
       ps.setString(6, studenteBean.getOccupazione());
       ps.setInt(7, studenteBean.getTutorAccID());
       ps.setInt(8, studenteBean.getTutorAzID());
@@ -120,7 +124,7 @@ public class StudenteModelDM implements BeansModel {
       ps.setInt(10, studenteBean.getRegistroID());
       
       if (!(ps.executeUpdate() > 0)) {
-        Logger.getGlobal().log(Level.INFO, "Oggetto StudenteBean non memorizzato");
+        Logger.getGlobal().log(Level.SEVERE, "Oggetto StudenteBean Non Memorizzato.");
       }
       
       connection.commit();
@@ -150,7 +154,7 @@ public class StudenteModelDM implements BeansModel {
       if (ps.executeUpdate() > 0) {
         deleted = true;
       } else {
-        Logger.getGlobal().log(Level.INFO, "Oggetto StudenteBean non rimosso");
+        Logger.getGlobal().log(Level.SEVERE, "Oggetto StudenteBean Non Rimosso.");
       }
       
       connection.commit();
@@ -167,7 +171,7 @@ public class StudenteModelDM implements BeansModel {
     return deleted;
   }
   
-  public boolean doUpdate(AbstractBean product) throws SQLException {
+  public boolean doUpdate(AbstractBean product, int studenteID) throws SQLException {
     Connection connection = null;
     PreparedStatement ps = null;
     StudenteBean studenteBean = (StudenteBean) product;
@@ -177,21 +181,22 @@ public class StudenteModelDM implements BeansModel {
       connection = DriverManagerConnectionPool.getConnection();
       ps = connection.prepareStatement(StudenteSQL.DO_UPDATE);
       
-      ps.setString(1, studenteBean.getMatricola());
-      ps.setString(2, studenteBean.getNome());
-      ps.setString(3, studenteBean.getCfu());
-      ps.setString(4, studenteBean.getPass());
-      ps.setString(5, studenteBean.getOccupazione());
-      ps.setInt(6, studenteBean.getTutorAccID());
-      ps.setInt(7, studenteBean.getTutorAzID());
-      ps.setInt(8, studenteBean.getProgettoFormativoID());
-      ps.setInt(9, studenteBean.getRegistroID());
-      ps.setInt(10, studenteBean.getID());
+      ps.setInt(1, studenteBean.getID());
+      ps.setString(2, studenteBean.getMatricola());
+      ps.setString(3, studenteBean.getNome());
+      ps.setString(4, studenteBean.getCfu());
+      ps.setString(5, studenteBean.getPass());
+      ps.setString(6, studenteBean.getOccupazione());
+      ps.setInt(7, studenteBean.getTutorAccID());
+      ps.setInt(8, studenteBean.getTutorAzID());
+      ps.setInt(9, studenteBean.getProgettoFormativoID());
+      ps.setInt(10, studenteBean.getRegistroID());
+      ps.setInt(11, studenteID);
       
       if (ps.executeUpdate() > 0) {
         updated = true;
       } else {
-        Logger.getGlobal().log(Level.INFO, "Oggetto StudenteBean non aggiornato");
+        Logger.getGlobal().log(Level.SEVERE, "Oggetto StudenteBean Non Aggiornato.");
       }
       
       connection.commit();
@@ -204,11 +209,10 @@ public class StudenteModelDM implements BeansModel {
         DriverManagerConnectionPool.releaseConnection(connection);
       }
     }
-    
     return updated;
   }
   
-  public AbstractBean doRetrieveByMatricola(String matricola) throws SQLException {
+  public AbstractBean doRetrieveByMatricola(String text) throws SQLException {
     Connection connection = null;
     PreparedStatement ps = null;
     ResultSet rs = null;
@@ -218,12 +222,13 @@ public class StudenteModelDM implements BeansModel {
       connection = DriverManagerConnectionPool.getConnection();
       ps = connection.prepareStatement(StudenteSQL.DO_RETRIEVE_BY_MATRICOLA);
       
-      ps.setString(1, matricola);
+      ps.setString(1, text);
       
       rs = ps.executeQuery();
       
       if (rs.next()) {
         int id = rs.getInt("id");
+        String matricola = rs.getString("matricola");
         String pass = rs.getString("pass");
         String nome = rs.getString("nome");
         String cfu = rs.getString("cfu");
@@ -235,7 +240,7 @@ public class StudenteModelDM implements BeansModel {
         
         studenteBean = new StudenteBean(id, matricola, nome, cfu, occupazione, pass, tutorAccID, tutorAzID, progettoFormativoID, registroID);
       } else
-        Logger.getGlobal().log(Level.INFO, "Oggetto StudenteBean con la matricola specificata non trovato");
+        Logger.getGlobal().log(Level.SEVERE, "Oggetto StudenteBean Non Trovato.");
       
     } finally {
       try {
@@ -245,11 +250,10 @@ public class StudenteModelDM implements BeansModel {
         DriverManagerConnectionPool.releaseConnection(connection);
       }
     }
-    
     return studenteBean;
   }
   
-  public AbstractBean doRetrieveByNome(String nome) throws SQLException {
+  public AbstractBean doRetrieveByNome(String text) throws SQLException {
     Connection connection = null;
     PreparedStatement ps = null;
     ResultSet rs = null;
@@ -259,13 +263,14 @@ public class StudenteModelDM implements BeansModel {
       connection = DriverManagerConnectionPool.getConnection();
       ps = connection.prepareStatement(StudenteSQL.DO_RETRIEVE_BY_NOME);
       
-      ps.setString(1, nome);
+      ps.setString(1, text);
       
       rs = ps.executeQuery();
       
       if (rs.next()) {
         int id = rs.getInt("id");
         String matricola = rs.getString("matricola");
+        String nome = rs.getString("nome");
         String pass = rs.getString("pass");
         String cfu = rs.getString("cfu");
         String occupazione = rs.getString("occupazione");
@@ -276,7 +281,7 @@ public class StudenteModelDM implements BeansModel {
         
         studenteBean = new StudenteBean(id, matricola, pass, nome, cfu, occupazione, tutorAccID, tutorAzID, progettoFormativoID, registroID);        
       } else
-        Logger.getGlobal().log(Level.INFO, "Oggetto StudenteBean non trovato con il nome specificato");
+        Logger.getGlobal().log(Level.SEVERE, "Oggetto StudenteBean non trovato con il nome specificato");
       
     } finally {
       try {
@@ -286,11 +291,10 @@ public class StudenteModelDM implements BeansModel {
         DriverManagerConnectionPool.releaseConnection(connection);
       }
     }
-    
     return studenteBean;
   }
   
-  public Collection<AbstractBean> doRetrieveByCfu(String cfu) throws SQLException {
+  public Collection<AbstractBean> doRetrieveByCfu(String text) throws SQLException {
     Connection connection = null;
     PreparedStatement ps = null;
     ResultSet rs = null;
@@ -300,7 +304,7 @@ public class StudenteModelDM implements BeansModel {
       connection = DriverManagerConnectionPool.getConnection();
       ps = connection.prepareStatement(StudenteSQL.DO_RETRIEVE_BY_CFU);
       
-      ps.setString(1, cfu);
+      ps.setString(1, text);
       
       rs = ps.executeQuery();
       
@@ -308,6 +312,7 @@ public class StudenteModelDM implements BeansModel {
       
       while (rs.next()) {
         int id = rs.getInt("id");
+        String cfu = rs.getString("cfu");
         String matricola = rs.getString("matricola");
         String pass = rs.getString("pass");
         String nome = rs.getString("nome");
@@ -370,7 +375,6 @@ public class StudenteModelDM implements BeansModel {
         DriverManagerConnectionPool.releaseConnection(connection);
       }
     }
-    
     return studenti;
   }
   
@@ -412,7 +416,6 @@ public class StudenteModelDM implements BeansModel {
         DriverManagerConnectionPool.releaseConnection(connection);
       }
     }
-    
     return studenti;
   }
   
@@ -455,7 +458,6 @@ public class StudenteModelDM implements BeansModel {
         DriverManagerConnectionPool.releaseConnection(connection);
       }
     }
-    
     return studenti;
   }
   
@@ -497,7 +499,6 @@ public class StudenteModelDM implements BeansModel {
         DriverManagerConnectionPool.releaseConnection(connection);
       }
     }
-    
     return studenti;
   }
  
@@ -524,12 +525,11 @@ public class StudenteModelDM implements BeansModel {
         String occupazione = rs.getString("occupazione");
         int tutorAccID = rs.getInt("tutorAccID");
         int tutorAzID = rs.getInt("tutorAzID");
-        int progettoFormativoID = rs.getInt("progettoFormativoID");
         int registroID = rs.getInt("registroID");
         
-        studenteBean = new StudenteBean(id, matricola, pass, nome, cfu, occupazione, tutorAccID, tutorAzID, progettoFormativoID, registroID);
+        studenteBean = new StudenteBean(id, matricola, pass, nome, cfu, occupazione, tutorAccID, tutorAzID, code, registroID);
       } else {
-        Logger.getGlobal().log(Level.INFO, "Oggetto StudenteBean non trovato con il progetto formativo specificato");
+        Logger.getGlobal().log(Level.SEVERE, "Oggetto StudenteBean Non Trovato.");
       }
       
     } finally {
@@ -540,7 +540,49 @@ public class StudenteModelDM implements BeansModel {
         DriverManagerConnectionPool.releaseConnection(connection);
       }
     }
-    
     return studenteBean;
+  }
+  
+  public Collection<AbstractBean> doRetrieveQuestionari(AbstractBean abstractBean) throws SQLException {
+    Connection connection = null;
+    PreparedStatement ps = null;
+    ResultSet rs = null;
+    StudenteBean studenteBean = null;
+    Collection<AbstractBean> questionari = null;
+    
+    if (abstractBean != null &&
+        abstractBean.getClass().getName().equals(StudenteBean.class.getName())) {
+      studenteBean = (StudenteBean) abstractBean;
+    }
+    
+    try {
+      connection = DriverManagerConnectionPool.getConnection();
+      ps = connection.prepareStatement(StudenteSQL.DO_RETRIEVE_QUESTIONARI_BY_UTENTE);
+      
+      ps.setInt(1, studenteBean.getID());
+      
+      questionari = new ArrayList<AbstractBean>();
+      
+      rs = ps.executeQuery();
+      
+      while (rs.next()) {
+        int id = rs.getInt("id");
+        int questions = rs.getInt("questions");
+        int nstudenti = rs.getInt("nstudenti");
+        String nome = rs.getString("nome");
+        String description = rs.getString("description");
+        String tematica = rs.getString("tematica");
+        
+        questionari.add(new QuestionarioBean(id, questions, nstudenti, nome, description, tematica));
+      }
+    } finally {
+      try {
+        if (ps != null)
+          ps.close();
+      } finally {
+        DriverManagerConnectionPool.releaseConnection(connection);
+      }
+    }
+    return questionari;
   }
 }

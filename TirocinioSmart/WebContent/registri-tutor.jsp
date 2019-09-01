@@ -20,11 +20,6 @@
     TutorBean tutorBean = null;
     AbstractBean userRegistriTutor = (AbstractBean) session.getAttribute("SessionUser");
   	List<AbstractBean> regs = null;
-    RegistroModelDM registroModelDM = (RegistroModelDM) getServletContext().getAttribute("SessionRegistroModelDM");
-    if (registroModelDM == null) {
-      registroModelDM = new RegistroModelDM();
-      getServletContext().setAttribute("SessionRegistroModelDM", registroModelDM);
-    }
     
   	if (userRegistriTutor != null) {
   	  if (userRegistriTutor instanceof TutorBean) {
@@ -43,14 +38,14 @@
     if (tutorBean != null) {
       if (tutorBean.getTipo().equals("Aziendale")) {
         try {
-          regs = (List<AbstractBean>) registroModelDM.doRetrieveByTutorAz(tutorBean.getID());
+          regs = (List<AbstractBean>) RegistroModelDM.INSTANCE.doRetrieveByTutorAz(tutorBean.getID());
         } catch(SQLException e) {
           Logger.getGlobal().log(Level.SEVERE, e.getMessage());
           //redirect to an [error] page
         }
       } else if (tutorBean.getTipo().equals("Accademico")) {
         try {
-          regs = (List<AbstractBean>) registroModelDM.doRetrieveByTutorAcc(tutorBean.getID());
+          regs = (List<AbstractBean>) RegistroModelDM.INSTANCE.doRetrieveByTutorAcc(tutorBean.getID());
         } catch(SQLException e) {
           Logger.getGlobal().log(Level.SEVERE, e.getMessage());
           //redirect to an [error] page

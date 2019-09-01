@@ -2,9 +2,10 @@ package it.unisa.model;
 
 import java.io.Serializable;
 import java.sql.Date;
+import java.util.logging.Logger;
+import java.util.logging.Level;
 
 public class RegistroBean extends AbstractBean implements Serializable, Cloneable {
-
   private static final long serialVersionUID = -2505094168799389057L;
   private int id;
   private String nome;
@@ -17,7 +18,7 @@ public class RegistroBean extends AbstractBean implements Serializable, Cloneabl
   private boolean confermaUff;  
   
   public RegistroBean() {
-
+    super();
   }
 
   public RegistroBean(
@@ -30,6 +31,7 @@ public class RegistroBean extends AbstractBean implements Serializable, Cloneabl
       boolean confermaTutorAcc, 
       boolean confermaTutorAz,
       boolean confermaUff) {
+    super();
     this.id = id;
     this.nome = nome;
     this.descrizione = descrizione;
@@ -117,7 +119,7 @@ public class RegistroBean extends AbstractBean implements Serializable, Cloneabl
   @Override
   public String toString() {
     StringBuilder str = new StringBuilder();
-    str.append(getClass().getName() + "[");
+    str.append(getClass().getName() + "{");
     str.append("id=" + id + ", ");
     str.append("nome=" + nome + ", ");
     str.append("descrizione=" + descrizione + ", ");
@@ -126,23 +128,18 @@ public class RegistroBean extends AbstractBean implements Serializable, Cloneabl
     str.append("consegna =" + consegna + ", ");
     str.append("confermaTutorAcc=" + confermaTutorAcc + ", ");
     str.append("confermaTutorAz=" + confermaTutorAz + ", ");
-    str.append("confermaUff=" + confermaUff + "]");
+    str.append("confermaUff=" + confermaUff + "}");
     return str.toString();
   }
 
   @Override
   public boolean equals(Object other) {
-    
     if (other == null)
       return false;
-    
     if (!getClass().getName().equals(other.getClass().getName()))
       return false;
-    
     RegistroBean registroBean = (RegistroBean) other;
-    
-    if (
-        id == registroBean.getID() && 
+    if (id == registroBean.getID() && 
         nome.equals(registroBean.getNome()) &&
         descrizione.equals(registroBean.getDescrizione()) &&
         primaIstituzione.equals(registroBean.getPrimaIstituzione()) &&
@@ -152,20 +149,17 @@ public class RegistroBean extends AbstractBean implements Serializable, Cloneabl
         confermaTutorAz == registroBean.getConfermaTutorAz() &&
         confermaUff == registroBean.getConfermaUff())
       return true;
-    
     return false;
   }
 
   @Override
   public RegistroBean clone() throws CloneNotSupportedException {
     RegistroBean other = null;
-    
     try {
       other = (RegistroBean) super.clone();
     } catch (CloneNotSupportedException e) {
-      e.printStackTrace();
+      Logger.getGlobal().log(Level.SEVERE, e.getMessage());
     }
-    
     return other;
   }
 }

@@ -14,12 +14,54 @@ import it.unisa.sql.SvoltoInSQL;
 
 public class SvoltoInModelDM implements BeansModel {
 
+  public static final SvoltoInModelDM INSTANCE = new SvoltoInModelDM();
+
+  private SvoltoInModelDM() {
+  
+  }
+
   @Override
   public AbstractBean doRetrieveByKey(int code) throws SQLException {
     // TODO Auto-generated method stub
     return null;
   }
-
+  
+  public AbstractBean doRetrieveByKey(int codeProgettoFormativo, int codeStrutturaOspitante, int codeTutorAz) throws SQLException {
+    Connection connection = null;
+    PreparedStatement ps = null;
+    ResultSet rs = null;
+    AbstractBean svoltoBean = null;
+    
+    try {
+      connection = DriverManagerConnectionPool.getConnection();
+      ps = connection.prepareStatement(SvoltoInSQL.DO_RETRIEVE_BY_KEY);
+      ps.setInt(1, codeProgettoFormativo);
+      ps.setInt(2, codeStrutturaOspitante);
+      ps.setInt(3, codeTutorAz);
+      
+      rs = ps.executeQuery();
+      
+      if (rs.next()) {
+        int progettoFormativoID = rs.getInt("progettoFormativoID");
+        int strutturaOspitanteID = rs.getInt("strutturaOspitanteID");
+        int tutorAzID = rs.getInt("tutorAzID");
+        Date inizioPeriodo = rs.getDate("inizioPeriodo");
+        Date terminePeriodo = rs.getDate("terminePeriodo");
+        svoltoBean = new SvoltoInBean(progettoFormativoID, strutturaOspitanteID, tutorAzID, inizioPeriodo, terminePeriodo);
+      } else {
+        Logger.getGlobal().log(Level.SEVERE, "Oggetto SvoltoInBean Non Trovato.");
+      }
+    } finally {
+      try {
+        if (ps != null)
+          ps.close();
+      } finally {
+        DriverManagerConnectionPool.releaseConnection(connection);
+      }
+    }
+    return svoltoBean;
+  }
+  
   @Override
   public Collection<AbstractBean> doRetrieveAll(String order) throws SQLException {
     Connection connection = null;
@@ -53,7 +95,6 @@ public class SvoltoInModelDM implements BeansModel {
         DriverManagerConnectionPool.releaseConnection(connection);
       }
     }
-    
     return svolto;
   }
 
@@ -76,7 +117,7 @@ public class SvoltoInModelDM implements BeansModel {
       ps.setDate(5, svoltoInBean.getTerminePeriodo());
       
       if (!(ps.executeUpdate() > 0)) {
-        Logger.getGlobal().log(Level.INFO, "Oggetto SvoltoInBean non memorizzato");
+        Logger.getGlobal().log(Level.SEVERE, "Oggetto SvoltoInBean Non Memorizzato.");
       }
       
       connection.commit();
@@ -95,6 +136,36 @@ public class SvoltoInModelDM implements BeansModel {
   public boolean doDelete(int code) throws SQLException {
     // TODO Auto-generated method stub
     return false;
+  }
+  
+  public boolean doDelete(int codeProgettoFormativoID, int codeStrutturaOspitanteID, int codeTutorAzID) throws SQLException {
+    Connection connection = null;
+    PreparedStatement ps = null;
+    boolean deleted = false;
+    
+    try {
+      connection = DriverManagerConnectionPool.getConnection();
+      ps = connection.prepareStatement(SvoltoInSQL.DO_DELETE);
+      
+      ps.setInt(1, codeProgettoFormativoID);
+      ps.setInt(2, codeStrutturaOspitanteID);
+      ps.setInt(3, codeTutorAzID);
+      
+      if (!(ps.executeUpdate() > 0)) {
+        Logger.getGlobal().log(Level.SEVERE, "Oggetto SvoltoInBean Non Rimosso.");
+      } else {
+        deleted = true;
+      }
+      
+    } finally {
+      try {
+        if (ps != null)
+          ps.close();
+      } finally {
+        DriverManagerConnectionPool.releaseConnection(connection);
+      }
+    }
+    return deleted;
   }
   
   public Collection<AbstractBean> doRetrieveByProgettoFormativo(int code) throws SQLException {
@@ -130,7 +201,6 @@ public class SvoltoInModelDM implements BeansModel {
         DriverManagerConnectionPool.releaseConnection(connection);
       }
     }
-    
     return svolto;
   }
   
@@ -167,7 +237,6 @@ public class SvoltoInModelDM implements BeansModel {
         DriverManagerConnectionPool.releaseConnection(connection);
       }
     }
-    
     return svolto;
   }
   
@@ -204,11 +273,10 @@ public class SvoltoInModelDM implements BeansModel {
         DriverManagerConnectionPool.releaseConnection(connection);
       }
     }
-    
     return svolto;
   }
   
-  public Collection<AbstractBean> doRetrieveByInizioPeriodo(Date inizioPeriodo) throws SQLException {
+  public Collection<AbstractBean> doRetrieveByInizioPeriodo(Date starting, Date ending) throws SQLException {
     Connection connection = null;
     PreparedStatement ps = null;
     ResultSet rs = null;
@@ -218,7 +286,8 @@ public class SvoltoInModelDM implements BeansModel {
       connection = DriverManagerConnectionPool.getConnection();
       ps = connection.prepareStatement(SvoltoInSQL.DO_RETRIEVE_BY_INIZIO_PERIODO);
       
-      ps.setDate(1, inizioPeriodo);
+      ps.setDate(1, starting);
+      ps.setDate(2, ending);
       
       rs = ps.executeQuery();
       
@@ -228,6 +297,7 @@ public class SvoltoInModelDM implements BeansModel {
         int progettoFormativoID = rs.getInt("progettoFormativoID");
         int strutturaOspitanteID = rs.getInt("strutturaOspitanteID");
         int tutorAzID = rs.getInt("tutorAzID");
+        Date inizioPeriodo = rs.getDate("inizioPeriodo");
         Date terminePeriodo = rs.getDate("terminePeriodo");
         
         svolto.add(new SvoltoInBean(progettoFormativoID, strutturaOspitanteID, tutorAzID, inizioPeriodo, terminePeriodo));
@@ -241,11 +311,10 @@ public class SvoltoInModelDM implements BeansModel {
         DriverManagerConnectionPool.releaseConnection(connection);
       }
     }
-    
     return svolto;
   }
   
-  public Collection<AbstractBean> doRetrieveByTerminePeriodo(Date terminePeriodo) throws SQLException {
+  public Collection<AbstractBean> doRetrieveByTerminePeriodo(Date starting, Date ending) throws SQLException {
     Connection connection = null;
     PreparedStatement ps = null;
     ResultSet rs = null;
@@ -255,7 +324,8 @@ public class SvoltoInModelDM implements BeansModel {
       connection = DriverManagerConnectionPool.getConnection();
       ps = connection.prepareStatement(SvoltoInSQL.DO_RETRIEVE_BY_TERMINE_PERIODO);
       
-      ps.setDate(1, terminePeriodo);
+      ps.setDate(1, starting);
+      ps.setDate(2, ending);
       
       rs = ps.executeQuery();
       
@@ -266,6 +336,7 @@ public class SvoltoInModelDM implements BeansModel {
         int strutturaOspitanteID = rs.getInt("strutturaOspitanteID");
         int tutorAzID = rs.getInt("tutorAzID");
         Date inizioPeriodo = rs.getDate("inizioPeriodo");
+        Date terminePeriodo = rs.getDate("terminePeriodo");
         
         svolto.add(new SvoltoInBean(progettoFormativoID, strutturaOspitanteID, tutorAzID, inizioPeriodo, terminePeriodo));
       }
@@ -278,7 +349,6 @@ public class SvoltoInModelDM implements BeansModel {
         DriverManagerConnectionPool.releaseConnection(connection);
       }
     }
-    
     return svolto;
   }
 
@@ -317,7 +387,6 @@ public class SvoltoInModelDM implements BeansModel {
         DriverManagerConnectionPool.releaseConnection(connection);
       }
     }
-    
     return svolto;
   }
 }

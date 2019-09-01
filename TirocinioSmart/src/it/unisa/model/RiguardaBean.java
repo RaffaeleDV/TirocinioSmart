@@ -5,19 +5,20 @@ import java.util.logging.Logger;
 import java.util.logging.Level;
 
 public class RiguardaBean extends AbstractBean implements Serializable, Cloneable {
-
+  private static final long serialVersionUID = 1L;
   private int progettoFormativoID;
   private int settoreOperativoID;
   private int priorita;
   
   public RiguardaBean() {
-    
+    super();
   }
   
   public RiguardaBean(
       int progettoFormativoID,
       int settoreOperativoID,
       int priorita) {
+    super();
     this.progettoFormativoID = progettoFormativoID;
     this.settoreOperativoID = settoreOperativoID;
     this.priorita = priorita;
@@ -50,26 +51,21 @@ public class RiguardaBean extends AbstractBean implements Serializable, Cloneabl
   @Override
   public String toString() {
     StringBuilder str = new StringBuilder();
-    str.append(getClass().getName() + "[");
+    str.append(getClass().getName() + "{");
     str.append("progettoFormativoID=" + progettoFormativoID + ", ");
     str.append("settoreOperativoID=" + settoreOperativoID + ", ");
-    str.append("priorita=" + priorita + "]");
+    str.append("priorita=" + priorita + "}");
     return str.toString();
   }
   
   @Override
   public boolean equals(Object o) {
-    
     if (o == null)
       return false;
-    
     if (!getClass().getName().equals(o.getClass().getName()))
       return false;
-    
     RiguardaBean segueBean = (RiguardaBean) o;
-    
-    if (
-        progettoFormativoID == segueBean.getProgettoFormativoID() &&
+    if (progettoFormativoID == segueBean.getProgettoFormativoID() &&
         settoreOperativoID == segueBean.getSettoreOperativoID() &&
         priorita == segueBean.getPriorita())
       return true;
@@ -80,13 +76,11 @@ public class RiguardaBean extends AbstractBean implements Serializable, Cloneabl
   @Override
   public RiguardaBean clone() throws CloneNotSupportedException {
     RiguardaBean riguardaBean = null;
-    
     try {
       riguardaBean = (RiguardaBean) super.clone();
     } catch(CloneNotSupportedException e) {
       Logger.getGlobal().log(Level.SEVERE, e.getMessage());
     }
-    
     return riguardaBean;
   }
 }

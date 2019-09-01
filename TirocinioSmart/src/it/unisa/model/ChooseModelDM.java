@@ -13,6 +13,12 @@ import java.util.ArrayList;
 
 public class ChooseModelDM implements BeansModel {
 
+  public static final ChooseModelDM INSTANCE = new ChooseModelDM();
+
+  private ChooseModelDM() {
+
+  }
+
   @Override
   public AbstractBean doRetrieveByKey(int code) throws SQLException {
     Connection connection = null;
@@ -35,7 +41,7 @@ public class ChooseModelDM implements BeansModel {
         
         chooseBean = new ChooseBean(id, description, tipo);
       } else {
-        Logger.getGlobal().log(Level.INFO, "Oggetto ChooseBean non trovato con l' id specificato");
+        Logger.getGlobal().log(Level.SEVERE, "Oggetto ChooseBean Non Trovato.");
       }
       
     } finally {
@@ -97,12 +103,12 @@ public class ChooseModelDM implements BeansModel {
       connection = DriverManagerConnectionPool.getConnection();
       ps = connection.prepareStatement(ChooseSQL.DO_SAVE);
     
-      ps.setInt(1, choose.getId());
+      ps.setInt(1, choose.getID());
       ps.setString(2, choose.getDescription());
       ps.setString(3, choose.getTipo());
     
       if (!(ps.executeUpdate() > 0)) {
-        Logger.getGlobal().log(Level.INFO, "Oggetto ChooseBean non memorizzato");
+        Logger.getGlobal().log(Level.SEVERE, "Oggetto ChooseBean Non Memorizzato.");
       }
       
       connection.commit();
@@ -132,7 +138,7 @@ public class ChooseModelDM implements BeansModel {
       if (ps.executeUpdate() > 0) {
         deleted = true;
       } else {
-        Logger.getGlobal().log(Level.INFO, "Oggetto ChooseBean non rimosso");
+        Logger.getGlobal().log(Level.SEVERE, "Oggetto ChooseBean Non Rimosso.");
       }
       
       connection.commit();
@@ -149,7 +155,7 @@ public class ChooseModelDM implements BeansModel {
     return deleted;
   }
   
-  public boolean doUpdate(AbstractBean product) throws SQLException{
+  public boolean doUpdate(AbstractBean product, int oldID) throws SQLException{
     Connection connection = null;
     PreparedStatement ps = null;
     ChooseBean chooseBean = (ChooseBean) product;
@@ -159,14 +165,15 @@ public class ChooseModelDM implements BeansModel {
       connection = DriverManagerConnectionPool.getConnection();
       ps = connection.prepareStatement(ChooseSQL.DO_UPDATE);
       
-      ps.setString(1, chooseBean.getDescription());
-      ps.setString(2, chooseBean.getTipo());
-      ps.setInt(3, chooseBean.getId());
+      ps.setInt(1, chooseBean.getID());
+      ps.setString(2, chooseBean.getDescription());
+      ps.setString(3, chooseBean.getTipo());
+      ps.setInt(4, oldID);
       
       if (ps.executeUpdate() > 0) {
         updated = true;
       } else {
-        Logger.getGlobal().log(Level.INFO, "Oggetto ChooseBean non aggiornato");
+        Logger.getGlobal().log(Level.SEVERE, "Oggetto ChooseBean Non Aggiornato.");
       }
       
       connection.commit();
@@ -201,10 +208,9 @@ public class ChooseModelDM implements BeansModel {
       
       while (rs.next()) {
         int id = rs.getInt("id");
-        String description = rs.getString("description");
         String tipo = rs.getString("tipo");
         
-        chooses.add(new ChooseBean(id, description, tipo));
+        chooses.add(new ChooseBean(id, text, tipo));
       }
       
     } finally {

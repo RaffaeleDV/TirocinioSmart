@@ -23,7 +23,7 @@ public class PercorsoFormativoSQL {
   
   public static final String DO_UPDATE =
     "UPDATE " + TABLE_NAME + " " +
-    "SET progettoFormativoID = ?, percorso = ? " +
+    "SET id = ?, progettoFormativoID = ?, percorso = ? " +
     "WHERE id = ?;";
   
   public static final String DO_RETRIEVE_BY_PROGETTO_FORMATIVO = 

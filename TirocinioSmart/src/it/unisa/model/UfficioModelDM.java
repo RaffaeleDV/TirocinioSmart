@@ -13,6 +13,12 @@ import it.unisa.sql.UfficioSQL;
 
 public class UfficioModelDM implements BeansModel {
 
+  public static final UfficioModelDM INSTANCE = new UfficioModelDM();
+
+  private UfficioModelDM() {
+
+  }
+  
   @Override
   public AbstractBean doRetrieveByKey(int code) throws SQLException {
     Connection connection = null;
@@ -36,9 +42,9 @@ public class UfficioModelDM implements BeansModel {
         String pass = rs.getString("pass");
         
         ufficioBean = new UfficioBean(id, strutturaOspitanteID, email, nome, pass);
-      } else
-        Logger.getGlobal().log(Level.INFO, "Oggetto UfficioBean non trovato con l' id specificato");
-      
+      } else {
+        Logger.getGlobal().log(Level.SEVERE, "Oggetto UfficioBean Non Trovato.");
+      }
     } finally {
       try {
         if (ps != null)
@@ -84,7 +90,6 @@ public class UfficioModelDM implements BeansModel {
         DriverManagerConnectionPool.releaseConnection(connection);
       }
     }
-    
     return uffici;
   }
 
@@ -105,7 +110,7 @@ public class UfficioModelDM implements BeansModel {
       ps.setString(5, ufficioBean.getPass());
       
       if (!(ps.executeUpdate() > 0)) {
-        Logger.getGlobal().log(Level.INFO, "Oggetto UfficioBean non memorizzato");
+        Logger.getGlobal().log(Level.SEVERE, "Oggetto UfficioBean Non Mmorizzato.");
       }
       
       connection.commit();
@@ -135,7 +140,7 @@ public class UfficioModelDM implements BeansModel {
       if (ps.executeUpdate() > 0) {
         deleted = true;
       } else {
-        Logger.getGlobal().log(Level.INFO, "Oggetto UfficioBean non rimosso");
+        Logger.getGlobal().log(Level.SEVERE, "Oggetto UfficioBean Non Rimosso.");
       }
       
       connection.commit();
@@ -148,11 +153,10 @@ public class UfficioModelDM implements BeansModel {
         DriverManagerConnectionPool.releaseConnection(connection);
       }
     }
-    
     return deleted;
   }
   
-  public boolean doUpdate(AbstractBean product) throws SQLException {
+  public boolean doUpdate(AbstractBean product, int ufficioID) throws SQLException {
     Connection connection = null;
     PreparedStatement ps = null;
     UfficioBean ufficioBean = (UfficioBean) product;
@@ -162,16 +166,17 @@ public class UfficioModelDM implements BeansModel {
       connection = DriverManagerConnectionPool.getConnection();
       ps = connection.prepareStatement(UfficioSQL.DO_UPDATE);
       
-      ps.setInt(1, ufficioBean.getStrutturaOspitanteID());
-      ps.setString(2, ufficioBean.getEmail());
-      ps.setString(3, ufficioBean.getNome());
-      ps.setString(4, ufficioBean.getPass());
-      ps.setInt(5, ufficioBean.getID());
+      ps.setInt(1, ufficioBean.getID());
+      ps.setInt(2, ufficioBean.getStrutturaOspitanteID());
+      ps.setString(3, ufficioBean.getEmail());
+      ps.setString(4, ufficioBean.getNome());
+      ps.setString(5, ufficioBean.getPass());
+      ps.setInt(6, ufficioID);
       
       if (ps.executeUpdate() > 0) {
         updated = true;
       } else {
-        Logger.getGlobal().log(Level.INFO, "Oggetto UfficioBean non aggiornato");
+        Logger.getGlobal().log(Level.SEVERE, "Oggetto UfficioBean Non Aggiornato.");
       }
       
       connection.commit();
@@ -221,11 +226,10 @@ public class UfficioModelDM implements BeansModel {
         DriverManagerConnectionPool.releaseConnection(connection);
       }
     }
-    
     return uffici;
   }
   
-  public Collection<AbstractBean> doRetrieveByEmail(String email) throws SQLException {
+  public Collection<AbstractBean> doRetrieveByEmail(String text) throws SQLException {
     Connection connection = null;
     PreparedStatement ps = null;
     ResultSet rs = null;
@@ -235,7 +239,7 @@ public class UfficioModelDM implements BeansModel {
       connection = DriverManagerConnectionPool.getConnection();
       ps = connection.prepareStatement(UfficioSQL.DO_RETRIEVE_BY_EMAIL);
       
-      ps.setString(1, email);
+      ps.setString(1, text);
       
       rs = ps.executeQuery();
       
@@ -244,6 +248,7 @@ public class UfficioModelDM implements BeansModel {
       while (rs.next()) {
         int id = rs.getInt("id");
         int strutturaOspitanteID = rs.getInt("strutturaOspitanteID");
+        String email = rs.getString("email");
         String nome = rs.getString("nome");
         String pass = rs.getString("pass");
         
@@ -258,7 +263,6 @@ public class UfficioModelDM implements BeansModel {
         DriverManagerConnectionPool.releaseConnection(connection);
       }
     }
-    
     return uffici;
   }
   
@@ -279,49 +283,13 @@ public class UfficioModelDM implements BeansModel {
       if (rs.next()) {
         int id = rs.getInt("id");
         int strutturaOspitanteID = rs.getInt("strutturaOspitanteID");
-        String nome = rs.getString("nome");
-        String email = rs.getString("email");
-        String pass = rs.getString("pass");
-        
-        ufficioBean = new UfficioBean(id, strutturaOspitanteID, email, nome, pass);
-      }
-      
-    } finally {
-      try {
-        if (ps != null)
-          ps.close();
-      } finally {
-        DriverManagerConnectionPool.releaseConnection(connection);
-      }
-    }
-    
-    return ufficioBean;
-  }
-  
-  public AbstractBean doRetrieveByProgettoFormativo(int code) throws SQLException {
-    Connection connection = null;
-    PreparedStatement ps = null;
-    ResultSet rs = null;
-    UfficioBean ufficioBean = null;
-    
-    try {
-      connection = DriverManagerConnectionPool.getConnection();
-      ps = connection.prepareStatement(UfficioSQL.DO_RETRIEVE_BY_PROGETTO_FORMATIVO);
-      
-      ps.setInt(1, code);
-      
-      rs = ps.executeQuery();
-      
-      if (rs.next()) {
-        int id = rs.getInt("id");
-        int strutturaOspitanteID = rs.getInt("strutturaOspitanteID");
         String email = rs.getString("email");
         String nome = rs.getString("nome");
         String pass = rs.getString("pass");
         
         ufficioBean = new UfficioBean(id, strutturaOspitanteID, email, nome, pass);
       } else {
-        Logger.getGlobal().log(Level.INFO, "Oggetto UfficioBean non trovato per il progetto formativo specificato");
+    	  Logger.getGlobal().log(Level.SEVERE, "Oggetto UfficioBean Non Trovato.");
       }
       
     } finally {
@@ -332,7 +300,52 @@ public class UfficioModelDM implements BeansModel {
         DriverManagerConnectionPool.releaseConnection(connection);
       }
     }
-    
     return ufficioBean;
+  }
+  
+  public Collection<AbstractBean> doRetrieveQuestionari(AbstractBean abstractBean) throws SQLException {
+    Connection connection = null;
+    PreparedStatement ps = null;
+    ResultSet rs = null;
+    UfficioBean ufficioBean = null;
+    Collection<AbstractBean> questionari = null;
+    
+    if (abstractBean != null &&
+        abstractBean.getClass().getName().equals(UfficioBean.class.getName())) {
+      ufficioBean = (UfficioBean) abstractBean;
+    } else {
+      Logger.getGlobal().log(Level.SEVERE, "Istanza Di Oggetto UfficioBean Non Valida.");
+      return null;
+    }
+    
+    try {
+      connection = DriverManagerConnectionPool.getConnection();
+      ps = connection.prepareStatement(UfficioSQL.DO_RETRIEVE_QUESTIONARI_BY_UTENTE);
+      
+      ps.setInt(1, ufficioBean.getID());
+      
+      questionari = new ArrayList<AbstractBean>();
+      
+      rs = ps.executeQuery();
+      
+      while (rs.next()) {
+        int id = rs.getInt("id");
+        int questions = rs.getInt("questions");
+        int nstudenti = rs.getInt("nstudenti");
+        String nome = rs.getString("nome");
+        String description = rs.getString("description");
+        String tematica = rs.getString("tematica");
+        
+        questionari.add(new QuestionarioBean(id, questions, nstudenti, nome, description, tematica));
+      }
+    } finally {
+      try {
+        if (ps != null)
+          ps.close();
+      } finally {
+        DriverManagerConnectionPool.releaseConnection(connection);
+      }
+    }
+    return questionari;
   }
 }

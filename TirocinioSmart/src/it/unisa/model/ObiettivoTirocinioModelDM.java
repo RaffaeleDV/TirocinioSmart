@@ -13,6 +13,12 @@ import it.unisa.sql.ObiettivoTirocinioSQL;
 
 public class ObiettivoTirocinioModelDM implements BeansModel {
 
+  public static final ObiettivoTirocinioModelDM INSTANCE = new ObiettivoTirocinioModelDM();
+
+  private ObiettivoTirocinioModelDM() {
+
+  }
+
   @Override
   public AbstractBean doRetrieveByKey(int code) throws SQLException {
     Connection connection = null;
@@ -34,9 +40,9 @@ public class ObiettivoTirocinioModelDM implements BeansModel {
         String priorita = rs.getString("priorita");
         
         obiettivoTirocinioBean = new ObiettivoTirocinioBean(code, progettoFormativoID, obiettivo, priorita);
-      } else
-        Logger.getGlobal().log(Level.INFO, "Oggetto ObbiettivoTirocinioBean con l' id specificato non trovato");
-      
+      } else {
+        Logger.getGlobal().log(Level.SEVERE, "Oggetto ObbiettivoTirocinioBean Non Trovato.");
+      }
     } finally {
       try {
         if (ps != null)
@@ -45,7 +51,6 @@ public class ObiettivoTirocinioModelDM implements BeansModel {
         DriverManagerConnectionPool.releaseConnection(connection);
       }
     }
-    
     return obiettivoTirocinioBean;
   }
 
@@ -101,7 +106,7 @@ public class ObiettivoTirocinioModelDM implements BeansModel {
       ps.setString(4, obiettivoTirocinioBean.getPriorita());
       
       if (!(ps.executeUpdate() > 0)) {
-        Logger.getGlobal().log(Level.INFO, "Oggetto ObiettivoTirocinioBean non memorizzato");
+        Logger.getGlobal().log(Level.SEVERE, "Oggetto ObiettivoTirocinioBean Non Memorizzato.");
       }
       
       connection.commit();
@@ -131,7 +136,7 @@ public class ObiettivoTirocinioModelDM implements BeansModel {
       if (ps.executeUpdate() > 0) {
         deleted = true;
       } else {
-        Logger.getGlobal().log(Level.INFO, "Oggetto ObiettivoTirocinioBean non rimosso");
+        Logger.getGlobal().log(Level.SEVERE, "Oggetto ObiettivoTirocinioBean Non Rimosso.");
       }
       
       connection.commit();
@@ -144,11 +149,10 @@ public class ObiettivoTirocinioModelDM implements BeansModel {
         DriverManagerConnectionPool.releaseConnection(connection);
       }
     }
-    
     return deleted;
   }
   
-  public boolean doUpdate(AbstractBean product) throws SQLException {
+  public boolean doUpdate(AbstractBean product, int codeObiettivoTirocinio) throws SQLException {
     Connection connection = null;
     PreparedStatement ps = null;
     ObiettivoTirocinioBean obiettivoTirocinioBean = (ObiettivoTirocinioBean) product;
@@ -158,15 +162,16 @@ public class ObiettivoTirocinioModelDM implements BeansModel {
       connection = DriverManagerConnectionPool.getConnection();
       ps = connection.prepareStatement(ObiettivoTirocinioSQL.DO_UPDATE);
       
-      ps.setInt(1, obiettivoTirocinioBean.getProgettoFormativoID());
-      ps.setString(2, obiettivoTirocinioBean.getObiettivo());
-      ps.setString(3, obiettivoTirocinioBean.getPriorita());
-      ps.setInt(4, obiettivoTirocinioBean.getID());
+      ps.setInt(1, obiettivoTirocinioBean.getID());
+      ps.setInt(2, obiettivoTirocinioBean.getProgettoFormativoID());
+      ps.setString(3, obiettivoTirocinioBean.getObiettivo());
+      ps.setString(4, obiettivoTirocinioBean.getPriorita());
+      ps.setInt(5, codeObiettivoTirocinio);
       
       if (ps.executeUpdate() > 0) {
         updated = true;
       } else {
-        Logger.getGlobal().log(Level.INFO, "Oggetto ObettivoTirocinioBean non aggiornato");
+        Logger.getGlobal().log(Level.SEVERE, "Oggetto ObettivoTirocinioBean Non Aggiornato.");
       }
       
       connection.commit();
@@ -179,7 +184,6 @@ public class ObiettivoTirocinioModelDM implements BeansModel {
         DriverManagerConnectionPool.releaseConnection(connection);
       }
     }
-    
     return updated;
   }
 
@@ -215,7 +219,6 @@ public class ObiettivoTirocinioModelDM implements BeansModel {
         DriverManagerConnectionPool.releaseConnection(connection);
       }
     }
-    
     return obiettivi;
   }
   
@@ -237,11 +240,11 @@ public class ObiettivoTirocinioModelDM implements BeansModel {
       
       while (rs.next()) {
         int id = rs.getInt("id");
-        int progettoFormativo = rs.getInt("progettoFormativo");
+        int progettoFormativoID = rs.getInt("progettoFormativoID");
         String obiettivo = rs.getString("obiettivo");
         String priorita = rs.getString("priorita");
         
-        obiettivi.add(new ObiettivoTirocinioBean(id, progettoFormativo, obiettivo, priorita));
+        obiettivi.add(new ObiettivoTirocinioBean(id, progettoFormativoID, obiettivo, priorita));
       }
       
     } finally {
@@ -252,7 +255,6 @@ public class ObiettivoTirocinioModelDM implements BeansModel {
         DriverManagerConnectionPool.releaseConnection(connection);
       }
     }
-    
     return obiettivi;
   }
   
@@ -275,8 +277,8 @@ public class ObiettivoTirocinioModelDM implements BeansModel {
       while (rs.next()) {
         int id = rs.getInt("id");
         int progettoFormativo = rs.getInt("progettoFormativo");
-        String obiettivo = rs.getString("obiettivo");
         String priorita = rs.getString("priorita");
+        String obiettivo = rs.getString("obiettivo");
         
         obiettivi.add(new ObiettivoTirocinioBean(id, progettoFormativo, obiettivo, priorita));
       }
@@ -289,7 +291,6 @@ public class ObiettivoTirocinioModelDM implements BeansModel {
         DriverManagerConnectionPool.releaseConnection(connection);
       }
     }
-    
     return obiettivi;
   }
 }

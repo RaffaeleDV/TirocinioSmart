@@ -14,6 +14,12 @@ import it.unisa.sql.ProgettoFormativoSQL;
 
 public class ProgettoFormativoModelDM implements BeansModel {
 
+  public static final ProgettoFormativoModelDM INSTANCE = new ProgettoFormativoModelDM();
+
+  private ProgettoFormativoModelDM() {
+
+  }
+
   @Override
   public AbstractBean doRetrieveByKey(int code) throws SQLException {
     Connection connection = null;
@@ -31,25 +37,21 @@ public class ProgettoFormativoModelDM implements BeansModel {
       
       if (rs.next()) {
         String info = rs.getString("info");
-        String idsAssicurazioni = rs.getString("idsAssicurazioni");
         String formazione = rs.getString("formazione");
         String modalita = rs.getString("modalita");
         String responsabile = rs.getString("responsabile");
         Date inizioPeriodo = rs.getDate("inizioPeriodo");
         Date terminePeriodo = rs.getDate("terminePeriodo");
         Date dataRilascio = rs.getDate("dataRilascio");
-        boolean approvazione = rs.getBoolean("approvazione");
         boolean approvazioneGenitori = rs.getBoolean("approvazioneGenitori");
         boolean approvazioneRespo = rs.getBoolean("approvazioneRespo");
         boolean approvazioneTutorAcc = rs.getBoolean("approvazioneTutorAcc");
         boolean approvazioneTutorAz = rs.getBoolean("approvazioneTutorAz");
         int ufficioID = rs.getInt("ufficioID");
-        int convenzioneID = rs.getInt("convenzioneID");
-        int tutorAccID = rs.getInt("tutorAccID");
         
-        progettoFormativoBean = new ProgettoFormativoBean(code, info, idsAssicurazioni, formazione, modalita, responsabile, inizioPeriodo, terminePeriodo, dataRilascio, approvazione, approvazioneGenitori, approvazioneRespo, approvazioneTutorAcc, approvazioneTutorAz, ufficioID, convenzioneID, tutorAccID);
+        progettoFormativoBean = new ProgettoFormativoBean(code, info, formazione, modalita, responsabile, inizioPeriodo, terminePeriodo, dataRilascio, approvazioneGenitori, approvazioneRespo, approvazioneTutorAcc, approvazioneTutorAz, ufficioID);
       } else {
-        Logger.getGlobal().log(Level.INFO, "Oggetto ProgettoFormativoBean con l' id specificato non trovato");
+        Logger.getGlobal().log(Level.SEVERE, "Oggetto ProgettoFormativoBean Non Trovato.");
       }
       
     } finally {
@@ -82,23 +84,19 @@ public class ProgettoFormativoModelDM implements BeansModel {
       while (rs.next()) {
         int id = rs.getInt("id");
         String info = rs.getString("info");
-        String idsAssicurazioni = rs.getString("idsAssicurazioni");
         String formazione = rs.getString("formazione");
         String modalita = rs.getString("modalita");
         String responsabile = rs.getString("responsabile");
         Date inizioPeriodo = rs.getDate("inizioPeriodo");
         Date terminePeriodo = rs.getDate("terminePeriodo");
         Date dataRilascio = rs.getDate("dataRilascio");
-        boolean approvazione = rs.getBoolean("approvazione");
         boolean approvazioneGenitori = rs.getBoolean("approvazioneGenitori");
         boolean approvazioneRespo = rs.getBoolean("approvazioneRespo");
         boolean approvazioneTutorAcc = rs.getBoolean("approvazioneTutorAcc");
         boolean approvazioneTutorAz = rs.getBoolean("approvazioneTutorAz");
         int ufficioID = rs.getInt("ufficioID");
-        int convenzioneID = rs.getInt("convenzioneID");
-        int tutorAccID = rs.getInt("tutorAccID");
         
-        progetti.add(new ProgettoFormativoBean(id, info, idsAssicurazioni, formazione, modalita, responsabile, inizioPeriodo, terminePeriodo, dataRilascio, approvazione, approvazioneGenitori, approvazioneRespo, approvazioneTutorAcc, approvazioneTutorAz, ufficioID, convenzioneID, tutorAccID));
+        progetti.add(new ProgettoFormativoBean(id, info, formazione, modalita, responsabile, inizioPeriodo, terminePeriodo, dataRilascio, approvazioneGenitori, approvazioneRespo, approvazioneTutorAcc, approvazioneTutorAz, ufficioID));
       }
       
     } finally {
@@ -109,7 +107,6 @@ public class ProgettoFormativoModelDM implements BeansModel {
         DriverManagerConnectionPool.releaseConnection(connection);
       }
     }
-    
     return progetti;
   }
 
@@ -125,24 +122,20 @@ public class ProgettoFormativoModelDM implements BeansModel {
       
       ps.setInt(1, progettoFormativoBean.getID());
       ps.setString(2, progettoFormativoBean.getInfo());
-      ps.setString(3, progettoFormativoBean.getIdsAssicurazioni());
-      ps.setString(4, progettoFormativoBean.getFormazione());
-      ps.setString(5, progettoFormativoBean.getModalita());
-      ps.setString(6, progettoFormativoBean.getResponsabile());
-      ps.setDate(7, progettoFormativoBean.getInizioPeriodo());
-      ps.setDate(8, progettoFormativoBean.getTerminePeriodo());
-      ps.setDate(9, progettoFormativoBean.getDataRilascio());
-      ps.setBoolean(10, progettoFormativoBean.getApprovazione());
-      ps.setBoolean(11, progettoFormativoBean.getApprovazioneGenitori());
-      ps.setBoolean(12, progettoFormativoBean.getApprovazioneRespo());
-      ps.setBoolean(13, progettoFormativoBean.getApprovazioneTutorAcc());
-      ps.setBoolean(14, progettoFormativoBean.getApprovazioneTutorAz());
-      ps.setInt(15, progettoFormativoBean.getUfficioID());
-      ps.setInt(16, progettoFormativoBean.getConvenzioneID());
-      ps.setInt(17, progettoFormativoBean.getTutorAccID());
+      ps.setString(3, progettoFormativoBean.getFormazione());
+      ps.setString(4, progettoFormativoBean.getModalita());
+      ps.setString(5, progettoFormativoBean.getResponsabile());
+      ps.setDate(6, progettoFormativoBean.getInizioPeriodo());
+      ps.setDate(7, progettoFormativoBean.getTerminePeriodo());
+      ps.setDate(8, progettoFormativoBean.getDataRilascio());
+      ps.setBoolean(9, progettoFormativoBean.isApprovazioneGenitori());
+      ps.setBoolean(10, progettoFormativoBean.isApprovazioneRespo());
+      ps.setBoolean(11, progettoFormativoBean.isApprovazioneTutorAcc());
+      ps.setBoolean(12, progettoFormativoBean.isApprovazioneTutorAz());
+      ps.setInt(13, progettoFormativoBean.getUfficioID());
       
       if (!(ps.executeUpdate() > 0)) {
-        Logger.getGlobal().log(Level.INFO, "Oggetto ProgettoFormativoBean non memorizzato");
+        Logger.getGlobal().log(Level.SEVERE, "Oggetto ProgettoFormativoBean Non Memorizzato.");
       }
       
       connection.commit();
@@ -172,7 +165,7 @@ public class ProgettoFormativoModelDM implements BeansModel {
       if (ps.executeUpdate() > 0) {
         deleted = true;
       } else {
-        Logger.getGlobal().log(Level.INFO, "Oggetto ProgettoFormativoBean non rimosso");
+        Logger.getGlobal().log(Level.SEVERE, "Oggetto ProgettoFormativoBean Non Rimosso.");
       }
       
       connection.commit();
@@ -185,11 +178,10 @@ public class ProgettoFormativoModelDM implements BeansModel {
         DriverManagerConnectionPool.releaseConnection(connection);
       }
     }
-    
     return deleted;
   }
   
-  public boolean doUpdate(AbstractBean product) throws SQLException {
+  public boolean doUpdate(AbstractBean product, int codeProgettoFormativo) throws SQLException {
     Connection connection = null;
     PreparedStatement ps = null;
     ProgettoFormativoBean progettoFormativoBean = (ProgettoFormativoBean) product;
@@ -199,28 +191,25 @@ public class ProgettoFormativoModelDM implements BeansModel {
       connection = DriverManagerConnectionPool.getConnection();
       ps = connection.prepareStatement(ProgettoFormativoSQL.DO_UPDATE);
       
-      ps.setString(1, progettoFormativoBean.getInfo());
-      ps.setString(2, progettoFormativoBean.getIdsAssicurazioni());
+      ps.setInt(1, progettoFormativoBean.getID());
+      ps.setString(2, progettoFormativoBean.getInfo());
       ps.setString(3, progettoFormativoBean.getFormazione());
       ps.setString(4, progettoFormativoBean.getModalita());
       ps.setString(5, progettoFormativoBean.getResponsabile());
       ps.setDate(6, progettoFormativoBean.getInizioPeriodo());
       ps.setDate(7, progettoFormativoBean.getTerminePeriodo());
       ps.setDate(8, progettoFormativoBean.getDataRilascio());
-      ps.setBoolean(9, progettoFormativoBean.getApprovazione());
-      ps.setBoolean(10, progettoFormativoBean.getApprovazioneGenitori());
-      ps.setBoolean(11, progettoFormativoBean.getApprovazioneRespo());
-      ps.setBoolean(12, progettoFormativoBean.getApprovazioneTutorAcc());
-      ps.setBoolean(13, progettoFormativoBean.getApprovazioneTutorAz());
-      ps.setInt(14, progettoFormativoBean.getUfficioID());
-      ps.setInt(15, progettoFormativoBean.getConvenzioneID());
-      ps.setInt(16, progettoFormativoBean.getTutorAccID());
-      ps.setInt(17, progettoFormativoBean.getID());
+      ps.setBoolean(9, progettoFormativoBean.isApprovazioneGenitori());
+      ps.setBoolean(10, progettoFormativoBean.isApprovazioneRespo());
+      ps.setBoolean(11, progettoFormativoBean.isApprovazioneTutorAcc());
+      ps.setBoolean(12, progettoFormativoBean.isApprovazioneTutorAz());
+      ps.setInt(13, progettoFormativoBean.getUfficioID());
+      ps.setInt(14, codeProgettoFormativo);
       
       if (ps.executeUpdate() > 0) {
         updated = true;
       } else {
-        Logger.getGlobal().log(Level.INFO, "Oggetto ProgettoFormativoBean non aggiornato");
+        Logger.getGlobal().log(Level.SEVERE, "Oggetto ProgettoFormativoBean Non Aggiornato.");
       }
       
       connection.commit();
@@ -233,7 +222,6 @@ public class ProgettoFormativoModelDM implements BeansModel {
         DriverManagerConnectionPool.releaseConnection(connection);
       }
     }
-    
     return updated;
   }
   
@@ -256,23 +244,19 @@ public class ProgettoFormativoModelDM implements BeansModel {
       while (rs.next()) {
         int id = rs.getInt("id");
         String info = rs.getString("info");
-        String idsAssicurazioni = rs.getString("idsAssicurazioni");
         String formazione = rs.getString("formazione");
         String modalita = rs.getString("modalita");
         String responsabile = rs.getString("responsabile");
         Date inizioPeriodo = rs.getDate("inizioPeriodo");
         Date terminePeriodo = rs.getDate("terminePeriodo");
         Date dataRilascio = rs.getDate("dataRilascio");
-        boolean approvazione = rs.getBoolean("approvazione");
         boolean approvazioneGenitori = rs.getBoolean("approvazioneGenitori");
         boolean approvazioneRespo = rs.getBoolean("approvazioneRespo");
         boolean approvazioneTutorAcc = rs.getBoolean("approvazioneTutorAcc");
         boolean approvazioneTutorAz = rs.getBoolean("approvazioneTutorAz");
         int ufficioID = rs.getInt("ufficioID");
-        int convenzioneID = rs.getInt("convenzioneID");
-        int tutorAccID = rs.getInt("tutorAccID");
         
-        progetti.add(new ProgettoFormativoBean(id, info, idsAssicurazioni, formazione, modalita, responsabile, inizioPeriodo, terminePeriodo, dataRilascio, approvazione, approvazioneGenitori, approvazioneRespo, approvazioneTutorAcc, approvazioneTutorAz, ufficioID, convenzioneID, tutorAccID));
+        progetti.add(new ProgettoFormativoBean(id, info, formazione, modalita, responsabile, inizioPeriodo, terminePeriodo, dataRilascio, approvazioneGenitori, approvazioneRespo, approvazioneTutorAcc, approvazioneTutorAz, ufficioID));
       }
       
     } finally {
@@ -283,11 +267,10 @@ public class ProgettoFormativoModelDM implements BeansModel {
         DriverManagerConnectionPool.releaseConnection(connection);
       }
     }
-    
     return progetti;
   }
   
-  public Collection<AbstractBean> doRetrieveByIdsAssicurazioni(String text) throws SQLException {
+  public Collection<AbstractBean> doRetrieveByIdAssicurazione(int code) throws SQLException {
     Connection connection = null;
     PreparedStatement ps = null;
     ResultSet rs = null;
@@ -295,9 +278,9 @@ public class ProgettoFormativoModelDM implements BeansModel {
     
     try {
       connection = DriverManagerConnectionPool.getConnection();
-      ps = connection.prepareStatement(ProgettoFormativoSQL.DO_RETRIEVE_BY_IDS_ASSICURAZIONI);
+      ps = connection.prepareStatement(ProgettoFormativoSQL.DO_RETRIEVE_BY_ID_ASSICURAZIONE);
       
-      ps.setString(1, text);
+      ps.setInt(1, code);
       
       rs = ps.executeQuery();
       
@@ -306,23 +289,19 @@ public class ProgettoFormativoModelDM implements BeansModel {
       while (rs.next()) {
         int id = rs.getInt("id");
         String info = rs.getString("info");
-        String idsAssicurazioni = rs.getString("idsAssicurazioni");
         String formazione = rs.getString("formazione");
         String modalita = rs.getString("modalita");
         String responsabile = rs.getString("responsabile");
         Date inizioPeriodo = rs.getDate("inizioPeriodo");
         Date terminePeriodo = rs.getDate("terminePeriodo");
         Date dataRilascio = rs.getDate("dataRilascio");
-        boolean approvazione = rs.getBoolean("approvazione");
         boolean approvazioneGenitori = rs.getBoolean("approvazioneGenitori");
         boolean approvazioneRespo = rs.getBoolean("approvazioneRespo");
         boolean approvazioneTutorAcc = rs.getBoolean("approvazioneTutorAcc");
         boolean approvazioneTutorAz = rs.getBoolean("approvazioneTutorAz");
         int ufficioID = rs.getInt("ufficioID");
-        int convenzioneID = rs.getInt("convenzioneID");
-        int tutorAccID = rs.getInt("tutorAccID");
         
-        progetti.add(new ProgettoFormativoBean(id, info, idsAssicurazioni, formazione, modalita, responsabile, inizioPeriodo, terminePeriodo, dataRilascio, approvazione, approvazioneGenitori, approvazioneRespo, approvazioneTutorAcc, approvazioneTutorAz, ufficioID, convenzioneID, tutorAccID));
+        progetti.add(new ProgettoFormativoBean(id, info, formazione, modalita, responsabile, inizioPeriodo, terminePeriodo, dataRilascio, approvazioneGenitori, approvazioneRespo, approvazioneTutorAcc, approvazioneTutorAz, ufficioID));
       }
       
     } finally {
@@ -333,7 +312,6 @@ public class ProgettoFormativoModelDM implements BeansModel {
         DriverManagerConnectionPool.releaseConnection(connection);
       }
     }
-    
     return progetti;
   }
   
@@ -356,23 +334,19 @@ public class ProgettoFormativoModelDM implements BeansModel {
       while (rs.next()) {
         int id = rs.getInt("id");
         String info = rs.getString("info");
-        String idsAssicurazioni = rs.getString("idsAssicurazioni");
         String formazione = rs.getString("formazione");
         String modalita = rs.getString("modalita");
         String responsabile = rs.getString("responsabile");
         Date inizioPeriodo = rs.getDate("inizioPeriodo");
         Date terminePeriodo = rs.getDate("terminePeriodo");
         Date dataRilascio = rs.getDate("dataRilascio");
-        boolean approvazione = rs.getBoolean("approvazione");
         boolean approvazioneGenitori = rs.getBoolean("approvazioneGenitori");
         boolean approvazioneRespo = rs.getBoolean("approvazioneRespo");
         boolean approvazioneTutorAcc = rs.getBoolean("approvazioneTutorAcc");
         boolean approvazioneTutorAz = rs.getBoolean("approvazioneTutorAz");
         int ufficioID = rs.getInt("ufficioID");
-        int convenzioneID = rs.getInt("convenzioneID");
-        int tutorAccID = rs.getInt("tutorAccID");
         
-        progetti.add(new ProgettoFormativoBean(id, info, idsAssicurazioni, formazione, modalita, responsabile, inizioPeriodo, terminePeriodo, dataRilascio, approvazione, approvazioneGenitori, approvazioneRespo, approvazioneTutorAcc, approvazioneTutorAz, ufficioID, convenzioneID, tutorAccID));
+        progetti.add(new ProgettoFormativoBean(id, info, formazione, modalita, responsabile, inizioPeriodo, terminePeriodo, dataRilascio, approvazioneGenitori, approvazioneRespo, approvazioneTutorAcc, approvazioneTutorAz, ufficioID));
       }
       
     } finally {
@@ -383,7 +357,6 @@ public class ProgettoFormativoModelDM implements BeansModel {
         DriverManagerConnectionPool.releaseConnection(connection);
       }
     }
-    
     return progetti;
   }
   
@@ -406,23 +379,19 @@ public class ProgettoFormativoModelDM implements BeansModel {
       while (rs.next()) {
         int id = rs.getInt("id");
         String info = rs.getString("info");
-        String idsAssicurazioni = rs.getString("idsAssicurazioni");
         String formazione = rs.getString("formazione");
         String modalita = rs.getString("modalita");
         String responsabile = rs.getString("responsabile");
         Date inizioPeriodo = rs.getDate("inizioPeriodo");
         Date terminePeriodo = rs.getDate("terminePeriodo");
         Date dataRilascio = rs.getDate("dataRilascio");
-        boolean approvazione = rs.getBoolean("approvazione");
         boolean approvazioneGenitori = rs.getBoolean("approvazioneGenitori");
         boolean approvazioneRespo = rs.getBoolean("approvazioneRespo");
         boolean approvazioneTutorAcc = rs.getBoolean("approvazioneTutorAcc");
         boolean approvazioneTutorAz = rs.getBoolean("approvazioneTutorAz");
         int ufficioID = rs.getInt("ufficioID");
-        int convenzioneID = rs.getInt("convenzioneID");
-        int tutorAccID = rs.getInt("tutorAccID");
         
-        progetti.add(new ProgettoFormativoBean(id, info, idsAssicurazioni, formazione, modalita, responsabile, inizioPeriodo, terminePeriodo, dataRilascio, approvazione, approvazioneGenitori, approvazioneRespo, approvazioneTutorAcc, approvazioneTutorAz, ufficioID, convenzioneID, tutorAccID));
+        progetti.add(new ProgettoFormativoBean(id, info, formazione, modalita, responsabile, inizioPeriodo, terminePeriodo, dataRilascio, approvazioneGenitori, approvazioneRespo, approvazioneTutorAcc, approvazioneTutorAz, ufficioID));
       }
       
     } finally {
@@ -433,7 +402,6 @@ public class ProgettoFormativoModelDM implements BeansModel {
         DriverManagerConnectionPool.releaseConnection(connection);
       }
     }
-    
     return progetti;
   }
   
@@ -456,23 +424,19 @@ public class ProgettoFormativoModelDM implements BeansModel {
       while (rs.next()) {
         int id = rs.getInt("id");
         String info = rs.getString("info");
-        String idsAssicurazioni = rs.getString("idsAssicurazioni");
         String formazione = rs.getString("formazione");
         String modalita = rs.getString("modalita");
         String responsabile = rs.getString("responsabile");
         Date inizioPeriodo = rs.getDate("inizioPeriodo");
         Date terminePeriodo = rs.getDate("terminePeriodo");
         Date dataRilascio = rs.getDate("dataRilascio");
-        boolean approvazione = rs.getBoolean("approvazione");
         boolean approvazioneGenitori = rs.getBoolean("approvazioneGenitori");
         boolean approvazioneRespo = rs.getBoolean("approvazioneRespo");
         boolean approvazioneTutorAcc = rs.getBoolean("approvazioneTutorAcc");
         boolean approvazioneTutorAz = rs.getBoolean("approvazioneTutorAz");
         int ufficioID = rs.getInt("ufficioID");
-        int convenzioneID = rs.getInt("convenzioneID");
-        int tutorAccID = rs.getInt("tutorAccID");
         
-        progetti.add(new ProgettoFormativoBean(id, info, idsAssicurazioni, formazione, modalita, responsabile, inizioPeriodo, terminePeriodo, dataRilascio, approvazione, approvazioneGenitori, approvazioneRespo, approvazioneTutorAcc, approvazioneTutorAz, ufficioID, convenzioneID, tutorAccID));
+        progetti.add(new ProgettoFormativoBean(id, info, formazione, modalita, responsabile, inizioPeriodo, terminePeriodo, dataRilascio, approvazioneGenitori, approvazioneRespo, approvazioneTutorAcc, approvazioneTutorAz, ufficioID));
       }
       
     } finally {
@@ -483,7 +447,6 @@ public class ProgettoFormativoModelDM implements BeansModel {
         DriverManagerConnectionPool.releaseConnection(connection);
       }
     }
-    
     return progetti;
   }
   
@@ -506,22 +469,18 @@ public class ProgettoFormativoModelDM implements BeansModel {
       while (rs.next()) {
         int id = rs.getInt("id");
         String info = rs.getString("info");
-        String idsAssicurazioni = rs.getString("idsAssicurazioni");
         String formazione = rs.getString("formazione");
         String modalita = rs.getString("modalita");
         String responsabile = rs.getString("responsabile");
         Date terminePeriodo = rs.getDate("terminePeriodo");
         Date dataRilascio = rs.getDate("dataRilascio");
-        boolean approvazione = rs.getBoolean("approvazione");
         boolean approvazioneGenitori = rs.getBoolean("approvazioneGenitori");
         boolean approvazioneRespo = rs.getBoolean("approvazioneRespo");
         boolean approvazioneTutorAcc = rs.getBoolean("approvazioneTutorAcc");
         boolean approvazioneTutorAz = rs.getBoolean("approvazioneTutorAz");
         int ufficioID = rs.getInt("ufficioID");
-        int convenzioneID = rs.getInt("convenzioneID");
-        int tutorAccID = rs.getInt("tutorAccID");
         
-        progetti.add(new ProgettoFormativoBean(id, info, idsAssicurazioni, formazione, modalita, responsabile, inizioPeriodo, terminePeriodo, dataRilascio, approvazione, approvazioneGenitori, approvazioneRespo, approvazioneTutorAcc, approvazioneTutorAz, ufficioID, convenzioneID, tutorAccID));
+        progetti.add(new ProgettoFormativoBean(id, info, formazione, modalita, responsabile, inizioPeriodo, terminePeriodo, dataRilascio, approvazioneGenitori, approvazioneRespo, approvazioneTutorAcc, approvazioneTutorAz, ufficioID));
       }
       
     } finally {
@@ -532,7 +491,6 @@ public class ProgettoFormativoModelDM implements BeansModel {
         DriverManagerConnectionPool.releaseConnection(connection);
       }
     }
-    
     return progetti;
   }
   
@@ -555,22 +513,18 @@ public class ProgettoFormativoModelDM implements BeansModel {
       while (rs.next()) {
         int id = rs.getInt("id");
         String info = rs.getString("info");
-        String idsAssicurazioni = rs.getString("idsAssicurazioni");
         String formazione = rs.getString("formazione");
         String modalita = rs.getString("modalita");
         String responsabile = rs.getString("responsabile");
         Date inizioPeriodo = rs.getDate("inizioPeriodo");
         Date dataRilascio = rs.getDate("dataRilascio");
-        boolean approvazione = rs.getBoolean("approvazione");
         boolean approvazioneGenitori = rs.getBoolean("approvazioneGenitori");
         boolean approvazioneRespo = rs.getBoolean("approvazioneRespo");
         boolean approvazioneTutorAcc = rs.getBoolean("approvazioneTutorAcc");
         boolean approvazioneTutorAz = rs.getBoolean("approvazioneTutorAz");
         int ufficioID = rs.getInt("ufficioID");
-        int convenzioneID = rs.getInt("convenzioneID");
-        int tutorAccID = rs.getInt("tutorAccID");
         
-        progetti.add(new ProgettoFormativoBean(id, info, idsAssicurazioni, formazione, modalita, responsabile, inizioPeriodo, terminePeriodo, dataRilascio, approvazione, approvazioneGenitori, approvazioneRespo, approvazioneTutorAcc, approvazioneTutorAz, ufficioID, convenzioneID, tutorAccID));
+        progetti.add(new ProgettoFormativoBean(id, info, formazione, modalita, responsabile, inizioPeriodo, terminePeriodo, dataRilascio, approvazioneGenitori, approvazioneRespo, approvazioneTutorAcc, approvazioneTutorAz, ufficioID));
       }
       
     } finally {
@@ -581,7 +535,6 @@ public class ProgettoFormativoModelDM implements BeansModel {
         DriverManagerConnectionPool.releaseConnection(connection);
       }
     }
-    
     return progetti;
   }
   
@@ -604,22 +557,18 @@ public class ProgettoFormativoModelDM implements BeansModel {
       while (rs.next()) {
         int id = rs.getInt("id");
         String info = rs.getString("info");
-        String idsAssicurazioni = rs.getString("idsAssicurazioni");
         String formazione = rs.getString("formazione");
         String modalita = rs.getString("modalita");
         String responsabile = rs.getString("responsabile");
         Date inizioPeriodo = rs.getDate("inizioPeriodo");
         Date terminePeriodo = rs.getDate("terminePeriodo");
-        boolean approvazione = rs.getBoolean("approvazione");
         boolean approvazioneGenitori = rs.getBoolean("approvazioneGenitori");
         boolean approvazioneRespo = rs.getBoolean("approvazioneRespo");
         boolean approvazioneTutorAcc = rs.getBoolean("approvazioneTutorAcc");
         boolean approvazioneTutorAz = rs.getBoolean("approvazioneTutorAz");
         int ufficioID = rs.getInt("ufficioID");
-        int convenzioneID = rs.getInt("convenzioneID");
-        int tutorAccID = rs.getInt("tutorAccID");
         
-        progetti.add(new ProgettoFormativoBean(id, info, idsAssicurazioni, formazione, modalita, responsabile, inizioPeriodo, terminePeriodo, dataRilascio, approvazione, approvazioneGenitori, approvazioneRespo, approvazioneTutorAcc, approvazioneTutorAz, ufficioID, convenzioneID, tutorAccID));
+        progetti.add(new ProgettoFormativoBean(id, info, formazione, modalita, responsabile, inizioPeriodo, terminePeriodo, dataRilascio, approvazioneGenitori, approvazioneRespo, approvazioneTutorAcc, approvazioneTutorAz, ufficioID));
       }
       
     } finally {
@@ -630,7 +579,6 @@ public class ProgettoFormativoModelDM implements BeansModel {
         DriverManagerConnectionPool.releaseConnection(connection);
       }
     }
-    
     return progetti;
   }
   
@@ -653,7 +601,6 @@ public class ProgettoFormativoModelDM implements BeansModel {
       while (rs.next()) {
         int id = rs.getInt("id");
         String info = rs.getString("info");
-        String idsAssicurazioni = rs.getString("idsAssicurazioni");
         String formazione = rs.getString("formazione");
         String modalita = rs.getString("modalita");
         String responsabile = rs.getString("responsabile");
@@ -665,10 +612,8 @@ public class ProgettoFormativoModelDM implements BeansModel {
         boolean approvazioneTutorAcc = rs.getBoolean("approvazioneTutorAcc");
         boolean approvazioneTutorAz = rs.getBoolean("approvazioneTutorAz");
         int ufficioID = rs.getInt("ufficioID");
-        int convenzioneID = rs.getInt("convenzioneID");
-        int tutorAccID = rs.getInt("tutorAccID");
         
-        progetti.add(new ProgettoFormativoBean(id, info, idsAssicurazioni, formazione, modalita, responsabile, inizioPeriodo, terminePeriodo, dataRilascio, approvazione, approvazioneGenitori, approvazioneRespo, approvazioneTutorAcc, approvazioneTutorAz, ufficioID, convenzioneID, tutorAccID));
+        progetti.add(new ProgettoFormativoBean(id, info, formazione, modalita, responsabile, inizioPeriodo, terminePeriodo, dataRilascio, approvazioneGenitori, approvazioneRespo, approvazioneTutorAcc, approvazioneTutorAz, ufficioID));
       }
       
     } finally {
@@ -679,7 +624,6 @@ public class ProgettoFormativoModelDM implements BeansModel {
         DriverManagerConnectionPool.releaseConnection(connection);
       }
     }
-    
     return progetti;
   }
   
@@ -702,22 +646,18 @@ public class ProgettoFormativoModelDM implements BeansModel {
       while (rs.next()) {
         int id = rs.getInt("id");
         String info = rs.getString("info");
-        String idsAssicurazioni = rs.getString("idsAssicurazioni");
         String formazione = rs.getString("formazione");
         String modalita = rs.getString("modalita");
         String responsabile = rs.getString("responsabile");
         Date inizioPeriodo = rs.getDate("inizioPeriodo");
         Date terminePeriodo = rs.getDate("terminePeriodo");
         Date dataRilascio = rs.getDate("dataRilascio");
-        boolean approvazione = rs.getBoolean("approvazione");
         boolean approvazioneRespo = rs.getBoolean("approvazioneRespo");
         boolean approvazioneTutorAcc = rs.getBoolean("approvazioneTutorAcc");
         boolean approvazioneTutorAz = rs.getBoolean("approvazioneTutorAz");
         int ufficioID = rs.getInt("ufficioID");
-        int convenzioneID = rs.getInt("convenzioneID");
-        int tutorAccID = rs.getInt("tutorAccID");
         
-        progetti.add(new ProgettoFormativoBean(id, info, idsAssicurazioni, formazione, modalita, responsabile, inizioPeriodo, terminePeriodo, dataRilascio, approvazione, approvazioneGenitori, approvazioneRespo, approvazioneTutorAcc, approvazioneTutorAz, ufficioID, convenzioneID, tutorAccID));
+        progetti.add(new ProgettoFormativoBean(id, info, formazione, modalita, responsabile, inizioPeriodo, terminePeriodo, dataRilascio, approvazioneGenitori, approvazioneRespo, approvazioneTutorAcc, approvazioneTutorAz, ufficioID));
       }
       
     } finally {
@@ -728,7 +668,6 @@ public class ProgettoFormativoModelDM implements BeansModel {
         DriverManagerConnectionPool.releaseConnection(connection);
       }
     }
-    
     return progetti;
   }
   
@@ -751,22 +690,18 @@ public class ProgettoFormativoModelDM implements BeansModel {
       while (rs.next()) {
         int id = rs.getInt("id");
         String info = rs.getString("info");
-        String idsAssicurazioni = rs.getString("idsAssicurazioni");
         String formazione = rs.getString("formazione");
         String modalita = rs.getString("modalita");
         String responsabile = rs.getString("responsabile");
         Date inizioPeriodo = rs.getDate("inizioPeriodo");
         Date terminePeriodo = rs.getDate("terminePeriodo");
         Date dataRilascio = rs.getDate("dataRilascio");
-        boolean approvazione = rs.getBoolean("approvazione");
         boolean approvazioneGenitori = rs.getBoolean("approvazioneGenitori");
         boolean approvazioneTutorAcc = rs.getBoolean("approvazioneTutorAcc");
         boolean approvazioneTutorAz = rs.getBoolean("approvazioneTutorAz");
         int ufficioID = rs.getInt("ufficioID");
-        int convenzioneID = rs.getInt("convenzioneID");
-        int tutorAccID = rs.getInt("tutorAccID");
         
-        progetti.add(new ProgettoFormativoBean(id, info, idsAssicurazioni, formazione, modalita, responsabile, inizioPeriodo, terminePeriodo, dataRilascio, approvazione, approvazioneGenitori, approvazioneRespo, approvazioneTutorAcc, approvazioneTutorAz, ufficioID, convenzioneID, tutorAccID));
+        progetti.add(new ProgettoFormativoBean(id, info, formazione, modalita, responsabile, inizioPeriodo, terminePeriodo, dataRilascio, approvazioneGenitori, approvazioneRespo, approvazioneTutorAcc, approvazioneTutorAz, ufficioID));
       }
       
     } finally {
@@ -777,7 +712,6 @@ public class ProgettoFormativoModelDM implements BeansModel {
         DriverManagerConnectionPool.releaseConnection(connection);
       }
     }
-    
     return progetti;
   }
   
@@ -800,22 +734,18 @@ public class ProgettoFormativoModelDM implements BeansModel {
       while (rs.next()) {
         int id = rs.getInt("id");
         String info = rs.getString("info");
-        String idsAssicurazioni = rs.getString("idsAssicurazioni");
         String formazione = rs.getString("formazione");
         String modalita = rs.getString("modalita");
         String responsabile = rs.getString("responsabile");
         Date inizioPeriodo = rs.getDate("inizioPeriodo");
         Date terminePeriodo = rs.getDate("terminePeriodo");
         Date dataRilascio = rs.getDate("dataRilascio");
-        boolean approvazione = rs.getBoolean("approvazione");
         boolean approvazioneGenitori = rs.getBoolean("approvazioneGenitori");
         boolean approvazioneRespo = rs.getBoolean("approvazioneRespo");
         boolean approvazioneTutorAz = rs.getBoolean("approvazioneTutorAz");
         int ufficioID = rs.getInt("ufficioID");
-        int convenzioneID = rs.getInt("convenzioneID");
-        int tutorAccID = rs.getInt("tutorAccID");
         
-        progetti.add(new ProgettoFormativoBean(id, info, idsAssicurazioni, formazione, modalita, responsabile, inizioPeriodo, terminePeriodo, dataRilascio, approvazione, approvazioneGenitori, approvazioneRespo, approvazioneTutorAcc, approvazioneTutorAz, ufficioID, convenzioneID, tutorAccID));
+        progetti.add(new ProgettoFormativoBean(id, info, formazione, modalita, responsabile, inizioPeriodo, terminePeriodo, dataRilascio, approvazioneGenitori, approvazioneRespo, approvazioneTutorAcc, approvazioneTutorAz, ufficioID));
       }
       
     } finally {
@@ -826,7 +756,6 @@ public class ProgettoFormativoModelDM implements BeansModel {
         DriverManagerConnectionPool.releaseConnection(connection);
       }
     }
-    
     return progetti;
   }
   
@@ -849,22 +778,18 @@ public class ProgettoFormativoModelDM implements BeansModel {
       while (rs.next()) {
         int id = rs.getInt("id");
         String info = rs.getString("info");
-        String idsAssicurazioni = rs.getString("idsAssicurazioni");
         String formazione = rs.getString("formazione");
         String modalita = rs.getString("modalita");
         String responsabile = rs.getString("responsabile");
         Date inizioPeriodo = rs.getDate("inizioPeriodo");
         Date terminePeriodo = rs.getDate("terminePeriodo");
         Date dataRilascio = rs.getDate("dataRilascio");
-        boolean approvazione = rs.getBoolean("approvazione");
         boolean approvazioneGenitori = rs.getBoolean("approvazioneGenitori");
         boolean approvazioneTutorAcc = rs.getBoolean("approvazioneTutorAcc");
         boolean approvazioneRespo = rs.getBoolean("approvazioneRespo");
         int ufficioID = rs.getInt("ufficioID");
-        int convenzioneID = rs.getInt("convenzioneID");
-        int tutorAccID = rs.getInt("tutorAccID");
         
-        progetti.add(new ProgettoFormativoBean(id, info, idsAssicurazioni, formazione, modalita, responsabile, inizioPeriodo, terminePeriodo, dataRilascio, approvazione, approvazioneGenitori, approvazioneRespo, approvazioneTutorAcc, approvazioneTutorAz, ufficioID, convenzioneID, tutorAccID));
+        progetti.add(new ProgettoFormativoBean(id, info, formazione, modalita, responsabile, inizioPeriodo, terminePeriodo, dataRilascio, approvazioneGenitori, approvazioneRespo, approvazioneTutorAcc, approvazioneTutorAz, ufficioID));
       }
       
     } finally {
@@ -875,7 +800,6 @@ public class ProgettoFormativoModelDM implements BeansModel {
         DriverManagerConnectionPool.releaseConnection(connection);
       }
     }
-    
     return progetti;
   }
   
@@ -896,26 +820,22 @@ public class ProgettoFormativoModelDM implements BeansModel {
       if (rs.next()) {
         int id = rs.getInt("id");
         String info = rs.getString("info");
-        String idsAssicurazioni = rs.getString("idsAssicurazioni");
         String formazione = rs.getString("formazione");
         String modalita = rs.getString("modalita");
         String responsabile = rs.getString("responsabile");
         Date inizioPeriodo = rs.getDate("inizioPeriodo");
         Date terminePeriodo = rs.getDate("terminePeriodo");
         Date dataRilascio = rs.getDate("dataRilascio");
-        boolean approvazione = rs.getBoolean("approvazione");
         boolean approvazioneGenitori = rs.getBoolean("approvazioneGenitori");
         boolean approvazioneRespo = rs.getBoolean("approvazioneRespo");
         boolean approvazioneTutorAcc = rs.getBoolean("approvazioneTutorAcc");
         boolean approvazioneTutorAz = rs.getBoolean("approvazioneTutorAz");
         int ufficioID = rs.getInt("ufficioID");
-        int convenzioneID = rs.getInt("convenzioneID");
-        int tutorAccID = rs.getInt("tutorAccID");
         
-        progettoBean = new ProgettoFormativoBean(id, info, idsAssicurazioni, formazione, modalita, responsabile, inizioPeriodo, terminePeriodo, dataRilascio, approvazione, approvazioneGenitori, approvazioneRespo, approvazioneTutorAcc, approvazioneTutorAz, ufficioID, convenzioneID, tutorAccID);
+        progettoBean = new ProgettoFormativoBean(id, info, formazione, modalita, responsabile, inizioPeriodo, terminePeriodo, dataRilascio, approvazioneGenitori, approvazioneRespo, approvazioneTutorAcc, approvazioneTutorAz, ufficioID);
       
       } else {
-        Logger.getGlobal().log(Level.INFO, "Nessun Progetto Formativo Trovato Con La Matricola Specificata");
+        Logger.getGlobal().log(Level.SEVERE, "Oggetto Progetto Formativo Non Trovato.");
       }
       
     } finally {
@@ -926,7 +846,6 @@ public class ProgettoFormativoModelDM implements BeansModel {
         DriverManagerConnectionPool.releaseConnection(connection);
       }
     }
-    
     return progettoBean;
   }
   
@@ -949,22 +868,18 @@ public class ProgettoFormativoModelDM implements BeansModel {
       while (rs.next()) {
         int id = rs.getInt("id");
         String info = rs.getString("info");
-        String idsAssicurazioni = rs.getString("idsAssicurazioni");
         String formazione = rs.getString("formazione");
         String modalita = rs.getString("modalita");
         String responsabile = rs.getString("responsabile");
         Date inizioPeriodo = rs.getDate("inizioPeriodo");
         Date terminePeriodo = rs.getDate("terminePeriodo");
         Date dataRilascio = rs.getDate("dataRilascio");
-        boolean approvazione = rs.getBoolean("approvazione");
         boolean approvazioneGenitori = rs.getBoolean("approvazioneGenitori");
         boolean approvazioneRespo = rs.getBoolean("approvazioneRespo");
         boolean approvazioneTutorAcc = rs.getBoolean("approvazioneTutorAcc");
         boolean approvazioneTutorAz = rs.getBoolean("approvazioneTutorAz");
-        int convenzioneID = rs.getInt("convenzioneID");
-        int tutorAccID = rs.getInt("tutorAccID");
         
-        progetti.add(new ProgettoFormativoBean(id, info, idsAssicurazioni, formazione, modalita, responsabile, inizioPeriodo, terminePeriodo, dataRilascio, approvazione, approvazioneGenitori, approvazioneRespo, approvazioneTutorAcc, approvazioneTutorAz, code, convenzioneID, tutorAccID));
+        progetti.add(new ProgettoFormativoBean(id, info, formazione, modalita, responsabile, inizioPeriodo, terminePeriodo, dataRilascio, approvazioneGenitori, approvazioneRespo, approvazioneTutorAcc, approvazioneTutorAz, code));
       }
       
     } finally {
@@ -975,7 +890,6 @@ public class ProgettoFormativoModelDM implements BeansModel {
         DriverManagerConnectionPool.releaseConnection(connection);
       }
     }
-    
     return progetti;
   }
   
@@ -998,22 +912,19 @@ public class ProgettoFormativoModelDM implements BeansModel {
       while (rs.next()) {
         int id = rs.getInt("id");
         String info = rs.getString("info");
-        String idsAssicurazioni = rs.getString("idsAssicurazioni");
         String formazione = rs.getString("formazione");
         String modalita = rs.getString("modalita");
         String responsabile = rs.getString("responsabile");
         Date inizioPeriodo = rs.getDate("inizioPeriodo");
         Date terminePeriodo = rs.getDate("terminePeriodo");
         Date dataRilascio = rs.getDate("dataRilascio");
-        boolean approvazione = rs.getBoolean("approvazione");
         boolean approvazioneGenitori = rs.getBoolean("approvazioneGenitori");
         boolean approvazioneRespo = rs.getBoolean("approvazioneRespo");
         boolean approvazioneTutorAcc = rs.getBoolean("approvazioneTutorAcc");
         boolean approvazioneTutorAz = rs.getBoolean("approvazioneTutorAz");
         int ufficioID = rs.getInt("ufficioID");
-        int tutorAccID = rs.getInt("tutorAccID");
         
-        progetti.add(new ProgettoFormativoBean(id, info, idsAssicurazioni, formazione, modalita, responsabile, inizioPeriodo, terminePeriodo, dataRilascio, approvazione, approvazioneGenitori, approvazioneRespo, approvazioneTutorAcc, approvazioneTutorAz, ufficioID, code, tutorAccID));
+        progetti.add(new ProgettoFormativoBean(id, info, formazione, modalita, responsabile, inizioPeriodo, terminePeriodo, dataRilascio, approvazioneGenitori, approvazioneRespo, approvazioneTutorAcc, approvazioneTutorAz, ufficioID));
       }
       
     } finally {
@@ -1024,60 +935,10 @@ public class ProgettoFormativoModelDM implements BeansModel {
         DriverManagerConnectionPool.releaseConnection(connection);
       }
     }
-    
     return progetti;
   }
   
-  public Collection<AbstractBean> doRetrieveByTutorAcc(int code) throws SQLException {
-    Connection connection = null;
-    PreparedStatement ps = null;
-    ResultSet rs = null;
-    Collection<AbstractBean> progetti = null;
-    
-    try {
-      connection = DriverManagerConnectionPool.getConnection();
-      ps = connection.prepareStatement(ProgettoFormativoSQL.DO_RETRIEVE_BY_TUTOR_ACC);
-      
-      ps.setInt(1, code);
-      
-      rs = ps.executeQuery();
-      
-      progetti = new ArrayList<AbstractBean>();
-      
-      while (rs.next()) {
-        int id = rs.getInt("id");
-        String info = rs.getString("info");
-        String idsAssicurazioni = rs.getString("idsAssicurazioni");
-        String formazione = rs.getString("formazione");
-        String modalita = rs.getString("modalita");
-        String responsabile = rs.getString("responsabile");
-        Date inizioPeriodo = rs.getDate("inizioPeriodo");
-        Date terminePeriodo = rs.getDate("terminePeriodo");
-        Date dataRilascio = rs.getDate("dataRilascio");
-        boolean approvazione = rs.getBoolean("approvazione");
-        boolean approvazioneGenitori = rs.getBoolean("approvazioneGenitori");
-        boolean approvazioneRespo = rs.getBoolean("approvazioneRespo");
-        boolean approvazioneTutorAcc = rs.getBoolean("approvazioneTutorAcc");
-        boolean approvazioneTutorAz = rs.getBoolean("approvazioneTutorAz");
-        int ufficioID = rs.getInt("ufficioID");
-        int convenzioneID = rs.getInt("convenzioneID");
-        
-        progetti.add(new ProgettoFormativoBean(id, info, idsAssicurazioni, formazione, modalita, responsabile, inizioPeriodo, terminePeriodo, dataRilascio, approvazione, approvazioneGenitori, approvazioneRespo, approvazioneTutorAcc, approvazioneTutorAz, ufficioID, convenzioneID, code));
-      }
-      
-    } finally {
-      try {
-        if (ps != null)
-          ps.close();
-      } finally {
-        DriverManagerConnectionPool.releaseConnection(connection);
-      }
-    }
-    
-    return progetti;
-  }
-  
-  public Collection<AbstractBean> doRetrieveByTutor(int code) throws SQLException {
+  public Collection<AbstractBean> doRetrieveByTutor(TutorBean tutorBean) throws SQLException {
     Connection connection = null;
     PreparedStatement ps = null;
     ResultSet rs = null;
@@ -1087,8 +948,7 @@ public class ProgettoFormativoModelDM implements BeansModel {
       connection = DriverManagerConnectionPool.getConnection();
       ps = connection.prepareStatement(ProgettoFormativoSQL.DO_RETRIEVE_BY_TUTOR);
       
-      ps.setInt(1, code);
-      ps.setInt(2, code);
+      ps.setInt(1, tutorBean.getID());
       
       rs = ps.executeQuery();
       
@@ -1097,22 +957,19 @@ public class ProgettoFormativoModelDM implements BeansModel {
       while (rs.next()) {
         int id = rs.getInt("id");
         String info = rs.getString("info");
-        String idsAssicurazioni =rs.getString("idsAssicurazioni");
         String formazione = rs.getString("formazione");
         String modalita = rs.getString("modalita");
         String responsabile = rs.getString("responsabile");
         Date inizioPeriodo = rs.getDate("inizioPeriodo");
         Date terminePeriodo = rs.getDate("terminePeriodo");
         Date dataRilascio = rs.getDate("dataRilascio");
-        boolean approvazione = rs.getBoolean("approvazione");
         boolean approvazioneGenitori = rs.getBoolean("approvazioneGenitori");
         boolean approvazioneRespo = rs.getBoolean("approvazioneRespo");
         boolean approvazioneTutorAcc = rs.getBoolean("approvazioneTutorAcc");
         boolean approvazioneTutorAz = rs.getBoolean("approvazioneTutorAz");
         int ufficioID = rs.getInt("ufficioID");
-        int convenzioneID = rs.getInt("convenzioneID");
         
-        progetti.add(new ProgettoFormativoBean(id, info, idsAssicurazioni, formazione, modalita, responsabile, inizioPeriodo, terminePeriodo, dataRilascio, approvazione, approvazioneGenitori, approvazioneRespo, approvazioneTutorAcc, approvazioneTutorAz, ufficioID, convenzioneID, code));
+        progetti.add(new ProgettoFormativoBean(id, info, formazione, modalita, responsabile, inizioPeriodo, terminePeriodo, dataRilascio, approvazioneGenitori, approvazioneRespo, approvazioneTutorAcc, approvazioneTutorAz, ufficioID));
       }
       
     } finally {
@@ -1123,11 +980,38 @@ public class ProgettoFormativoModelDM implements BeansModel {
         DriverManagerConnectionPool.releaseConnection(connection);
       }
     }
-    Logger.getGlobal().log(Level.INFO, progetti.toString());
     return progetti;
   }
   
-  public boolean isStudenteProgettoFormativo(int studenteID, int code) throws SQLException {
+  public Collection<Integer> doRetrieveAssicurazioniIDSByProgettoFormativo(ProgettoFormativoBean progettoFormativoBean) throws SQLException {
+    Connection connection = null;
+    PreparedStatement ps = null;
+    ResultSet rs = null;
+    Collection<Integer> idsAssicurazioni = null;
+    
+    try {
+      connection = (Connection) DriverManagerConnectionPool.getConnection();
+      ps = connection.prepareStatement(ProgettoFormativoSQL.DO_RETRIEVE_IDS_ASSICURAZIONI);
+      
+      ps.setInt(1, progettoFormativoBean.getID());
+      idsAssicurazioni = new ArrayList<Integer>();
+      rs = ps.executeQuery();
+      while (rs.next()) {
+        Integer id = rs.getInt("assicurazioneID");
+        idsAssicurazioni.add(id);
+      }
+    } finally {
+      try {
+        if (ps != null)
+          ps.close();
+      } finally {
+        DriverManagerConnectionPool.releaseConnection(connection);
+      }
+    }
+    return idsAssicurazioni;
+  }
+  
+  public boolean isStudenteProgettoFormativo(StudenteBean studenteBean, int codeProgettoFormativo) throws SQLException {
     Connection connection = null;
     PreparedStatement ps = null;
     ResultSet rs = null;
@@ -1137,13 +1021,15 @@ public class ProgettoFormativoModelDM implements BeansModel {
       connection = DriverManagerConnectionPool.getConnection();
       ps = connection.prepareStatement(ProgettoFormativoSQL.IS_STUDENTE_PROGETTO_FORMATIVO);
       
-      ps.setInt(1, studenteID);
-      ps.setInt(2, code);
+      ps.setInt(1, studenteBean.getID());
+      ps.setInt(2, codeProgettoFormativo);
       
       rs = ps.executeQuery();
       
       if (rs.next()) {
         isStudenteProgettoFormativo = true;
+      } else {
+        Logger.getGlobal().log(Level.SEVERE, "Il Progetto Formativo Non Risulta Dello Studente.");
       }
       
     } finally {
@@ -1154,7 +1040,13 @@ public class ProgettoFormativoModelDM implements BeansModel {
         DriverManagerConnectionPool.releaseConnection(connection);
       }
     }
-    
     return isStudenteProgettoFormativo;
+  }
+  
+  public Collection<Object> doRetrieveIDSAssicurazioni(ProgettoFormativoBean progettoFormativoBean) throws SQLException {
+    /*
+     * to implement
+     */
+    return null;
   }
 }

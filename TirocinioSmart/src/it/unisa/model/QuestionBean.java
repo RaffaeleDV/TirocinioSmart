@@ -5,7 +5,7 @@ import java.util.logging.Logger;
 import java.util.logging.Level;
 
 public class QuestionBean extends AbstractBean implements Serializable, Cloneable {
-
+  private static final long serialVersionUID = 1L;
   private int id;
   private int maxChooses;
   private int maxAnswers;
@@ -13,7 +13,7 @@ public class QuestionBean extends AbstractBean implements Serializable, Cloneabl
   private String description;
   
   public QuestionBean() {
-    
+    super();
   }
   
   public QuestionBean(
@@ -22,6 +22,7 @@ public class QuestionBean extends AbstractBean implements Serializable, Cloneabl
       int maxAnswers, 
       String question, 
       String description) {
+    super();
     this.id = id;
     this.question = question;
     this.description = description;
@@ -72,47 +73,39 @@ public class QuestionBean extends AbstractBean implements Serializable, Cloneabl
   @Override
   public String toString() {
     StringBuilder str = new StringBuilder();
-    str.append(getClass().getName() + "[");
+    str.append(getClass().getName() + "{");
     str.append("id=" + id + ", ");
     str.append("maxChooses=" + maxChooses + ", ");
     str.append("maxAnswers=" + maxAnswers + ", ");
     str.append("question=" + question + ", ");
-    str.append("description=" + description + "]");
+    str.append("description=" + description + "}");
     return str.toString();
   }
   
   @Override
   public boolean equals(Object o) {
-    
     if (o == null)
       return false;
-    
     if (!getClass().getName().equals(o.getClass().getName()))
       return false;
-    
     QuestionBean questionBean = (QuestionBean) o;
-    
-    if (
-        id == questionBean.getID() &&
+    if (id == questionBean.getID() &&
         maxChooses == questionBean.getMaxChooses() &&
         maxAnswers == questionBean.getMaxAnswers() &&
         question.equals(questionBean.getQuestion()) &&
         description.equals(questionBean.getDescription()))
       return true;
-    
     return false;
   }
   
   @Override
   public QuestionBean clone() throws CloneNotSupportedException {
     QuestionBean questionBean = null;
-    
     try {
       questionBean = (QuestionBean) super.clone();
     } catch (CloneNotSupportedException e) {
       Logger.getGlobal().log(Level.SEVERE, e.getMessage());
     }
-    
     return questionBean;
   }
 }

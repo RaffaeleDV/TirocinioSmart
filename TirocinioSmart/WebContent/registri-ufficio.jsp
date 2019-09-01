@@ -20,12 +20,7 @@
     UfficioBean ufficioBean = null;
     Object userRegistriUfficio = session.getAttribute("SessionUser");
     List<AbstractBean> regs = null;
-    RegistroModelDM registroModelDM = (RegistroModelDM) session.getAttribute("SessionRegistroModelDM");
-    if (registroModelDM == null) {
-      registroModelDM = new RegistroModelDM();
-      session.setAttribute("SessionRegistroModelDM", registroModelDM);
-    }
-    
+   
     if (userRegistriUfficio != null) {
       if (userRegistriUfficio instanceof UfficioBean) {
         ufficioBean = (UfficioBean) userRegistriUfficio;
@@ -40,7 +35,7 @@
     
     if (ufficioBean != null) {
       try {
-        regs = (List<AbstractBean>) registroModelDM.doRetrieveByUfficio(ufficioBean.getID());
+        regs = (List<AbstractBean>) RegistroModelDM.INSTANCE.doRetrieveByUfficio(ufficioBean.getID());
       } catch(SQLException e) {
         Logger.getGlobal().log(Level.SEVERE, e.getMessage());
         //redirect to an [error] page

@@ -5,15 +5,19 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.sql.Connection;
 import it.unisa.database.DriverManagerConnectionPool;
-import it.unisa.sql.QuestionSQL;
 import it.unisa.sql.QuestionarioSQL;
 
 public class QuestionarioModelDM implements BeansModel {
+
+  public static final QuestionarioModelDM INSTANCE = new QuestionarioModelDM();  
+
+  private QuestionarioModelDM() {
+
+  }
 
   @Override
   public AbstractBean doRetrieveByKey(int code) throws SQLException {
@@ -40,7 +44,7 @@ public class QuestionarioModelDM implements BeansModel {
         
         questionarioBean = new QuestionarioBean(id, questions, nstudenti, nome, description, tematica);
       } else {
-        Logger.getGlobal().log(Level.INFO, "Oggetto QuestionarioBean non trovato con l' id specificato");
+        Logger.getGlobal().log(Level.SEVERE, "Oggetto QuestionarioBean Non Trovato.");
       }
       
     } finally {
@@ -51,7 +55,6 @@ public class QuestionarioModelDM implements BeansModel {
         DriverManagerConnectionPool.releaseConnection(connection);
       }
     }
-    
     return questionarioBean; 
   }
 
@@ -89,7 +92,6 @@ public class QuestionarioModelDM implements BeansModel {
         DriverManagerConnectionPool.releaseConnection(connection);
       }
     }
-    
     return questionaries;
   }
 
@@ -105,13 +107,13 @@ public class QuestionarioModelDM implements BeansModel {
       
       ps.setInt(1, questionario.getID());
       ps.setInt(2, questionario.getQuestions());
-      ps.setInt(3, questionario.getNstudenti());
-      ps.setString(4, questionario.getNome());
-      ps.setString(5, questionario.getDescription());
-      ps.setString(6, questionario.getTematica());
+      ps.setString(3, questionario.getNome());
+      ps.setString(4, questionario.getDescription());
+      ps.setString(5, questionario.getTematica());
+      ps.setInt(6, questionario.getNstudenti());
       
       if (!(ps.executeUpdate() > 0)) {
-        Logger.getGlobal().log(Level.INFO, "Oggetto QuestionarioBean non memorizzato");
+        Logger.getGlobal().log(Level.SEVERE, "Oggetto QuestionarioBean Non Memorizzato.");
       }
       
       connection.commit();
@@ -141,7 +143,7 @@ public class QuestionarioModelDM implements BeansModel {
       if (ps.executeUpdate() > 0) {
         deleted = true;
       } else {
-        Logger.getGlobal().log(Level.INFO, "Oggetto QuestionarioBean non rimosso");
+        Logger.getGlobal().log(Level.SEVERE, "Oggetto QuestionarioBean Non Rimosso.");
       }
       
       connection.commit();
@@ -154,11 +156,10 @@ public class QuestionarioModelDM implements BeansModel {
         DriverManagerConnectionPool.releaseConnection(connection);
       }
     }
-    
     return deleted;
   }
 
-  public boolean doUpdate(AbstractBean product) throws SQLException {
+  public boolean doUpdate(AbstractBean product, int codeQuestionario) throws SQLException {
     Connection connection = null;
     PreparedStatement ps = null;
     QuestionarioBean questionarioBean = (QuestionarioBean) product;
@@ -168,17 +169,18 @@ public class QuestionarioModelDM implements BeansModel {
       connection = DriverManagerConnectionPool.getConnection();
       ps = connection.prepareStatement(QuestionarioSQL.DO_UPDATE);
       
-      ps.setInt(1, questionarioBean.getQuestions());
-      ps.setInt(2, questionarioBean.getNstudenti());
-      ps.setString(3, questionarioBean.getNome());
-      ps.setString(4, questionarioBean.getDescription());
-      ps.setString(5, questionarioBean.getTematica());
-      ps.setInt(6, questionarioBean.getID());
+      ps.setInt(1, questionarioBean.getID());
+      ps.setInt(2, questionarioBean.getQuestions());
+      ps.setInt(3, questionarioBean.getNstudenti());
+      ps.setString(4, questionarioBean.getNome());
+      ps.setString(5, questionarioBean.getDescription());
+      ps.setString(6, questionarioBean.getTematica());
+      ps.setInt(7, codeQuestionario);
       
       if (ps.executeUpdate() > 0) {
         updated = true;
       } else {
-        Logger.getGlobal().log(Level.INFO, "Oggetto QuestionarioBean non aggiornato");
+        Logger.getGlobal().log(Level.SEVERE, "Oggetto QuestionarioBean Non Aggiornato.");
       }
       
       connection.commit();
@@ -191,25 +193,134 @@ public class QuestionarioModelDM implements BeansModel {
         DriverManagerConnectionPool.releaseConnection(connection);
       }
     }
-    
     return updated;
   }
   
-  public AbstractBean doRetrieveByNome(String text) throws SQLException {
+  public Collection<AbstractBean> doRetrieveByTematica(String text) throws SQLException {
     Connection connection = null;
     PreparedStatement ps = null;
     ResultSet rs = null;
-    QuestionarioBean questionarioBean = null;
-        
+    Collection<AbstractBean> questionari = null;
+    
     try {
       connection = DriverManagerConnectionPool.getConnection();
-      ps = connection.prepareStatement(QuestionarioSQL.DO_RETRIEVE_BY_NOME);
+      ps = connection.prepareStatement(QuestionarioSQL.DO_RETRIEVE_BY_TEMATICA);
       
       ps.setString(1, text);
       
+      questionari = new ArrayList<AbstractBean>();
+      
       rs = ps.executeQuery();
       
-      if (rs.next()) {
+      while (rs.next()) {
+        int id = rs.getInt("id");
+        int questions = rs.getInt("questions");
+        int nstudenti = rs.getInt("nstudenti");
+        String nome = rs.getString("nome");
+        String description = rs.getString("description");
+        String tematica = rs.getString("tematica");
+        questionari.add(new QuestionarioBean(id, questions, nstudenti, nome, description, tematica));
+      }
+    } finally {
+      try {
+        if (ps != null)
+          ps.close();
+      } finally {
+        DriverManagerConnectionPool.releaseConnection(connection);
+      }
+    }
+    return questionari;
+  }
+  
+  public Collection<AbstractBean> doRetrieveByNStudenti(int starting, int ending) throws SQLException {
+    Connection connection = null;
+    PreparedStatement ps = null;
+    ResultSet rs = null;
+    Collection<AbstractBean> questionari = null;
+    
+    try {
+      connection = DriverManagerConnectionPool.getConnection();
+      ps = connection.prepareStatement(QuestionarioSQL.DO_RETRIEVE_BY_QUESTIONS);
+      
+      ps.setInt(1, starting);
+      ps.setInt(2, ending);
+      
+      questionari = new ArrayList<AbstractBean>();
+      
+      rs = ps.executeQuery();
+      while (rs.next()) {
+        int id = rs.getInt("id");
+        int questions = rs.getInt("questions");
+        int nstudenti = rs.getInt("nstudenti");
+        String nome = rs.getString("nome");
+        String description = rs.getString("description");
+        String tematica = rs.getString("tematica");
+        questionari.add(new QuestionarioBean(id, questions, nstudenti, nome, description, tematica));
+      }
+    } finally {
+      try {
+        if (ps != null)
+          ps.close();
+      } finally {
+        DriverManagerConnectionPool.releaseConnection(connection);
+      }
+    }
+    return questionari;
+  }
+  
+  public Collection<AbstractBean> doRetrieveByQuestions(int starting, int ending) throws SQLException {
+    Connection connection = null;
+    PreparedStatement ps = null;
+    ResultSet rs = null;
+    Collection<AbstractBean> questionari = null;
+    
+    try {
+      connection = DriverManagerConnectionPool.getConnection();
+      ps = connection.prepareStatement(QuestionarioSQL.DO_RETRIEVE_BY_QUESTIONS);
+      
+      ps.setInt(1, starting);
+      ps.setInt(2, ending);
+      
+      questionari = new ArrayList<AbstractBean>();
+      
+      rs = ps.executeQuery();
+      while (rs.next()) {
+        int id = rs.getInt("id");
+        int questions = rs.getInt("questions");
+        int nstudenti = rs.getInt("nstudenti");
+        String nome = rs.getString("nome");
+        String description = rs.getString("description");
+        String tematica = rs.getString("tematica");
+        questionari.add(new QuestionarioBean(id, questions, nstudenti, nome, description, tematica));
+      }
+    } finally {
+      try {
+        if (ps != null)
+          ps.close();
+      } finally {
+        DriverManagerConnectionPool.releaseConnection(connection);
+      }
+    }
+    return questionari;
+  }
+  
+  public Collection<AbstractBean> doRetrieveByDescription(String text) throws SQLException {
+    Connection connection = null;
+    PreparedStatement ps = null;
+    ResultSet rs = null;
+    Collection<AbstractBean> questionari = null;
+    
+    try {
+      connection = DriverManagerConnectionPool.getConnection();
+      ps = connection.prepareStatement(QuestionarioSQL.DO_RETRIEVE_BY_DESCRIPTION);
+      
+      ps.setString(1, text);
+      
+      questionari = new ArrayList<AbstractBean>();
+      
+      rs = ps.executeQuery();
+      
+      while (rs.next()) {
         int id = rs.getInt("id");
         int questions = rs.getInt("questions");
         int nstudenti = rs.getInt("nstudenti");
@@ -217,9 +328,44 @@ public class QuestionarioModelDM implements BeansModel {
         String description = rs.getString("description");
         String tematica = rs.getString("tematica");
         
-        questionarioBean = new QuestionarioBean(id, questions, nstudenti, nome, description, tematica);
-      } else {
-        Logger.getGlobal().log(Level.INFO, "Nessun Questionario Trovato Con Il Nome Specificato");
+        questionari.add(new QuestionarioBean(id, questions, nstudenti, nome, description, tematica));
+      }
+    } finally {
+      try {
+        if (ps != null)
+          ps.close();
+      } finally {
+        DriverManagerConnectionPool.releaseConnection(connection);
+      }
+    }
+    return questionari;
+  }
+  
+  public Collection<AbstractBean> doRetrieveByNome(String text) throws SQLException {
+    Connection connection = null;
+    PreparedStatement ps = null;
+    ResultSet rs = null;
+    Collection<AbstractBean> questionari = null;
+        
+    try {
+      connection = DriverManagerConnectionPool.getConnection();
+      ps = connection.prepareStatement(QuestionarioSQL.DO_RETRIEVE_BY_NOME);
+      
+      ps.setString(1, text);
+      
+      questionari = new ArrayList<AbstractBean>();
+      
+      rs = ps.executeQuery();
+      
+      while (rs.next()) {
+        int id = rs.getInt("id");
+        int questions = rs.getInt("questions");
+        int nstudenti = rs.getInt("nstudenti");
+        String nome = rs.getString("nome");
+        String description = rs.getString("description");
+        String tematica = rs.getString("tematica");
+        
+        questionari.add(new QuestionarioBean(id, questions, nstudenti, nome, description, tematica));
       }
       
     } finally {
@@ -230,8 +376,7 @@ public class QuestionarioModelDM implements BeansModel {
         DriverManagerConnectionPool.releaseConnection(connection);
       }
     }
-    
-    return questionarioBean;
+    return questionari;
   }
   
   public void incrementNstudenti(AbstractBean product) throws SQLException {
@@ -241,8 +386,8 @@ public class QuestionarioModelDM implements BeansModel {
       questionarioBean.setNstudenti(questionarioBean.getNstudenti() + 1);
     }
     
-    if (!doUpdate(questionarioBean)) {
-      Logger.getGlobal().log(Level.INFO, "Numero studenti del questionario non incrementato");
+    if (!doUpdate(questionarioBean, questionarioBean.getID())) {
+      Logger.getGlobal().log(Level.SEVERE, "Incremento Numero Studenti Fallito.");
     }
     
   }
@@ -254,17 +399,17 @@ public class QuestionarioModelDM implements BeansModel {
       questionarioBean.setNstudenti(questionarioBean.getNstudenti());
     }
     
-    if (!doUpdate(questionarioBean)) {
-      Logger.getGlobal().log(Level.INFO, "Numero studenti del questionario non decrementato");
+    if (!doUpdate(questionarioBean, questionarioBean.getID())) {
+      Logger.getGlobal().log(Level.SEVERE, "Decremento Numero Studenti Fallito.");
     }
     
   }
   
-  public void updateNstudenti(int idQuestionario, int nStudenti) throws SQLException {
+  public boolean updateNstudenti(int codeQuestionario, int nStudenti) throws SQLException {
     QuestionarioBean questionarioBean = null;
     
     try {
-      questionarioBean = (QuestionarioBean) doRetrieveByKey(idQuestionario);
+      questionarioBean = (QuestionarioBean) doRetrieveByKey(codeQuestionario);
     } catch(SQLException e) {
       Logger.getGlobal().log(Level.SEVERE, e.getMessage());
     }
@@ -273,9 +418,10 @@ public class QuestionarioModelDM implements BeansModel {
       questionarioBean.setNstudenti(nStudenti);
     }
     
-    if (!doUpdate(questionarioBean)) {
-      Logger.getGlobal().log(Level.INFO, "Numeri studenti del questionario aggiornato");
+    if (!doUpdate(questionarioBean, questionarioBean.getID())) {
+      Logger.getGlobal().log(Level.SEVERE, "Aggiornamento Numero Studenti Fallito.");
+      return false;
     }
-    
+    return true;
   }
 }

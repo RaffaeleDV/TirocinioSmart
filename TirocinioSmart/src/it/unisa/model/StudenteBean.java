@@ -1,11 +1,11 @@
 package it.unisa.model;
 
 import java.io.Serializable;
+import java.util.logging.Logger;
+import java.util.logging.Level;
 
 public class StudenteBean extends AbstractBean implements Serializable, Cloneable {
-
   private static final long serialVersionUID = -7363690702555462451L;
-
   private int id;
   private String matricola;
   private String nome;
@@ -18,7 +18,7 @@ public class StudenteBean extends AbstractBean implements Serializable, Cloneabl
   private int registroID;
 
   public StudenteBean() {
-
+    super();
   }
 
   public StudenteBean(
@@ -32,6 +32,7 @@ public class StudenteBean extends AbstractBean implements Serializable, Cloneabl
       int tutorAzID,
       int progettoFormativoID,
       int registroID) {
+    super();
     this.id = id;
     this.matricola = matricola;
     this.pass = pass;
@@ -127,33 +128,28 @@ public class StudenteBean extends AbstractBean implements Serializable, Cloneabl
   @Override
   public String toString() {
     StringBuilder str = new StringBuilder();
-    str.append(getClass().getName() + "[");
+    str.append(getClass().getName() + "{");
     str.append("id=" + id + ", ");
     str.append("matricola=" + matricola + ", ");
-    str.append("password=" + pass + ", ");
     str.append("nome=" + nome + ", ");
     str.append("cfu=" + cfu + ", ");
+    str.append("pass=" + pass + ", ");
     str.append("occupazione=" + occupazione + ", ");
     str.append("tutorAccID=" + tutorAccID + ", ");
     str.append("tutorAzID=" + tutorAzID + ", ");
     str.append("progettoFormativoID=" + progettoFormativoID + ", ");
-    str.append("registroID=" + registroID + "]");
+    str.append("registroID=" + registroID + "}");
     return str.toString();
   }
 
   @Override
   public boolean equals(Object other) {
-    
     if (other == null)
       return false;
-    
     if (!getClass().getName().equals(other.getClass().getName()))
       return false;
-    
     StudenteBean studenteBean = (StudenteBean) other;
-    
-    if (
-        id == studenteBean.getID() &&
+    if (id == studenteBean.getID() &&
         matricola.equals(studenteBean.getMatricola()) && 
         pass.equals(studenteBean.getPass()) && 
         nome.equals(studenteBean.getNome()) && 
@@ -164,20 +160,17 @@ public class StudenteBean extends AbstractBean implements Serializable, Cloneabl
         registroID == studenteBean.getRegistroID() &&
         progettoFormativoID == studenteBean.getProgettoFormativoID())
       return true;
-    
     return false;
   }
 
   @Override
   public StudenteBean clone() throws CloneNotSupportedException {
     StudenteBean other = null;
-    
     try {
       other = (StudenteBean) super.clone();
     } catch (CloneNotSupportedException e) {
-      e.printStackTrace();
+      Logger.getGlobal().log(Level.SEVERE, e.getMessage());
     }
-    
     return other;
   }
 }

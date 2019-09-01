@@ -13,6 +13,12 @@ import it.unisa.sql.QuestionSQL;
 
 public class QuestionModelDM implements BeansModel {
 
+  public static final QuestionModelDM INSTANCE = new QuestionModelDM();
+
+  private QuestionModelDM() {
+
+  }
+
   @Override
   public AbstractBean doRetrieveByKey(int code) throws SQLException {
     Connection connection = null;
@@ -35,6 +41,8 @@ public class QuestionModelDM implements BeansModel {
         String description = rs.getString("description");
         
         questionBean = new QuestionBean(code, maxChooses, maxAnswers, question, description);
+      } else {
+        Logger.getGlobal().log(Level.SEVERE, "Oggetto QuestionBean Non Trovato.");
       }
       
     } finally {
@@ -45,7 +53,6 @@ public class QuestionModelDM implements BeansModel {
         DriverManagerConnectionPool.releaseConnection(connection);
       }
     }
-    
     return questionBean;
   }
 
@@ -82,7 +89,6 @@ public class QuestionModelDM implements BeansModel {
         DriverManagerConnectionPool.releaseConnection(connection);
       }
     }
-    
     return questions;
   }
 
@@ -103,7 +109,7 @@ public class QuestionModelDM implements BeansModel {
       ps.setString(5, questionBean.getDescription());
       
       if (!(ps.executeUpdate() > 0)) {
-        Logger.getGlobal().log(Level.INFO, "Oggetto QuestionBean non memorizzato");
+        Logger.getGlobal().log(Level.SEVERE, "Oggetto QuestionBean Non Memorizzato.");
       }
       
       connection.commit();
@@ -133,7 +139,7 @@ public class QuestionModelDM implements BeansModel {
       if (ps.executeUpdate() > 0) {
         deleted = true;
       } else {
-        Logger.getGlobal().log(Level.INFO, "Oggetto QuestionBean non rimosso");
+        Logger.getGlobal().log(Level.SEVERE, "Oggetto QuestionBean Non Rimosso.");
       }
       
       connection.commit();
@@ -150,7 +156,7 @@ public class QuestionModelDM implements BeansModel {
     return deleted;
   }
   
-  public boolean doUpdate(AbstractBean product) throws SQLException {
+  public boolean doUpdate(AbstractBean product, int codeQuestion) throws SQLException {
     Connection connection = null;
     PreparedStatement ps = null;
     QuestionBean questionBean = (QuestionBean) product;
@@ -160,16 +166,17 @@ public class QuestionModelDM implements BeansModel {
       connection = DriverManagerConnectionPool.getConnection();
       ps = connection.prepareStatement(QuestionSQL.DO_UPDATE);
 
-      ps.setInt(1, questionBean.getMaxChooses());
-      ps.setInt(2, questionBean.getMaxAnswers());
-      ps.setString(3, questionBean.getQuestion());
-      ps.setString(4, questionBean.getDescription());
-      ps.setInt(5, questionBean.getID());
+      ps.setInt(1, questionBean.getID());
+      ps.setInt(2, questionBean.getMaxChooses());
+      ps.setInt(3, questionBean.getMaxAnswers());
+      ps.setString(4, questionBean.getQuestion());
+      ps.setString(5, questionBean.getDescription());
+      ps.setInt(6, codeQuestion);
       
       if (ps.executeUpdate() > 0) {
         updated = true;
       } else {
-        Logger.getGlobal().log(Level.INFO, "Oggetto QuestionBean non aggiornato");
+        Logger.getGlobal().log(Level.SEVERE, "Oggetto QuestionBean Non Aggiornato.");
       }
       
       connection.commit();
@@ -206,8 +213,8 @@ public class QuestionModelDM implements BeansModel {
         int id = rs.getInt("id");
         int maxChooses = rs.getInt("maxChooses");
         int maxAnswers = rs.getInt("maxAnswers");
-        String question = rs.getString("question");
         String description = rs.getString("description");
+        String question = rs.getString("question");
         
         questions.add(new QuestionBean(id, maxChooses, maxAnswers, question, description));
       }
@@ -220,7 +227,42 @@ public class QuestionModelDM implements BeansModel {
         DriverManagerConnectionPool.releaseConnection(connection);
       }
     }
+    return questions;
+  }
+  
+  public Collection<AbstractBean> doRetrieveByQuestion(String text) throws SQLException {
+    Connection connection = null;
+    PreparedStatement ps = null;
+    ResultSet rs = null;
+    Collection<AbstractBean> questions = null;
     
+    try {
+      connection = DriverManagerConnectionPool.getConnection();
+      ps = connection.prepareStatement(QuestionSQL.DO_RETRIEVE_BY_QUESTION);
+      
+      ps.setString(1, text);
+      
+      rs = ps.executeQuery();
+      
+      questions = new ArrayList<AbstractBean>();
+      
+      while (rs.next()) {
+        int id = rs.getInt("id");
+        int maxChooses = rs.getInt("maxChooses");
+        int maxAnswers = rs.getInt("maxAnswers");
+        String question = rs.getString("question");
+        String description = rs.getString("description");
+        
+        questions.add(new QuestionBean(id, maxChooses, maxAnswers, question, description));
+      }
+    } finally {
+      try {
+        if (ps != null)
+          ps.close();
+      } finally {
+        DriverManagerConnectionPool.releaseConnection(connection);
+      }
+    }
     return questions;
   }
   
@@ -258,7 +300,6 @@ public class QuestionModelDM implements BeansModel {
         DriverManagerConnectionPool.releaseConnection(connection);
       }
     }
-    
     return questions;
   }
 }

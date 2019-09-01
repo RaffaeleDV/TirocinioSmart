@@ -14,6 +14,12 @@ import it.unisa.sql.AttivitaTirocinioSQL;
 
 public class AttivitaTirocinioModelDM implements BeansModel {
 
+  public static final AttivitaTirocinioModelDM INSTANCE = new AttivitaTirocinioModelDM();
+
+  private AttivitaTirocinioModelDM() {
+
+  }
+
   @Override
   public AbstractBean doRetrieveByKey(int code) throws SQLException {
     Connection connection = null;
@@ -37,7 +43,7 @@ public class AttivitaTirocinioModelDM implements BeansModel {
         
         attivitaTirocinioBean = new AttivitaTirocinioBean(code, registroID, strutturaOspitanteID, descrizione, data, ore);
       } else {
-        Logger.getGlobal().log(Level.INFO, "AttivitaTirocinio con l' id specificato non trovato");
+        Logger.getGlobal().log(Level.SEVERE, "Oggetto AttivitaTirocinioBean Non Trovato.");
       }
       
     } finally {
@@ -109,7 +115,7 @@ public class AttivitaTirocinioModelDM implements BeansModel {
       ps.setInt(6, attivita.getOre());
       
       if (!(ps.executeUpdate() > 0)) {
-        Logger.getGlobal().log(Level.INFO, "Oggetto AttivitaTirocinioBean non memorizzato");
+        Logger.getGlobal().log(Level.SEVERE, "Oggetto AttivitaTirocinioBean Non Memorizzato.");
       }
       
       connection.commit();
@@ -139,7 +145,7 @@ public class AttivitaTirocinioModelDM implements BeansModel {
       if (ps.executeUpdate() > 0) {
         deleted = true;
       } else {
-        Logger.getGlobal().log(Level.INFO, "Oggetto AttivitaTirocinioBean non rimosso");
+        Logger.getGlobal().log(Level.SEVERE, "Oggetto AttivitaTirocinioBean Non Rimosso.");
       }
       
       connection.commit();
@@ -156,7 +162,7 @@ public class AttivitaTirocinioModelDM implements BeansModel {
     return deleted;
   }
   
-  public boolean doUpdate(AbstractBean product) throws SQLException {
+  public boolean doUpdate(AbstractBean product, int oldID) throws SQLException {
     Connection connection = null;
     PreparedStatement ps = null;
     AttivitaTirocinioBean attivitaTirocinioBean = (AttivitaTirocinioBean) product;
@@ -166,17 +172,18 @@ public class AttivitaTirocinioModelDM implements BeansModel {
       connection = DriverManagerConnectionPool.getConnection();
       ps = connection.prepareStatement(AttivitaTirocinioSQL.DO_UPDATE);
       
-      ps.setInt(1, attivitaTirocinioBean.getRegistroID());
-      ps.setInt(2, attivitaTirocinioBean.getStrutturaOspitanteID());
-      ps.setString(3, attivitaTirocinioBean.getDescrizione());
-      ps.setDate(4, attivitaTirocinioBean.getData());
-      ps.setInt(5, attivitaTirocinioBean.getOre());
-      ps.setInt(6, attivitaTirocinioBean.getID());
+      ps.setInt(1, attivitaTirocinioBean.getID());
+      ps.setInt(2, attivitaTirocinioBean.getRegistroID());
+      ps.setInt(3, attivitaTirocinioBean.getStrutturaOspitanteID());
+      ps.setString(4, attivitaTirocinioBean.getDescrizione());
+      ps.setDate(5, attivitaTirocinioBean.getData());
+      ps.setInt(6, attivitaTirocinioBean.getOre());
+      ps.setInt(7, oldID);
       
       if (ps.executeUpdate() > 0) {
         updated = true;
       } else {
-        Logger.getGlobal().log(Level.INFO, "Oggetto AttivitaTirocinioBean non aggiornato");
+        Logger.getGlobal().log(Level.SEVERE, "Oggetto AttivitaTirocinioBean Non Aggiornato.");
       }
       
       connection.commit();
@@ -267,6 +274,42 @@ public class AttivitaTirocinioModelDM implements BeansModel {
     }
     
     return attivitaPerStrutturaOspitante;
+  }
+  
+  public Collection<AbstractBean> doRetrieveByDescrizione(String text) throws SQLException {
+    Connection connection = null;
+    PreparedStatement ps = null;
+    ResultSet rs = null;
+    Collection<AbstractBean> attivita = null;
+    
+    try {
+      connection = DriverManagerConnectionPool.getConnection();
+      ps = connection.prepareStatement(AttivitaTirocinioSQL.DO_RETRIEVE_BY_DESCRIZIONE);
+      
+      ps.setString(1, text);
+      
+      rs = ps.executeQuery();
+      
+      attivita = new ArrayList<AbstractBean>();
+      
+      while (rs.next()) {
+        int id = rs.getInt("id");
+        int registroID = rs.getInt("registroID");
+        int strutturaOspitanteID = rs.getInt("strutturaOspitanteID");
+        String descrizione = rs.getString("descrizione");
+        Date data = rs.getDate("data");
+        int ore = rs.getInt("ore");
+        attivita.add(new AttivitaTirocinioBean(id, registroID, strutturaOspitanteID, descrizione, data, ore));
+      }
+    } finally {
+      try {
+        if (ps != null)
+          ps.close();
+      } finally {
+        DriverManagerConnectionPool.releaseConnection(connection);
+      }
+    }
+    return attivita;
   }
   
   public Collection<AbstractBean> doRetrieveByDataBetween(Date startTime, Date endTime) throws SQLException {

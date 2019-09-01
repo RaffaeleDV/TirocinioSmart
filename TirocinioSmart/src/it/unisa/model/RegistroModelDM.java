@@ -14,6 +14,12 @@ import it.unisa.sql.RegistroSQL;
 
 public class RegistroModelDM implements BeansModel {
 
+  public static final RegistroModelDM INSTANCE = new RegistroModelDM();
+
+  private RegistroModelDM() {
+
+  }
+
   @Override
   public AbstractBean doRetrieveByKey(int code) throws SQLException {
     Connection connection = null;
@@ -41,7 +47,7 @@ public class RegistroModelDM implements BeansModel {
         
         registroBean = new RegistroBean(code, nome, descrizione, primaIstituzione, ultimoAgg, consegna, confermaTutorAcc, confermaTutorAz, confermaUff);
       } else {
-        Logger.getGlobal().log(Level.INFO, "Registro con l' id specificato non trovato");
+        Logger.getGlobal().log(Level.SEVERE, "Registro Non Trovato.");
       }
       
     } finally {
@@ -52,7 +58,6 @@ public class RegistroModelDM implements BeansModel {
         DriverManagerConnectionPool.releaseConnection(connection);
       }
     }
-    
     return registroBean;
   }
 
@@ -93,7 +98,6 @@ public class RegistroModelDM implements BeansModel {
         DriverManagerConnectionPool.releaseConnection(connection);
       }
     }
-    
     return registri;
   }
 
@@ -120,7 +124,7 @@ public class RegistroModelDM implements BeansModel {
       ps.setBoolean(9, registroBean.getConfermaUff());
       
       if (!(ps.executeUpdate() > 0)) {
-        Logger.getGlobal().log(Level.INFO, "Oggetto RegistroBean non memorizzato");
+        Logger.getGlobal().log(Level.SEVERE, "Oggetto RegistroBean Non Memorizzato.");
       }
       
       connection.commit();
@@ -150,7 +154,7 @@ public class RegistroModelDM implements BeansModel {
       if (ps.executeUpdate() > 0) {
         deleted = true;
       } else {
-        Logger.getGlobal().log(Level.INFO, "Oggetto RegistroBean non rimosso");
+        Logger.getGlobal().log(Level.SEVERE, "Oggetto RegistroBean Non Rimosso.");
       }
       
       connection.commit();
@@ -163,11 +167,10 @@ public class RegistroModelDM implements BeansModel {
         DriverManagerConnectionPool.releaseConnection(connection);
       }
     }
-    
     return deleted;
   }
   
-  public boolean doUpdate(AbstractBean product) throws SQLException {
+  public boolean doUpdate(AbstractBean product, int codeRegistro) throws SQLException {
     Connection connection = null;
     PreparedStatement ps = null;
     RegistroBean registroBean = (RegistroBean) product;
@@ -177,20 +180,21 @@ public class RegistroModelDM implements BeansModel {
       connection = DriverManagerConnectionPool.getConnection();
       ps = connection.prepareStatement(RegistroSQL.DO_UPDATE);
       
-      ps.setString(1, registroBean.getNome());
-      ps.setString(2, registroBean.getDescrizione());
-      ps.setDate(3, registroBean.getPrimaIstituzione());
-      ps.setDate(4, registroBean.getUltimoAgg());
-      ps.setBoolean(5, registroBean.getConsegna());
-      ps.setBoolean(6, registroBean.getConfermaTutorAcc());
-      ps.setBoolean(7, registroBean.getConfermaTutorAz());
-      ps.setBoolean(8, registroBean.getConfermaUff());
-      ps.setInt(9, registroBean.getID());
+      ps.setInt(1, registroBean.getID());
+      ps.setString(2, registroBean.getNome());
+      ps.setString(3, registroBean.getDescrizione());
+      ps.setDate(4, registroBean.getPrimaIstituzione());
+      ps.setDate(5, registroBean.getUltimoAgg());
+      ps.setBoolean(6, registroBean.getConsegna());
+      ps.setBoolean(7, registroBean.getConfermaTutorAcc());
+      ps.setBoolean(8, registroBean.getConfermaTutorAz());
+      ps.setBoolean(9, registroBean.getConfermaUff());
+      ps.setInt(10, codeRegistro);
       
       if (ps.executeUpdate() > 0) {
         updated = true;
       } else {
-        Logger.getGlobal().log(Level.INFO, "Oggetto RegistroBean non aggiornato");
+        Logger.getGlobal().log(Level.SEVERE, "Oggetto RegistroBean Non Aggiornato.");
       }
       
       connection.commit();
@@ -203,7 +207,6 @@ public class RegistroModelDM implements BeansModel {
         DriverManagerConnectionPool.releaseConnection(connection);
       }
     }
-    
     return updated;
   }
   
@@ -245,7 +248,6 @@ public class RegistroModelDM implements BeansModel {
         DriverManagerConnectionPool.releaseConnection(connection);
       }
     }
-    
     return registri;
   }
   
@@ -291,7 +293,7 @@ public class RegistroModelDM implements BeansModel {
     return registri;
   }
   
-  public Collection<AbstractBean> doRetrieveByPrimaIstituzione(Date primaIstituzione) throws SQLException {
+  public Collection<AbstractBean> doRetrieveByPrimaIstituzione(Date starting, Date ending) throws SQLException {
     Connection connection = null;
     PreparedStatement ps = null;
     ResultSet rs = null;
@@ -301,7 +303,8 @@ public class RegistroModelDM implements BeansModel {
       connection = DriverManagerConnectionPool.getConnection();
       ps = connection.prepareStatement(RegistroSQL.DO_RETRIEVE_BY_PRIMA_ISTITUZIONE);
       
-      ps.setDate(1, primaIstituzione);
+      ps.setDate(1, starting);
+      ps.setDate(2, ending);
       
       rs = ps.executeQuery();
       
@@ -311,6 +314,7 @@ public class RegistroModelDM implements BeansModel {
         int id = rs.getInt("id");
         String nome = rs.getString("nome");
         String descrizione = rs.getString("descrizione");
+        Date primaIstituzione = rs.getDate("primaIstituzione");
         Date ultimoAgg = rs.getDate("ultimoAgg");
         boolean consegna = rs.getBoolean("consegna");
         boolean confermaTutorAcc = rs.getBoolean("confermaTutorAcc");
@@ -328,11 +332,10 @@ public class RegistroModelDM implements BeansModel {
         DriverManagerConnectionPool.releaseConnection(connection);
       }
     }
-    
     return registri;
   }
   
-  public Collection<AbstractBean> doRetrieveByUltimoAgg(Date ultimoAgg) throws SQLException {
+  public Collection<AbstractBean> doRetrieveByUltimoAgg(Date starting, Date ending) throws SQLException {
     Connection connection = null;
     PreparedStatement ps = null;
     ResultSet rs = null;
@@ -342,7 +345,8 @@ public class RegistroModelDM implements BeansModel {
       connection = DriverManagerConnectionPool.getConnection();
       ps = connection.prepareStatement(RegistroSQL.DO_RETRIEVE_BY_ULTIMO_AGG);
       
-      ps.setDate(1, ultimoAgg);
+      ps.setDate(1, starting);
+      ps.setDate(2, ending);
       
       rs = ps.executeQuery();
       
@@ -353,6 +357,7 @@ public class RegistroModelDM implements BeansModel {
         String nome = rs.getString("nome");
         String descrizione = rs.getString("descrizione");
         Date primaIstituzione = rs.getDate("primaIstituzione");
+        Date ultimoAgg = rs.getDate("ultimoAgg");
         boolean consegna = rs.getBoolean("consegna");
         boolean confermaTutorAcc = rs.getBoolean("confermaTutorAcc");
         boolean confermaTutorAz = rs.getBoolean("confermaTutorAz");
@@ -369,7 +374,6 @@ public class RegistroModelDM implements BeansModel {
         DriverManagerConnectionPool.releaseConnection(connection);
       }
     }
-    
     return registri;
   }
   
@@ -451,7 +455,6 @@ public class RegistroModelDM implements BeansModel {
         DriverManagerConnectionPool.releaseConnection(connection);
       }
     }
-    
     return registri;
   }
   
@@ -492,7 +495,6 @@ public class RegistroModelDM implements BeansModel {
         DriverManagerConnectionPool.releaseConnection(connection);
       }
     }
-    
     return registri;
   }
   
@@ -504,7 +506,7 @@ public class RegistroModelDM implements BeansModel {
     
     try {
       connection = DriverManagerConnectionPool.getConnection();
-      ps = connection.prepareStatement(RegistroSQL.DO_RETRIEVE_BY_CONFERMA_TUTOR_UFF);
+      ps = connection.prepareStatement(RegistroSQL.DO_RETRIEVE_BY_CONFERMA_UFF);
       
       ps.setBoolean(1, confermaTutorUff);
       
@@ -533,7 +535,6 @@ public class RegistroModelDM implements BeansModel {
         DriverManagerConnectionPool.releaseConnection(connection);
       }
     }
-    
     return registri;
   }
   
@@ -564,7 +565,7 @@ public class RegistroModelDM implements BeansModel {
         
         registroBean = new RegistroBean(id, nome, descrizione, primaIstituzione, ultimoAgg, consegna, confermaTutorAcc, confermaTutorAz, confermaUff);        
       } else {
-        Logger.getGlobal().log(Level.INFO, "Nessun registro trovato per lo studente specificato tramite id");
+        Logger.getGlobal().log(Level.SEVERE, "Oggetto RegistroBean Non Trovato.");
       }
       
     } finally {
@@ -575,7 +576,6 @@ public class RegistroModelDM implements BeansModel {
         DriverManagerConnectionPool.releaseConnection(connection);
       }
     }
-    
     return registroBean;
   }
   
@@ -690,7 +690,7 @@ public class RegistroModelDM implements BeansModel {
         
         registroBean = new RegistroBean(id, nome, descrizione, primaIstituzione, ultimoAgg, consegna, confermaTutorAcc, confermaTutorAz, confermaUff);
       } else {
-        Logger.getGlobal().log(Level.INFO, "Oggetto RegistroBean non trovato per il progetto formativo specificato");
+        Logger.getGlobal().log(Level.SEVERE, "Oggetto RegistroBean Non Trovato Con Il Progetto Formativo Specificato.");
       }
       
     } finally {
@@ -701,7 +701,6 @@ public class RegistroModelDM implements BeansModel {
         DriverManagerConnectionPool.releaseConnection(connection);
       }
     }
-    
     return registroBean;
   }
   
@@ -743,7 +742,6 @@ public class RegistroModelDM implements BeansModel {
         DriverManagerConnectionPool.releaseConnection(connection);
       }
     }
-    
     return registri;
   }
     
@@ -764,6 +762,8 @@ public class RegistroModelDM implements BeansModel {
       
       if (rs.next()) {
         isStudenteRegistro = true;
+      } else {
+        Logger.getGlobal().log(Level.SEVERE, "Gli Oggetti StudenteBean Ed RegistroBean Non Corrispondono.");
       }
       
     } finally {
@@ -774,7 +774,6 @@ public class RegistroModelDM implements BeansModel {
         DriverManagerConnectionPool.releaseConnection(connection);
       }
     }
-    
     return isStudenteRegistro;
   }
   
@@ -795,6 +794,8 @@ public class RegistroModelDM implements BeansModel {
       
       if (rs.next()) {
         isTutorAccRegistro = true;
+      } else {
+        Logger.getGlobal().log(Level.SEVERE, "Gli Oggetti TutorBean Ed RegistroBean Non Corrispondono.");
       }
       
     } finally {
@@ -805,7 +806,6 @@ public class RegistroModelDM implements BeansModel {
         DriverManagerConnectionPool.releaseConnection(connection);
       }
     }
-    
     return isTutorAccRegistro;
   }
   
@@ -826,6 +826,8 @@ public class RegistroModelDM implements BeansModel {
       
       if (rs.next()) {
         isTutorAzRegistro = true;
+      } else {
+        Logger.getGlobal().log(Level.SEVERE, "Gli Oggetti TutorBean Ed RegistroBean Non Corrispondono.");
       }
       
     } finally {
@@ -836,7 +838,6 @@ public class RegistroModelDM implements BeansModel {
         DriverManagerConnectionPool.releaseConnection(connection);
       }
     }
-    
     return isTutorAzRegistro;
   }
   
@@ -857,6 +858,8 @@ public class RegistroModelDM implements BeansModel {
       
       if (rs.next()) {
         isUfficioRegistro = true;
+      } else {
+        Logger.getGlobal().log(Level.SEVERE, "Gli Oggetti UfficioBean Ed RegistroBean Non Corrispondono.");
       }
       
     } finally {
@@ -867,7 +870,6 @@ public class RegistroModelDM implements BeansModel {
         DriverManagerConnectionPool.releaseConnection(connection);
       }
     }
-    
     return isUfficioRegistro;
   }
 }

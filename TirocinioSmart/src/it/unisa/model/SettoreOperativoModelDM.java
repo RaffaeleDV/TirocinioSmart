@@ -13,6 +13,12 @@ import it.unisa.sql.SettoreOperativoSQL;
 
 public class SettoreOperativoModelDM implements BeansModel {
 
+  public static final SettoreOperativoModelDM INSTANCE = new SettoreOperativoModelDM();
+
+  private SettoreOperativoModelDM() {
+
+  }
+
   @Override
   public AbstractBean doRetrieveByKey(int code) throws SQLException {
     Connection connection = null;
@@ -33,7 +39,7 @@ public class SettoreOperativoModelDM implements BeansModel {
         
         settoreOperativoBean = new SettoreOperativoBean(code, descrizione);
       } else {
-        Logger.getGlobal().log(Level.INFO, "Oggetto SettoreOperativoBean con l' id specificato non trovato");
+        Logger.getGlobal().log(Level.SEVERE, "Oggetto SettoreOperativoBean Non Trovato.");
       }
       
     } finally {
@@ -44,7 +50,6 @@ public class SettoreOperativoModelDM implements BeansModel {
         DriverManagerConnectionPool.releaseConnection(connection);
       }
     }
-    
     return settoreOperativoBean;
   }
 
@@ -98,7 +103,7 @@ public class SettoreOperativoModelDM implements BeansModel {
       ps.setString(2, settoreOperativoBean.getDescrizione());
       
       if (!(ps.executeUpdate() > 0)) {
-        Logger.getGlobal().log(Level.INFO, "Oggetto SettoreOperativoBean non memorizzato");
+        Logger.getGlobal().log(Level.SEVERE, "Oggetto SettoreOperativoBean Non Memorizzato.");
       }
       
       connection.commit();
@@ -128,7 +133,7 @@ public class SettoreOperativoModelDM implements BeansModel {
       if (ps.executeUpdate() > 0) {
         deleted = true;
       } else {
-        Logger.getGlobal().log(Level.INFO, "Oggetto SettoreOperativoBean non rimosso");
+        Logger.getGlobal().log(Level.SEVERE, "Oggetto SettoreOperativoBean Non Rimosso.");
       }
       
       connection.commit();
@@ -141,11 +146,10 @@ public class SettoreOperativoModelDM implements BeansModel {
         DriverManagerConnectionPool.releaseConnection(connection);
       }
     }
-    
     return deleted;
   }
 
-  public boolean doUpdate(AbstractBean product) throws SQLException {
+  public boolean doUpdate(AbstractBean product, int codeSettoreOperativo) throws SQLException {
     Connection connection = null;
     PreparedStatement ps = null;
     SettoreOperativoBean settoreOperativoBean = (SettoreOperativoBean) product;
@@ -155,13 +159,14 @@ public class SettoreOperativoModelDM implements BeansModel {
       connection = DriverManagerConnectionPool.getConnection();
       ps = connection.prepareStatement(SettoreOperativoSQL.DO_UPDATE);
       
-      ps.setString(1, settoreOperativoBean.getDescrizione());
-      ps.setInt(2, settoreOperativoBean.getID());
+      ps.setInt(1, settoreOperativoBean.getID());
+      ps.setString(2, settoreOperativoBean.getDescrizione());
+      ps.setInt(3, codeSettoreOperativo);
       
       if (ps.executeUpdate() > 0) {
         updated = true;
       } else {
-        Logger.getGlobal().log(Level.INFO, "Oggetto SettoreOperativoBean non aggiornato");
+        Logger.getGlobal().log(Level.SEVERE, "Oggetto SettoreOperativoBean Non Aggiornato.");
       }
       
       connection.commit();
@@ -174,7 +179,6 @@ public class SettoreOperativoModelDM implements BeansModel {
         DriverManagerConnectionPool.releaseConnection(connection);
       }
     }
-    
     return updated;
   }
   
@@ -209,7 +213,6 @@ public class SettoreOperativoModelDM implements BeansModel {
         DriverManagerConnectionPool.releaseConnection(connection);
       }
     }
-    
     return settoriOperativi;
   }
 }

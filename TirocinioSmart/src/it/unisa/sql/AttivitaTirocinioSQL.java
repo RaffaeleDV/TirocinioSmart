@@ -18,12 +18,13 @@ public class AttivitaTirocinioSQL {
     "VALUES (?, ?, ?, ?, ?, ?);";
   
   public static final String DO_DELETE = 
-    "DELETE FROM " + TABLE_NAME + " " + 
+    "DELETE " +
+    "FROM " + TABLE_NAME + " " +
     "WHERE id = ?;";
   
   public static final String DO_UPDATE = 
     "UPDATE " + TABLE_NAME + " " +
-    "SET registroID = ?, strutturaOspitanteID = ?, descrizione = ?, data = ?, ore = ? " +
+    "SET registroID = ?, strutturaOspitanteID = ?, descrizione LIKE ?, data = ?, ore = ? " +
     "WHERE id = ?;";
   
   public static final String DO_RETRIEVE_BY_REGISTRO = 
@@ -35,6 +36,11 @@ public class AttivitaTirocinioSQL {
     "SELECT * " + 
     "FROM " + TABLE_NAME + " " + 
     "WHERE strutturaOspitanteID = ?;";
+  
+  public static final String DO_RETRIEVE_BY_DESCRIZIONE =
+    "SELECT * " +
+    "FROM " + TABLE_NAME + " " +
+    "WHERE descrizione LIKE ?;";
   
   public static final String DO_RETRIEVE_BY_DATA_BETWEEN = 
     "SELECT * " + 

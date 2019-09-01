@@ -7,131 +7,126 @@
     import="java.util.Collection"
     import="it.unisa.model.CompilaBean"
     import="it.unisa.model.CompilaModelDM"
+    import="it.unisa.model.TutorBean"
+    import="it.unisa.model.TutorModelDM"
     import="it.unisa.model.StudenteBean"
+    import="it.unisa.model.StudenteModelDM"
+    import="it.unisa.model.UfficioBean"
+    import="it.unisa.model.UfficioModelDM"
     import="java.util.logging.Logger"
     import="java.util.logging.Level"%>
 <section id="questionari-wrapper" class="wrapper">
-  <h1><b id="quest-heading">Questionari</b></h1>
+  <div id="questionari-heading-wrapper" class="wrapper">
+    <img id="questionari-heading-icon" class="icon" src="images/questionari-icon.png"/>
+    <h1 id="questionari-heading" class="heading"></h1>
+  </div>
   <div id="questionari-wrapper" class="wrapper">
     <%
+      Collection<AbstractBean> questionari = null;
+      Collection<AbstractBean> comps = null;
       AbstractBean userQuestionari = (AbstractBean) session.getAttribute("SessionUser");
+      
       if (userQuestionari == null) {
-        Logger.getGlobal().log(Level.SEVERE, "Nessun utente trovato nella sessione dopo un login");
         RequestDispatcher view = request.getRequestDispatcher("login-page.jsp");
         view.forward(request, response);
       }
       
-      QuestionarioModelDM qmDM = (QuestionarioModelDM) getServletContext().getAttribute("SessionQuestionarioModelDM");
-      if (qmDM == null) {
-        qmDM = new QuestionarioModelDM();
-        getServletContext().setAttribute("SessionQuestionarioModelDM", qmDM);
-      }
-      
-      CompilaModelDM cmDM = (CompilaModelDM) getServletContext().getAttribute("SessionCompilaModelDM");
-      if (cmDM == null) {
-        cmDM = new CompilaModelDM();
-        getServletContext().setAttribute("SessionCompilaModelDM", cmDM);
-      }
-      
-      Collection<AbstractBean> questionari = qmDM.doRetrieveAll(null);
-      
-      if (userQuestionari instanceof StudenteBean) {
-        StudenteBean studente = (StudenteBean) userQuestionari;
-	    Collection<AbstractBean> comps = cmDM.doRetrieveByStudente(studente.getID());
-	    
-	    if (questionari == null) {
-	      %>
-            <h3>Nessun Questionario Trovato</h3>
-          <%
-	      Logger.getGlobal().log(Level.INFO, "Nessun questionario trovato");
-	    } else {
-	      if (questionari.size() == 0) {
-	        %>
-	          <h3>Nessun Questionario Trovato</h3>
-	        <%
-	      } else {
-	        %>
-	          <!--
-	          <div id="sceltaquestionario-wrapper" class="wrapper">
-                <input id="search-input" name="questionario" type="text" placeholder="inserire il nome del questionario" />
-                <input id="button" name="quest-submit" type="button" value="Vai Al Questionario" onclick="vaiQuestionario()" />
-              </div>
-              -->
-            <%
-	      }
-	    }
-	    
-	    for (AbstractBean a: questionari) {
-	      QuestionarioBean questionario = (QuestionarioBean) a;
-	      boolean questionarioCompilato = false;
-	      if (questionario != null) {
-	        for (AbstractBean product: comps) {
-	          CompilaBean compilaBean = (CompilaBean) product;
-	          if (compilaBean.getQuestionarioID() == questionario.getID()) {
-	            questionarioCompilato = true;
-	            break;
-	          }
-	        }
-	        
-	        if (!questionarioCompilato) {
-	        %>
-	          <div id="questionario-wrapper" class="wrapper">
-	            <p id="quest-info">Nome: <b><%= questionario.getNome() %></b></p>
-	            <p id="quest-info">Descrizione: <%= questionario.getDescription() %></p>
-	            <p id="quest-info">Tematica: <%= questionario.getTematica() %></p>
-	            <p id="quest-info">#Domande: <%= questionario.getQuestions() %></p>
-	            <p id="quest-info">#Utenti Che Hanno Compilato: <%= questionario.getNstudenti() %></p>
-	          </div>
-	        <%
-	        } else {
-	        %>
-	          <div id="questionario-wrapper-compilato" class="wrapper">
-	            <p id="quest-info">Nome: <b><%= questionario.getNome() %></b></p>
-	            <p id="quest-info">Descrizione: <%= questionario.getDescription() %></p>
-	            <p id="quest-info">Tematica: <%= questionario.getTematica() %></p>
-	            <p id="quest-info">#Domande: <%= questionario.getQuestions() %></p>
-	            <p id="quest-info">#Utenti Che Hanno Compilato: <%= questionario.getNstudenti() %></p>
-	          </div>
-	        <%
-	        }
-	      }
-	    }
+      if (userQuestionari.getClass().getName().equals(StudenteBean.class.getName())) {
+    	  StudenteBean studenteBean = (StudenteBean) userQuestionari;
+    	  questionari = StudenteModelDM.INSTANCE.doRetrieveQuestionari(studenteBean);
+      } else if (userQuestionari.getClass().getName().equals(TutorBean.class.getName())) {
+    	  TutorBean tutorBean = (TutorBean) userQuestionari;
+    	  questionari = TutorModelDM.INSTANCE.doRetrieveQuestionari(tutorBean);
+      } else if (userQuestionari.getClass().getName().equals(UfficioBean.class.getName())) {
+    	  UfficioBean ufficioBean = (UfficioBean) userQuestionari;
+    	  questionari = UfficioModelDM.INSTANCE.doRetrieveQuestionari(ufficioBean);
       } else {
-        for (AbstractBean a: questionari) {
-          QuestionarioBean questionario = (QuestionarioBean) a;
-          if (questionario != null) {
-            %>
-            <div id="questionario-wrapper" class="wrapper">
-              <p id="quest-info">Nome: <b><%= questionario.getNome() %></b></p>
-              <p id="quest-info">Descrizione: <%= questionario.getDescription() %></p>
-              <p id="quest-info">Tematica: <%= questionario.getTematica() %></p>
-              <p id="quest-info">#Domande: <%= questionario.getQuestions() %></p>
-              <p id="quest-info">#Utenti Che Hanno Compilato: <%= questionario.getNstudenti() %></p>
-            </div>
-            <%
+    	  RequestDispatcher view = request.getRequestDispatcher("500-page.jsp");
+    	  view.forward(request, response);
+      }
+      
+      if (questionari != null && questionari.size() > 0) {
+    	  QuestionarioBean questionarioBean = null;
+    	  for (AbstractBean productQuestionario: questionari) {
+    		  boolean compilato = false;
+    		  questionarioBean = (QuestionarioBean) productQuestionario;
+    		  compilato = CompilaModelDM.INSTANCE.isQuestionarioCompilato(userQuestionari, questionarioBean);
+    		  if (questionarioBean != null && compilato == false) {
+    			  %>
+    			    <div id=questionario-wrapper" class="wrapper">
+    			      <div id="questionario-info-wrapper" class="wrapper">
+    			        <p id="questionario-info-heading" class="info-heading">ID</p>
+    			        <p id="questionario-info" class="info"><%= questionarioBean.getID() %></p>
+    			      </div>
+    			      <div id="questionario-info-wrapper" class="wrapper">
+                  <p id="questionario-info-heading" class="info-heading">Nome</p>
+                  <p id="questionario-info" class="info"><%= questionarioBean.getNome() %></p>
+                </div>
+                <div id="questionario-info-wrapper" class="wrapper">
+                  <p id="questionario-info-heading" class="info-heading">Tematica</p>
+                  <p id="questionario-info" class="info"><%= questionarioBean.getTematica() %></p>
+                </div>
+                <div id="questionario-info-wrapper" class="wrapper">
+                  <p id="questionario-info-heading" class="info-heading">Questions</p>
+                  <p id="questionario-info" class="info"><%= questionarioBean.getQuestions() %></p>
+                </div>
+                <div id="questionario-info-wrapper" class="wrapper">
+                  <p id="questionario-info-heading" class="info-heading">Nstudenti</p>
+                  <p id="questionario-info" class="info"><%= questionarioBean.getNstudenti() %></p>
+                </div>
+                <div id="questionario-input-wrapper" class="wrapper">
+                  <input id="ts-button" class="button" type="button" value="Compila" style="margin: 25px; margin-left: 45%; background-color: #2fa493; !important"/>
+                </div>
+    			    </div>
+    			  <%
+    		  } else if (questionarioBean != null && compilato == true) {
+    			  %>
+    			    <div id="questionario-wrapper-compilato" class="wrapper">
+    			      <div id="questionario-info-wrapper" class="wrapper">
+                  <p id="questionario-info-heading" class="info-heading">ID</p>
+                  <p id="questionario-info" class="info"><%= questionarioBean.getID() %></p>
+                </div>
+                <div id="questionario-info-wrapper" class="wrapper">
+                  <p id="questionario-info-heading" class="info-heading">Nome</p>
+                  <p id="questionario-info" class="info"><%= questionarioBean.getNome() %></p>
+                </div>
+                <div id="questionario-info-wrapper" class="wrapper">
+                  <p id="questionario-info-heading" class="info-heading">Tematica</p>
+                  <p id="questionario-info" class="info"><%= questionarioBean.getTematica() %></p>
+                </div>
+                <div id="questionario-info-wrapper" class="wrapper">
+                  <p id="questionario-info-heading" class="info-heading">Domande</p>
+                  <p id="questionario-info" class="info"><%= questionarioBean.getQuestions() %></p>
+                </div>
+                <div id="questionario-info-wrapper" class="wrapper">
+                  <p id="questionario-info-heading" class="info-heading">Numero Studenti</p>
+                  <p id="questionario-info" class="info"><%= questionarioBean.getNstudenti() %></p>
+                </div>
+                <div id="questionario-input-wrapper" class="wrapper">
+                  <input id="ts-button" class="button" type="button" value="Compila" style="margin: 25px; margin-left: 45%; background-color: #A0A0A0; !important"/>
+                </div>
+    			    </div>
+    			  <%
+          } else {
+    			  //redirect to an [404error] page
+    			  //save the message for redirecting
+    			  RequestDispatcher view = request.getRequestDispatcher("404-error.jsp");
+            view.forward(request, response);
           }
         }
+      } else {
+        //redirect to an [404error] page
+        //save the message for redirecting
+        RequestDispatcher view = request.getRequestDispatcher("404-error.jsp");
+        view.forward(request, response);
       }
     %>
   </div>
-  <script type="text/javascript">
-    function vaiQuestionario() {
-      var questionario = $('#search-input').val();
-      console.log(questionario);
-      $.ajax({
-        type : "POST",
-        url : "EffettuaQuestionarioStudenteServlet",
-        contentType: "application/x-www-form-urlencoded",
-        datatype : "json", 
-        data: "questionario="+questionario,
-        success: function(data){
-          console.log("Nome Del Questionario Scelto: " + questionario);
-          console.log("Richiesta effettuata da EffettuaQuestionarioStudenteServlet");
-        },
-        error: function(error){
-          console.log("Errore:"+ error);
-        }
-      })
-    }
-  </script>
 </section>
+<script type="text/javascript">
+  if (typeof String.trim == "undefined") {
+    String.prototype.trim = function() {
+      return this.replace(/(^\s*)|(\s*$)/g, "");
+    }
+  }
+</script>

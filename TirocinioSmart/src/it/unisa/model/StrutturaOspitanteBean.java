@@ -5,7 +5,7 @@ import java.util.logging.Logger;
 import java.util.logging.Level;
 
 public class StrutturaOspitanteBean extends AbstractBean implements Serializable, Cloneable {
-  
+  private static final long serialVersionUID = 1L;
   private int id;
   private String nome;
   private String ambitoLavorativo;
@@ -17,7 +17,7 @@ public class StrutturaOspitanteBean extends AbstractBean implements Serializable
   private int ndipendenti;
   
   public StrutturaOspitanteBean() {
-    
+    super();
   }
   
   public StrutturaOspitanteBean(
@@ -30,6 +30,7 @@ public class StrutturaOspitanteBean extends AbstractBean implements Serializable
       String via,
       int ncivico,
       int ndipendenti) {
+    super();
     this.id = id;
     this.nome = nome;
     this.ambitoLavorativo = ambitoLavorativo;
@@ -116,7 +117,7 @@ public class StrutturaOspitanteBean extends AbstractBean implements Serializable
   @Override
   public String toString() {
     StringBuilder str = new StringBuilder();
-    str.append(getClass().getName() + "[");
+    str.append(getClass().getName() + "{");
     str.append("id=" + id + ", ");
     str.append("nome=" + nome + ", ");
     str.append("ambitoLavorativo=" + ambitoLavorativo + ", ");
@@ -125,23 +126,18 @@ public class StrutturaOspitanteBean extends AbstractBean implements Serializable
     str.append("citta=" + citta + ", ");
     str.append("via=" + via + ", ");
     str.append("ncivico=" + ncivico + ", ");
-    str.append("ndipendenti=" + ndipendenti + "]");
+    str.append("ndipendenti=" + ndipendenti + "}");
     return str.toString();
   }
   
   @Override
   public boolean equals(Object o) {
-    
     if (o == null)
       return false;
-    
     if (!getClass().getName().equals(o.getClass().getName()))
       return false;
-    
     StrutturaOspitanteBean strutturaOspitanteBean = (StrutturaOspitanteBean) o;
-    
-    if (
-        id == strutturaOspitanteBean.getID() &&
+    if (id == strutturaOspitanteBean.getID() &&
         nome.equals(strutturaOspitanteBean.getNome()) &&
         ambitoLavorativo.equals(strutturaOspitanteBean.getAmbitoLavorativo()) &&
         nazione.equals(strutturaOspitanteBean.getNazione()) &&
@@ -151,20 +147,17 @@ public class StrutturaOspitanteBean extends AbstractBean implements Serializable
         ncivico == strutturaOspitanteBean.getNcivico() &&
         ndipendenti == strutturaOspitanteBean.getNdipendenti())
       return true;
-    
     return false;
   }
   
   @Override
   public StrutturaOspitanteBean clone() throws CloneNotSupportedException {
     StrutturaOspitanteBean strutturaOspitanteBean = null;
-    
     try {
       strutturaOspitanteBean = (StrutturaOspitanteBean) super.clone();
     } catch(CloneNotSupportedException e) {
       Logger.getGlobal().log(Level.SEVERE, e.getMessage());
     }
-    
     return strutturaOspitanteBean;
   }
 }

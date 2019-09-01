@@ -23,7 +23,7 @@ public class ObiettivoTirocinioSQL {
   
   public static final String DO_UPDATE =
     "UPDATE " + TABLE_NAME + " " +
-    "SET progettoFormativoID = ?, obiettivo = ?, priorita = ? " +
+    "SET id = ?, progettoFormativoID = ?, obiettivo = ?, priorita = ? " +
     "WHERE id = ?;";
   
   public static final String DO_RETRIEVE_BY_PROGETTO_FORMATIVO = 

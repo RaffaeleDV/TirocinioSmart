@@ -5,19 +5,20 @@ import java.util.logging.Logger;
 import java.util.logging.Level;
 
 public class PercorsoFormativoBean extends AbstractBean implements Serializable, Cloneable {
-  
+  private static final long serialVersionUID = 1L;
   private int id;
   private int progettoFormativoID;
   private String percorso;
   
   public PercorsoFormativoBean() {
-    
+    super();
   }
   
   public PercorsoFormativoBean(
       int id,
       int progettoFormativoID,
       String percorso) {
+    super();
     this.id = id;
     this.progettoFormativoID = progettoFormativoID;
     this.percorso = percorso;
@@ -50,43 +51,35 @@ public class PercorsoFormativoBean extends AbstractBean implements Serializable,
   @Override
   public String toString() {
     StringBuilder str = new StringBuilder();
-    str.append(getClass().getName() + "[");
+    str.append(getClass().getName() + "{");
     str.append("id=" + id + ", ");
     str.append("progettoFormativoID=" + progettoFormativoID + ", ");
-    str.append("percorso=" + percorso + "]");
+    str.append("percorso=" + percorso + "}");
     return str.toString();
   }
   
   @Override
   public boolean equals(Object o) {
-    
     if (o == null)
       return false;
-    
     if (!getClass().getName().equals(o.getClass().getName()))
       return false;
-    
     PercorsoFormativoBean percorsoFormativoBean = (PercorsoFormativoBean) o;
-    
-    if (
-        id == percorsoFormativoBean.getID() &&
+    if (id == percorsoFormativoBean.getID() &&
         progettoFormativoID == percorsoFormativoBean.getProgettoFormativoID() &&
         percorso.equals(percorsoFormativoBean.getPercorso()))
       return true;
-    
     return false;
   }
   
   @Override
   public PercorsoFormativoBean clone() throws CloneNotSupportedException {
     PercorsoFormativoBean percorsoFormativoBean = null;
-    
     try {
       percorsoFormativoBean = (PercorsoFormativoBean) super.clone();
     } catch (CloneNotSupportedException e){
-      Logger.getGlobal().log(Level.INFO, e.getMessage());
+      Logger.getGlobal().log(Level.SEVERE, e.getMessage());
     }
-    
     return percorsoFormativoBean;
   }
 }

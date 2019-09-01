@@ -13,11 +13,47 @@ import it.unisa.sql.RispondeSQL;
 
 public class RispondeModelDM implements BeansModel {
 
+  public static final RispondeModelDM INSTANCE = new RispondeModelDM();
+
+  private RispondeModelDM() {
+  
+  }
+
   @Override
   public AbstractBean doRetrieveByKey(int code) throws SQLException {
     return null;
   }
 
+  public AbstractBean doRetrieveByKey(int codeQuestion, int codeChoose) throws SQLException {
+    Connection connection = null;
+    PreparedStatement ps = null;
+    ResultSet rs = null;
+    RispondeBean rispondeBean = null;
+    
+    try {
+      connection = (Connection) DriverManagerConnectionPool.getConnection();
+      ps = connection.prepareStatement(RispondeSQL.DO_RETRIEVE_BY_KEY);
+      
+      ps.setInt(1, codeQuestion);
+      ps.setInt(2, codeChoose);
+      
+      rs = ps.executeQuery();
+      if (rs.next()) {
+        rispondeBean = new RispondeBean(codeQuestion, codeChoose);
+      } else {
+        Logger.getGlobal().log(Level.SEVERE, "Oggetto RispondeBean Non Trovato.");
+      }
+    } finally {
+      try {
+        if (ps != null)
+          ps.close();
+      } finally {
+        DriverManagerConnectionPool.releaseConnection(connection);
+      }
+    }
+    return rispondeBean;
+  }
+  
   @Override
   public Collection<AbstractBean> doRetrieveAll(String order) throws SQLException {
     Connection connection = null;
@@ -48,7 +84,6 @@ public class RispondeModelDM implements BeansModel {
         DriverManagerConnectionPool.releaseConnection(connection);
       }
     }
-    
     return risponde;
   }
 
@@ -67,7 +102,7 @@ public class RispondeModelDM implements BeansModel {
       ps.setInt(2, risponde.getChooseID());
       
       if (!(ps.executeUpdate() > 0)) {
-        Logger.getGlobal().log(Level.INFO, "Oggetto RispondeBean non memorizzato");
+        Logger.getGlobal().log(Level.SEVERE, "Oggetto RispondeBean Non Memorizzato.");
       }
       
       connection.commit();
@@ -85,6 +120,65 @@ public class RispondeModelDM implements BeansModel {
   @Override
   public boolean doDelete(int code) throws SQLException {
     return false;
+  }
+  
+  public boolean doDelete(int codeQuestion, int codeChoose) throws SQLException {
+    Connection connection = null;
+    PreparedStatement ps = null;
+    boolean deleted = false;
+    
+    try {
+      connection = DriverManagerConnectionPool.getConnection();
+      ps = connection.prepareStatement(RispondeSQL.DO_DELETE);
+      
+      ps.setInt(1, codeQuestion);
+      ps.setInt(2, codeChoose);
+      
+      if (!(ps.executeUpdate() > 0)) {
+        Logger.getGlobal().log(Level.SEVERE, "Oggetto RispondeBean Non Rimosso.");
+      } else {
+        deleted = true;
+      }
+    } finally {
+      try {
+        if (ps != null)
+          ps.close();
+      } finally {
+        DriverManagerConnectionPool.releaseConnection(connection);
+      }
+    }
+    return deleted;
+  }
+  
+  public boolean doUpdate(AbstractBean abstractBean, int codeQuestion, int codeChoose) throws SQLException {
+    Connection connection = null;
+    PreparedStatement ps = null;
+    RispondeBean rispondeBean = (RispondeBean) abstractBean;
+    boolean deleted = false;
+    
+    try {
+      connection = (Connection) DriverManagerConnectionPool.getConnection();
+      ps = connection.prepareStatement(RispondeSQL.DO_UPDATE);
+      
+      ps.setInt(1, rispondeBean.getQuestionID());
+      ps.setInt(2, rispondeBean.getChooseID());
+      ps.setInt(3, codeQuestion);
+      ps.setInt(4, codeChoose);
+    
+      if (ps.executeUpdate() > 0) {
+        deleted = true;
+      } else {
+        Logger.getGlobal().log(Level.SEVERE, "Oggetto RispondeBean Non Rimosso.");
+      }
+    } finally {
+      try {
+        if (ps != null)
+          ps.close();
+      } finally {
+        DriverManagerConnectionPool.releaseConnection(connection);
+      }
+    }
+    return deleted;
   }
 
   public Collection<AbstractBean> doRetrieveByQuestion(int code) throws SQLException {
@@ -117,7 +211,6 @@ public class RispondeModelDM implements BeansModel {
         DriverManagerConnectionPool.releaseConnection(connection);
       }
     }
-    
     return risposte;
   }
   
@@ -151,7 +244,6 @@ public class RispondeModelDM implements BeansModel {
         DriverManagerConnectionPool.releaseConnection(connection);
       }
     }
-    
     return risposte;
   }
 }

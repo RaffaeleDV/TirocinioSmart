@@ -2,7 +2,9 @@ package it.unisa.login;
 
 import java.io.IOException;
 import java.sql.SQLException;
-import javax.servlet.RequestDispatcher;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -17,10 +19,7 @@ import it.unisa.model.UfficioModelDM;
 @WebServlet("/LoginServletUfficio")
 public class LoginServletUfficio extends HttpServlet {
   private static final long serialVersionUID = 1L;
-  private static final UfficioModelDM ufficioModelDM = new UfficioModelDM();
   
-  
-
   protected void doGet(HttpServletRequest request, HttpServletResponse response)
       throws ServletException, IOException {
 
@@ -36,10 +35,9 @@ public class LoginServletUfficio extends HttpServlet {
     if (Validate.checkUser(uff)) {
 
       try {
-        uff = (UfficioBean) ufficioModelDM.doRetrieveByNome(nome);
-
+        uff = (UfficioBean) UfficioModelDM.INSTANCE.doRetrieveByNome(nome);
       } catch (SQLException e) {
-        e.printStackTrace();
+        Logger.getGlobal().log(Level.SEVERE, e.getMessage());
       }
       request.getSession().setAttribute("Loggato", new Boolean(true));
       request.getSession().setAttribute("SessionUser", uff);

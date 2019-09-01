@@ -21,15 +21,14 @@ import it.unisa.model.StudenteBean;
 /**
  * Servlet implementation class ConsegnaRegistroTirocinioServlet
  */
-@WebServlet("/ConsegnaRegistroTirocinioServlet")
-public class ConsegnaRegistroTirocinioServlet extends HttpServlet {
-  
-  private static final RegistroModelDM registroModelDM = new RegistroModelDM();
+@WebServlet("/ConsegnaRegistroServlet")
+public class ConsegnaRegistroServlet extends HttpServlet {
+  private static final long serialVersionUID = 1L;
   
   /**
    * @see HttpServlet#HttpServlet()
    */
-  public ConsegnaRegistroTirocinioServlet() {
+  public ConsegnaRegistroServlet() {
     super();
   }
   
@@ -53,21 +52,19 @@ public class ConsegnaRegistroTirocinioServlet extends HttpServlet {
     boolean consegna = false;
     int id = -1;
     
-    getServletContext().setAttribute("ContextRegistroModelDM", registroModelDM);
-    
     idRegistro = (String) request.getParameter("id").toString();
     if (idRegistro != null) {
       if (!idRegistro.equals("")) {
         id = Integer.valueOf(idRegistro);
       } else {
-        Logger.getGlobal().log(Level.INFO, "idRegistro stringa vuota nella consegna di un registro da parte di uno studente");
+        Logger.getGlobal().log(Level.INFO, "ID RegistroBean Non Valido.");
         //redirect to an [error] page
         //set del valore per SessionErrorMessage404
         RequestDispatcher view = request.getRequestDispatcher("404-page.jsp");
         view.forward(request, response);
       }
     } else {
-      Logger.getGlobal().log(Level.INFO, "idRegistro nullo nella consegna di un registo da parte di uno studente");
+      Logger.getGlobal().log(Level.INFO, "ID RegistroBean Non Valido.");
       //redirect to an [error] page
       //set del valore per SessionErrorMessage404
       RequestDispatcher view = request.getRequestDispatcher("404-page.jsp");
@@ -79,14 +76,12 @@ public class ConsegnaRegistroTirocinioServlet extends HttpServlet {
       AbstractBean userBean = (AbstractBean) session.getAttribute("SessionUser");
       if (userBean != null) {
         if (!userBean.getClass().getName().equals(StudenteBean.class.getName())) {
-          Logger.getGlobal().log(Level.INFO, "L' utente non risulta loggato come studente");
           RequestDispatcher view = request.getRequestDispatcher("login-page.jsp");
           view.forward(request, response);
         } else {
           studenteBean = (StudenteBean) userBean;
         }
       } else {
-        Logger.getGlobal().log(Level.INFO, "Nessun utente loggato");
         RequestDispatcher view = request.getRequestDispatcher("login-page.jsp");
         view.forward(request, response);
       }
@@ -94,10 +89,10 @@ public class ConsegnaRegistroTirocinioServlet extends HttpServlet {
       if (registroBean == null) {
         if (id >= 0) {
           try {
-            if (registroModelDM.isStudenteRegistro(studenteBean.getMatricola(), id)) {
-              registroBean = (RegistroBean) registroModelDM.doRetrieveByKey(id);
+            if (RegistroModelDM.INSTANCE.isStudenteRegistro(studenteBean.getMatricola(), id)) {
+              registroBean = (RegistroBean) RegistroModelDM.INSTANCE.doRetrieveByKey(id);
             } else {
-              Logger.getGlobal().log(Level.INFO, "Il registro con id: " + id + " non risulta dello studente nella consegna da parte di uno studente");
+              Logger.getGlobal().log(Level.INFO, "ID RegistroBean Non Valido.");
               //redirect to an [error] page
               //set del valore per SessionErrorMessage404
               RequestDispatcher view = request.getRequestDispatcher("404-page.jsp");
@@ -111,7 +106,7 @@ public class ConsegnaRegistroTirocinioServlet extends HttpServlet {
             view.forward(request, response);
           }
         } else {
-          Logger.getGlobal().log(Level.INFO, "ID registro negativo nella consegna da parte di uno studente");
+          Logger.getGlobal().log(Level.INFO, "ID RegistroBean Non Valido.");
           //redirect to an [error] page
           //set del valore per SessionErrorMessage404
           RequestDispatcher view = request.getRequestDispatcher("404-page.jsp");
@@ -123,8 +118,8 @@ public class ConsegnaRegistroTirocinioServlet extends HttpServlet {
         if (!registroBean.getConsegna()) {
           registroBean.setConsegna(true);
           try {
-            if (!registroModelDM.doUpdate(registroBean)) {
-              Logger.getGlobal().log(Level.INFO, "Registro non aggiornato nella consegna del registro da parte di uno studente");
+            if (!RegistroModelDM.INSTANCE.doUpdate(registroBean, registroBean.getID())) {
+              Logger.getGlobal().log(Level.INFO, "Oggetto RegistroBean Non Aggiornato.");
               //redirect to an [error] page
               //set del valore per SessionErrorMessage500
               RequestDispatcher view = request.getRequestDispatcher("500-page.jsp");
@@ -140,26 +135,26 @@ public class ConsegnaRegistroTirocinioServlet extends HttpServlet {
             view.forward(request, response);
           }
         } else {
-          Logger.getGlobal().log(Level.INFO, "Il registro risulta gi√† consegnato nella consegna da parte di uno studente");
+          Logger.getGlobal().log(Level.INFO, "Oggetto RegistroBean Risulta Gi‡†Consegnato.");
         }
       } else {
-        Logger.getGlobal().log(Level.INFO, "Nessuno registro trovato con l' id specificato nella consegna di registro da parte dello studente");
+        Logger.getGlobal().log(Level.INFO, "Oggetto RegistroBean Non Trovato.");
         //redirect to an [error] page
         //set del valore per SessionErrorMessage404
         RequestDispatcher view = request.getRequestDispatcher("404-page.jsp");
         view.forward(request, response);
       }
     } else {
-      Logger.getGlobal().log(Level.INFO, "Nessuna sessione nella ricerca di tirocini da parte di un tutor");
+      Logger.getGlobal().log(Level.INFO, "Oggetto HttpSession Non Trovato.");
       RequestDispatcher view = request.getRequestDispatcher("login-page.jsp");
       view.forward(request, response);
     }
     
     JSONObject json = new JSONObject();
     if (consegna) {
-      json.put("consegna", "true");
+      json.put("consegna", true);
     } else {
-      json.put("consegna", "false");
+      json.put("consegna", false);
     }
     response.setContentType("application/json");
     try {

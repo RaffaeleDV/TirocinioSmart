@@ -11,9 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 import it.unisa.model.TutorBean;
 import it.unisa.model.TutorModelDM;
 import it.unisa.model.AbstractBean;
-import it.unisa.model.ConvenzioneBean;
 import it.unisa.model.ConvenzioneModelDM;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -24,8 +22,6 @@ import java.util.logging.Logger;
 @WebServlet("/LoginServletTutor")
 public class LoginServletTutor extends HttpServlet {
   private static final long serialVersionUID = 1L;
-  private static final ConvenzioneModelDM convenzioneModelDM = new ConvenzioneModelDM();
-  private static final TutorModelDM tutorModelDM = new TutorModelDM();
   
   public LoginServletTutor() {
     super();
@@ -48,12 +44,12 @@ public class LoginServletTutor extends HttpServlet {
 
     if (Validate.checkUser(tut)) {
       try {
-        tut = (TutorBean) tutorModelDM.doRetrieveTutorByEmail(tut.getEmail());
+        tut = (TutorBean) TutorModelDM.INSTANCE.doRetrieveTutorByEmail(tut.getEmail());
         if (tut != null) {
           if (tut.getTipo().equals("Aziendale")) {
-            convenzioni = (List<AbstractBean>) convenzioneModelDM.doRetrieveByTutorAz(tut.getID());
+            convenzioni = (List<AbstractBean>) ConvenzioneModelDM.INSTANCE.doRetrieveByTutorAz(tut.getID());
           } else {
-            Logger.getGlobal().log(Level.INFO, "Richiesta di convenzione da parte di un tutor accademico non fattibile");
+            Logger.getGlobal().log(Level.SEVERE, "Convenzioni Non Trovate Per Il Tutor Aziendale Specificato.");
           }
         } else {
           RequestDispatcher view = request.getRequestDispatcher("login-page.jsp");

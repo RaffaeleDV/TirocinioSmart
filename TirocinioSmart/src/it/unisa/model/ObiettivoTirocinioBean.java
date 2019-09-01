@@ -5,18 +5,14 @@ import java.util.logging.Logger;
 import java.util.logging.Level;
 
 public class ObiettivoTirocinioBean extends AbstractBean implements Serializable, Cloneable {
+  private static final long serialVersionUID = 1L;
   private int id;
   private int progettoFormativoID;
   private String obiettivo;
-  /*
-   * media,
-   * alta,
-   * bassa
-   */
   private String priorita;
   
   public ObiettivoTirocinioBean() {
-    
+    super();
   }
   
   public ObiettivoTirocinioBean(
@@ -24,6 +20,7 @@ public class ObiettivoTirocinioBean extends AbstractBean implements Serializable
       int progettoFormativoID,
       String obiettivo,
       String priorita) {
+    super();
     this.id = id;
     this.progettoFormativoID = progettoFormativoID;
     this.obiettivo = obiettivo;
@@ -65,45 +62,37 @@ public class ObiettivoTirocinioBean extends AbstractBean implements Serializable
   @Override
   public String toString() {
     StringBuilder str = new StringBuilder();
-    str.append(getClass().getName() + "[");
+    str.append(getClass().getName() + "{");
     str.append("id=" + id + ", ");
     str.append("progettoFormativoID=" + progettoFormativoID + ", ");
     str.append("obiettivo=" + obiettivo + ", ");
-    str.append("priorita=" + priorita + "]");
+    str.append("priorita=" + priorita + "}");
     return str.toString();
   }
   
   @Override
   public boolean equals(Object o) {
-    
     if (o == null)
       return false;
-    
     if (!getClass().getName().equals(o.getClass().getName()))
       return false;
-    
     ObiettivoTirocinioBean obiettivoTirocinioBean = (ObiettivoTirocinioBean) o;
-    
-    if (
-        id == obiettivoTirocinioBean.getID() &&
+    if (id == obiettivoTirocinioBean.getID() &&
         progettoFormativoID == obiettivoTirocinioBean.getProgettoFormativoID() &&
         obiettivo.equals(obiettivoTirocinioBean.getObiettivo()) &&
         priorita == obiettivoTirocinioBean.getPriorita())
       return true;
-    
     return false;
   }
   
   @Override
   public ObiettivoTirocinioBean clone() throws CloneNotSupportedException {
     ObiettivoTirocinioBean obbiettivoTirocinioBean = null;
-    
     try {
       obbiettivoTirocinioBean = (ObiettivoTirocinioBean) super.clone();
     } catch (CloneNotSupportedException e) {
-      Logger.getGlobal().log(Level.INFO, e.getMessage());
+      Logger.getGlobal().log(Level.SEVERE, e.getMessage());
     }
-    
     return obbiettivoTirocinioBean;
   }
 }

@@ -21,6 +21,11 @@ public class QuestionSQL {
     "SELECT * " + 
     "FROM " + TABLE_NAME + ";";
   
+  public static final String DO_RETRIEVE_BY_QUESTION =
+    "SELECT * " +
+    "FROM " + TABLE_NAME + " " +
+    "WHERE question LIKE ?;";
+  
   public static final String DO_RETRIEVE_BY_DESCRIPTION = 
     "SELECT * " + 
     "FROM " + TABLE_NAME + " " + 
@@ -28,7 +33,7 @@ public class QuestionSQL {
   
   public static final String DO_UPDATE = 
     "UPDATE " + TABLE_NAME + " " + 
-    "SET maxChooses = ?, maxAnswers = ?, question = ?, description = ? " + 
+    "SET id = ?, maxChooses = ?, maxAnswers = ?, question = ?, description = ? " + 
     "WHERE id = ?;";
   
   public static final String DO_RETRIEVE_BY_QUESTIONARIO = 

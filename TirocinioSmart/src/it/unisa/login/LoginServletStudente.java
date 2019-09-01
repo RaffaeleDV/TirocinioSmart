@@ -18,9 +18,6 @@ import it.unisa.model.StudenteModelDM;
 @WebServlet("/LoginServletStudente")
 public class LoginServletStudente extends HttpServlet {
   private static final long serialVersionUID = 1L;
-  private static final StudenteModelDM studenteModelDM = new StudenteModelDM();
-  
-  
   
   /**
    * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
@@ -40,10 +37,10 @@ public class LoginServletStudente extends HttpServlet {
     if (Validate.checkUser(stud)) {
       
       try {
-        stud = (StudenteBean) studenteModelDM.doRetrieveByNome(nome);
+        stud = (StudenteBean) StudenteModelDM.INSTANCE.doRetrieveByNome(nome);
 
       } catch (SQLException e) {
-        e.printStackTrace();
+        Logger.getGlobal().log(Level.SEVERE, e.getMessage());
       }
       request.getSession().setAttribute("Loggato", new Boolean(true));
       request.getSession().setAttribute("SessionUser", stud);
@@ -57,7 +54,6 @@ public class LoginServletStudente extends HttpServlet {
 
     }
     response.sendRedirect(request.getContextPath() + redirectPage);
-
   }
 
   /**
@@ -67,5 +63,4 @@ public class LoginServletStudente extends HttpServlet {
       throws ServletException, IOException {
     doGet(request, response);
   }
-
 }

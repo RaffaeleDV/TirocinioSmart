@@ -15,7 +15,7 @@ public class ConvenzioneSQL {
   
   public static final String DO_SAVE = 
     "INSERT INTO " + TABLE_NAME + " " + 
-    "VALUES (?, ?, ?, ?);";
+    "VALUES (?, ?, ?, ?, ?);";
   
   public static final String DO_DELETE = 
     "DELETE FROM " + TABLE_NAME + " " + 
@@ -23,7 +23,7 @@ public class ConvenzioneSQL {
   
   public static final String DO_UPDATE =
     "UPDATE " + TABLE_NAME + " " +
-    "SET tutorAzID = ?, info = ?, azienda = ? " +
+    "SET id = ?, info = ?, descrizione = ?, tutorAzID = ?, tutorAccID = ? " +
     "WHERE id = ?;";
   
   public static final String DO_RETRIEVE_BY_INFO = 
@@ -31,10 +31,15 @@ public class ConvenzioneSQL {
     "FROM " + TABLE_NAME + " " + 
     "WHERE info LIKE ?;";
   
-  public static final String DO_RETRIEVE_BY_AZIENDA = 
-    "SELECT * " + 
-    "FROM " + TABLE_NAME + " " + 
-    "WHERE azienda LIKE ?;";
+  public static final String DO_RETRIEVE_BY_CONVENIENZA =
+    "SELECT * " +
+    "FROM " + TABLE_NAME + " " +
+    "WHERE descrizione LIKE ?;";
+  
+  public static final String DO_RETRIEVE_BY_TUTOR_ACC =
+    "SELECT * " +
+    "FROM " + TABLE_NAME + " " +
+    "WHERE tutorAccID = ?;";
   
   public static final String DO_RETRIEVE_BY_TUTOR_AZ = 
     "SELECT * " + 

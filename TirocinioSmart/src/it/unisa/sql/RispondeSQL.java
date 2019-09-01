@@ -8,6 +8,21 @@ public class RispondeSQL {
     "SELECT * " + 
     "FROM " + TABLE_NAME + ";";
   
+  public static final String DO_RETRIEVE_BY_KEY =
+    "SELECT * " +
+    "FROM " + TABLE_NAME + " " +
+    "WHERE questionID = ? AND chooseID = ?;";
+  
+  public static final String DO_UPDATE =
+    "UPDATE " + TABLE_NAME + " " +
+    "SET questionID = ?, chooseID = ? " +
+    "WHERE questionID = ? AND chooseID = ?;";
+  
+  public static final String DO_DELETE =
+    "DELETE " +
+    "FROM " + TABLE_NAME + " " +
+    "WHERE questionID = ? AND chooseID = ?;";
+  
   public static final String DO_SAVE = 
     "INSERT INTO " + TABLE_NAME + " " + 
     "VALUES (?, ?);";
@@ -15,10 +30,10 @@ public class RispondeSQL {
   public static final String DO_RETRIEVE_BY_QUESTION = 
     "SELECT * " + 
     "FROM " + TABLE_NAME + " " + 
-    "WHERE quest = ?;";
+    "WHERE questionID = ?;";
   
   public static  final String DO_RETRIEVE_BY_CHOOSE = 
     "SELECT * " + 
     "FROM " + TABLE_NAME + " " + 
-    "WHERE choose = ?;";
+    "WHERE chooseID = ?;";
 }
