@@ -33,7 +33,7 @@
           } else if (userBean instanceof TutorBean) {
         %>
             <li><a id="navbar-link" href="registri-tutor-page.jsp">Registri Del Tirocinio(Tutor)</a></li>
-            <li><a id="navbar-link" href="progetti-formativi-tutor-page.jsp">Progetti Formativi(Tutor)</a>
+            <li><a id="navbar-link" href="progetti-formativi-page.jsp">Progetti Formativi(Tutor)</a>
         <%
           } else if (userBean instanceof UfficioBean) {
         %>

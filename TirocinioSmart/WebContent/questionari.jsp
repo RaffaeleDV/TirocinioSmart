@@ -115,10 +115,14 @@
           }
         }
       } else {
-        //redirect to an [404error] page
-        //save the message for redirecting
-        RequestDispatcher view = request.getRequestDispatcher("404-error.jsp");
-        view.forward(request, response);
+    	  %>
+        <!-- Nessun questionario da visualizzare -->
+        
+        <div id="info-wrapper" class="wrapper">
+          <!-- <img id="info-icon" class="icon" src="no-questionari.png"/> -->
+          <h1 id="info-questionari" class="text">Nessun Questionario Da Visualizzare</h1>
+        </div>
+        <%
       }
     %>
   </div>
