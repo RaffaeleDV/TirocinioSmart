@@ -51,4 +51,14 @@ public class AttivitaTirocinioSQL {
     "SELECT * " + 
     "FROM " + TABLE_NAME + " " + 
     "WHERE ore BETWEEN ? AND ?;";
+  
+  public static final String DO_RETRIEVE_REGISTRO =
+    "SELECT * " +
+    "FROM " + RegistroSQL.TABLE_NAME + " " +
+    "WHERE id = ?;";
+  
+  public static final String DO_RETRIEVE_STRUTTURA_OSPITANTE =
+    "SELECT * " +
+    "FROM " + StrutturaOspitanteSQL.TABLE_NAME + " " +
+    "WHERE id = ?;";
 }

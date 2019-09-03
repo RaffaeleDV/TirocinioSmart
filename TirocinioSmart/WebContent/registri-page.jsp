@@ -7,8 +7,7 @@
 </head>
 <body id="general-body">
   <%@ include file = "header.jsp" %>
-  <!-- <%@ include file="user-area.jsp"%> -->
-  <%@ include file = "registri-tutor.jsp" %>
+  <%@ include file = "registri.jsp" %>
   <%@ include file = "footer.jsp" %>
 </body>
 </html>

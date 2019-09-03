@@ -7,7 +7,6 @@
 </head>
 <body id="general-body">
   <%@ include file = "header.jsp" %>
-  <!-- <%@ include file="user-area.jsp"%> -->
   <%@ include file = "progetto-formativo.jsp" %>
   <%@ include file = "footer.jsp" %>
 </body>

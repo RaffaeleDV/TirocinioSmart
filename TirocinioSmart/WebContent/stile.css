@@ -15,7 +15,7 @@ body {
 form {
 	padding: 10px;
 	font-family: arial;
-	border: 1px dotted white;
+	border: 1px white dotted;
 }
 
 h1{
@@ -160,6 +160,7 @@ div > nav > ul > li > a {
 }
 
 #header-wrapper {
+	display: table-caption;
 	color: #fefbe9;
 	background-size: 100%;
 	background-color: #09005a;
@@ -339,8 +340,11 @@ div > nav > ul > li > a {
 	color: #334455;
 }
 
+
+
+
 #registro-heading-wrapper {
-	margin-left: 35%;
+	margin-left: 40%;
 	padding: 15px;
 }
 
@@ -352,21 +356,24 @@ div > nav > ul > li > a {
 }
 
 #progetto-formativo-heading-wrapper {
+	margin-left: 35%;
 	padding: 15px;
 }
 
 #progetto-formativo-heading-icon {
-	padding: 70px;
+	padding: 30px;
 	display: inline;
 	width: 130px;
 	height: 130px;
 }
 
-#id-progetti-wrapper {
-	padding: 55px;
+#progetti-formativi-items-wrapper {
+	padding: 40px;
+	border-radius: 7px;
+	margin: -8px;
 }
 
-#id-progetto-wrapper {
+#progetto-formativo-item-wrapper {
 	margin: 30px;
 	padding-bottom: 5px;
 	margin-bottom: 10px;
@@ -376,13 +383,27 @@ div > nav > ul > li > a {
 	border-radius: 3px;
 	border-color: #204a87;
 	display: -webkit-box;
-	-webkit-box-align: center;
-	-webkit-box-pack: center;
+  -webkit-box-align: center;
+  -webkit-box-pack: justify;
+  column-count: 3;
 }
 
-#progetto-icon {
+#progetto-formativo-item-info {
+	
+}
+
+#progetto-formativo-item-link {
+	
+}
+
+#progetto-formativo-item-icon {
 	width: 80px;
 	height: 80px;
+}
+
+#warning-wrapper {
+	margin: 40px;
+	padding: 10px;
 }
 
 #id-progetto-info {
@@ -398,13 +419,14 @@ div > nav > ul > li > a {
 	color: black;
 }
 
-#nomi-registri-wrapper {
+#registri-items-wrapper {
+	border-radius: 7px;
 	margin-top: -20px;
 	margin: -8px;
 	padding: 55px;
 }
 
-#nome-registro-wrapper {
+#registro-item-wrapper {
 	margin: 30px;
 	padding-bottom: 5px;
 	margin-bottom: 10px;
@@ -413,9 +435,13 @@ div > nav > ul > li > a {
 	border-width: 1px;
 	border-radius: 3px;
 	border-color: #204a87;
-	display: -webkit-box;
-	-webkit-box-align: center;
-	-webkit-box-pack: center;
+	align: center;
+  padding: 10px;
+  margin-left: 10px;
+  display: -webkit-box;
+  -webkit-box-align: center;
+  -webkit-box-pack: justify;
+  column-count: 3;
 }
 
 #registro-options-wrapper {
@@ -431,17 +457,27 @@ div > nav > ul > li > a {
 	-webkit-box-pack: justify;
 }
 
-#registro-icon {
+#registro-item-icon {
+	margin: 20px;
 	width: 60px;
 	height: 60px;
 	padding-right: 30px;
 }
 
-#nome-registro-info {
+#registro-item-info {
 	color: black;
 	margin: 15px;
 	font-size: 14px;
 }
+
+#registro-item-link {
+	padding: 0px;
+	margin: 0px;
+	background-color: #0080ff;
+}
+
+
+
 
 #registri-heading {
 	color: #000000;
@@ -530,6 +566,7 @@ div > nav > ul > li > a {
 
 #footerbar-link {
 	color: white;
+	font-size: 14px;
 	font-weight: 800;
 	padding: 10px;
 	text-decoration: none;
@@ -567,7 +604,7 @@ div > nav > ul > li > a {
   padding: 10px;
   margin: 10px;
   margin-left: 10px;
-  border: 3px solid black;
+  border: 3px black solid;
   border-radius: 6px;
   display: -webkit-box;
   -webkit-box-align: center;
@@ -587,8 +624,7 @@ div > nav > ul > li > a {
 
 #progetto-formativo-options-wrapper {
   padding: 35px;
-  margin-right: 70%;
-  margin-left: 30%;
+  margin-left: 60%;
 }
 
 #approvazione-info {
@@ -716,7 +752,7 @@ div > nav > ul > li > a {
 	background-color: #fc9b0a;
 	border-radius: 4px;
 	border: 0px black solid;
-	border-bottom: 2px #d28002solid;
+	border-bottom: 2px #d28002 solid;
 	padding: 9px;
 	position: relative;
 	top: 30px;
@@ -768,7 +804,8 @@ div > nav > ul > li > a {
 }
 
 #registro-wrapper {
-	
+	border-radius: 7px;
+	margin: -8px;
 }
 
 #registro-info-heading {
@@ -838,6 +875,9 @@ div > nav > ul > li > a {
 #tf-consegna {
 	float: right;
 }
+
+
+
 
 #questionari-heading-icon {
 	margin-left: 40%;
@@ -924,6 +964,104 @@ div > nav > ul > li > a {
 
 
 
+
+
+
+#attivita-table {
+	margin: 50px;
+	padding: 40px;
+	margin-left: 15%;
+}
+
+#attivita-head {
+	padding: 25px;
+}
+
+#attivita-data {
+	padding: 25px;
+}
+
+#hattivita-id {
+	padding: 15px;
+}
+
+#hattivita-registro {
+	padding: 15px;
+}
+
+#hattivita-struttura {
+	padding: 15px;
+}
+
+#hattivita-descrizione {
+	padding: 15px;
+}
+
+#hattivita-data {
+	padding: 15px;
+}
+
+#hattivita-ore {
+	padding: 15px;
+}
+
+
+
+
+
+
+
+
+
+
+#error-wrapper {
+	padding: 40px;
+}
+
+#400-wrapper {
+	min-height: 40%;
+	background-color: #A00000;
+}
+
+#400 {
+	color: #000000;
+	font-size: 28px;
+	font-weight: large;
+}
+
+#page-not-found {
+	color: white;
+	font-size: large;
+	font-weight: small;
+}
+
+#500-wrapper {
+	min-height: 40%;
+  background-color: #A00000;
+}
+
+#500 {
+	color: #000000;
+	font-size: 280px;
+	font-weight: large;
+}
+
+#internal-error {
+	color: white;
+	font-size: large;
+	font-weight: small;
+}
+
+#error-message-wrapper {
+	
+}
+
+#error-message {
+	color: #000000;
+	min-height: 30%;
+	font-size: x-small;
+	font-weight: x-small;
+}
 
 
 

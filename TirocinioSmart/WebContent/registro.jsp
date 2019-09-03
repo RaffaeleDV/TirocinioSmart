@@ -27,7 +27,15 @@
       StudenteBean studenteRegistroBean = null;
       TutorBean tutorRegistroBean = null;
       UfficioBean ufficioRegistroBean = null;
+      String registroID = request.getParameter("id");
       int idRegistro = -1;
+      
+      try {
+    	  idRegistro = Integer.valueOf(registroID);
+      } catch (NumberFormatException e) {
+    	  Logger.getGlobal().log(Level.SEVERE, e.getMessage());
+    	  //redirect to an [error] page
+      }
       
       if (utenteRegistroBean != null) {
         if (utenteRegistroBean instanceof StudenteBean) {
@@ -106,12 +114,19 @@
         }
         try {
           attivitaTirocinioRegistro = (List<AbstractBean>) AttivitaTirocinioModelDM.INSTANCE.doRetrieveByRegistro(registroBean.getID());
+          session.setAttribute("SessionAttivitaTirocinioList", attivitaTirocinioRegistro);
         } catch (SQLException e) {
           Logger.getGlobal().log(Level.SEVERE, e.getMessage());
           //redirect to an [error] page
+          //set the 500 error message
+          RequestDispatcher view = request.getRequestDispatcher("500-page.jsp");
+          view.forward(request, response);
         }
       } else {
         //redirect to an [error] page
+        //set the 404 error message
+        RequestDispatcher view = request.getRequestDispatcher("404-page.jsp");
+        view.forward(request, response);
       }
  	  %>
  	<div id="registro-info-container" class="wrapper" hidden=true>

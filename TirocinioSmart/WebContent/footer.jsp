@@ -17,7 +17,7 @@
         RequestDispatcher view = request.getRequestDispatcher("login-page.jsp");
         view.forward(request, response);
       }
-    %>
+  %>
   <nav id="footerbar" class="container">
     <ul id="footerbar-list" class="container">
       <li><a id="footerbar-link" href="home-page.jsp">Home</a></li>

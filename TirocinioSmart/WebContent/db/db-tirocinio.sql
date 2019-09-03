@@ -59,7 +59,7 @@ CREATE TABLE IF NOT EXISTS attivita_tirocinio(
     registroID           INT,
     strutturaOspitanteID INT,
     descrizione          VARCHAR(255) NOT NULL,
-    data                 DATE NOT NULL,
+    data                 DATE,
     ore                  INT NOT NULL,
     PRIMARY KEY(id)
 );

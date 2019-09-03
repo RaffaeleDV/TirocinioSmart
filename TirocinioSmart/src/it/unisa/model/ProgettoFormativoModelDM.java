@@ -949,6 +949,7 @@ public class ProgettoFormativoModelDM implements BeansModel {
       ps = connection.prepareStatement(ProgettoFormativoSQL.DO_RETRIEVE_BY_TUTOR);
       
       ps.setInt(1, tutorBean.getID());
+      ps.setInt(2, tutorBean.getID());
       
       rs = ps.executeQuery();
       

@@ -12,7 +12,7 @@
     import="java.util.logging.Level"
     import="java.sql.SQLException" %>
 <section id="progetto-formativo-wrapper" class="wrapper">
-  <div id="progetto-formativo-heading-wrapper" align="center" style="padding:50px;">
+  <div id="progetto-formativo-heading-wrapper">
     <img id="progetto-formativo-heading-icon" src="images/prog-form-icon.png"/>
     <h3 id="progetto-formativo-heading" style="font-size: 24px; color: black;"></h3>
   </div>

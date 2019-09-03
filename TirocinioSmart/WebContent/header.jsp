@@ -32,14 +32,13 @@
         <%
           } else if (userBean instanceof TutorBean) {
         %>
-            <li><a id="navbar-link" href="registri-tutor-page.jsp">Registri Del Tirocinio(Tutor)</a></li>
+            <li><a id="navbar-link" href="registri-page.jsp">Registri Del Tirocinio(Tutor)</a></li>
             <li><a id="navbar-link" href="progetti-formativi-page.jsp">Progetti Formativi(Tutor)</a>
         <%
           } else if (userBean instanceof UfficioBean) {
         %>
-            <li><a id="navbar-link" href="registri-ufficio-page.jsp">Registri Del Tirocinio(Ufficio)</a></li>
-            <li><a id="navbar-link" href="questionario-page.jsp">Questionario</a></li>
-            <li><a id="navbar-link" href="convenzione-page.jsp">Convenzione</a></li>
+            <li><a id="navbar-link" href="registri-page.jsp">Registri Del Tirocinio(Ufficio)</a></li>
+            <li><a id="navbar-link" href="progetti-formativi-page.jsp">Progetti Formativi(Ufficio)</a></li>
         <%
           } else {
             //redirect to an [login] page

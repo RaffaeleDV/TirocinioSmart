@@ -116,11 +116,8 @@
         }
       } else {
     	  %>
-        <!-- Nessun questionario da visualizzare -->
-        
-        <div id="info-wrapper" class="wrapper">
-          <!-- <img id="info-icon" class="icon" src="no-questionari.png"/> -->
-          <h1 id="info-questionari" class="text">Nessun Questionario Da Visualizzare</h1>
+        <div id="warning-wrapper" class="wrapper">
+          <h2>Nessun Questionario Da Visualizzare</h2>
         </div>
         <%
       }

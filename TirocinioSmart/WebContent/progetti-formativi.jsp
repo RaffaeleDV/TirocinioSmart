@@ -10,14 +10,8 @@
     import="java.util.List"
     import="java.sql.SQLException"
     %>
-<section id="id-progetti-wrapper" class="wrapper">
-  <h3 style="font-weight: 200; padding: 35px; font-size: 28px; color: black;" align="center">Progetti</h3>
-  <!--
-  <div id="scelta-progetto-wrapper" class="wrapper">
-    <input id="search-input" type="text" placeholder="Inserire ID Del Progetto Formativo Scelto"/>
-    <input id="button" type="button" onclick="vaiProgetto()" value="Vai Al Progetto"/>
-  </div>
-  -->
+<section id="progetti-formativi-items-wrapper" class="wrapper">
+  <h3 style="border-radius: 10px; margin: 100px; background-color: #05003F; font-weight: xx-large; padding: 15px; font-size: 28px; color: white;" align="center">Progetti Formativi</h3>
   <%
     TutorBean tutorBean = null;
     UfficioBean ufficioBean = null;
@@ -56,12 +50,12 @@
           //redirect to an [error] page
         }
       } else {
-        Logger.getGlobal().log(Level.INFO, "Nessun login effettuato per accedere ai progetti");
-        //redirect to an [error] page
+        RequestDispatcher view = request.getRequestDispatcher("login-page.jsp");
+        view.forward(request, response);
       }
     }
     
-    if (progetti != null) {
+    if (progetti != null && progetti.size() > 0) {
       for (AbstractBean product: progetti) {
         ProgettoFormativoBean progettoFormativoBean = null;
         if (product instanceof ProgettoFormativoBean) {
@@ -73,17 +67,14 @@
         
         if (progettoFormativoBean != null) {
   %>
-          <div id="id-progetto-wrapper" class="wrapper">
+          <div id="progetto-formativo-item-wrapper" class="wrapper">
             <div>
-              <img id="progetto-icon" src="images/progetto-icon.png"/>
+              <img id="progetto-formativo-item-icon" src="images/progetto-icon.png"/>
             </div>
             <div>
-              <p> </p>
+              <p id="progetto-formativo-item-info" class="info">ID: <b id="id-prog"><%= progettoFormativoBean.getID() %></b></p>
             </div>
-            <div>
-              <p id="id-progetto-info" class="info"> ID Progetto Formativo: <b id="id-prog"><%= progettoFormativoBean.getID() %></b></p>
-            </div>
-            <div>
+            <div id="progetto-formativo-item-link">
             
             </div>
           </div>
@@ -91,7 +82,11 @@
         }
       }
     } else {
-      //redirect to an [error] page
+    	%>
+    	<div id="warning-wrapper">
+    	  <h2>Nessun Progetto Formativo Trovato</h2>
+    	</div>
+      <%
     }
   %>
   <script type="text/javascript">
@@ -111,7 +106,6 @@
         
         }
       })
-      
-    }
+    };
   </script>
 </section>

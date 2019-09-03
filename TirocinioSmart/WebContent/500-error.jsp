@@ -1,18 +1,18 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-<section id="500-error-wrapper">
+<section id="error-wrapper">
+  <div id="500-wrapper">
+    <h1 id="500" style="color: black;" align="center"></p>
+    <h2 id="internal-error">Internal Server Error(500)</h2>
+  </div>
   <%
     String errorMessage500 = (String) session.getAttribute("SessionErrorMessage500");
   
     if (errorMessage500 != null) {
       if (!errorMessage500.equals("")) {
         %>
-        <div id="500-error-message-wrapper">
-          <p id="500-error-message"> <%= errorMessage500.toString() %> </p>
-        </div>
-        <div>
-          <p id="500-info"> Internal Server Error </p>
-          <p id="500-text"> 500 </p>
+        <div id="error-message-wrapper">
+          <p id="error-message"><%= errorMessage500.toString() %> </p>
         </div>
         <%
       }

@@ -391,4 +391,96 @@ public class AttivitaTirocinioModelDM implements BeansModel {
     
     return attivitaTraOre;
   }
+  
+  public AbstractBean doRetrieveRegistro(AbstractBean product) throws SQLException {
+    Connection connection = null;
+    PreparedStatement ps = null;
+    ResultSet rs = null;
+    RegistroBean registroBean = null;
+    AttivitaTirocinioBean attivitaTirocinioBean = (AttivitaTirocinioBean) product;
+    
+    if (product.getClass().getName().equals(AttivitaTirocinioBean.class.getName())) {
+      attivitaTirocinioBean = (AttivitaTirocinioBean) product;
+    } else {
+      return null;
+    }
+    
+    try {
+      connection = (Connection) DriverManagerConnectionPool.getConnection();
+      ps = connection.prepareStatement(AttivitaTirocinioSQL.DO_RETRIEVE_REGISTRO);
+      
+      ps.setInt(1, attivitaTirocinioBean.getRegistroID());
+      
+      rs = ps.executeQuery();
+      if (rs.next()) {
+        int id = rs.getInt("id");
+        String nome = rs.getString("nome");
+        String descrizione = rs.getString("descrizione");
+        Date primaIstituzione = rs.getDate("primaIstituzione");
+        Date ultimoAgg = rs.getDate("ultimoAgg");
+        boolean consegna = rs.getBoolean("consegna");
+        boolean confermaTutorAcc = rs.getBoolean("confermaTutorAcc");
+        boolean confermaTutorAz = rs.getBoolean("confermaTutorAz");
+        boolean confermaUff = rs.getBoolean("confermaUff");
+        
+        registroBean = new RegistroBean(id, nome, descrizione, primaIstituzione, ultimoAgg, consegna, confermaTutorAcc, confermaTutorAz, confermaUff);
+      } else {
+        Logger.getGlobal().log(Level.SEVERE, "Oggetto RegistroBean Non Trovato.");
+      }
+    } finally {
+      try {
+        if (ps != null) {
+          ps.close();
+        }
+      } finally {
+        DriverManagerConnectionPool.releaseConnection(connection);
+      }
+    }
+    return registroBean;
+  }
+  
+  public AbstractBean doRetrieveStrutturaOspitante(AbstractBean product) throws SQLException {
+    Connection connection = null;
+    PreparedStatement ps = null;
+    ResultSet rs = null;
+    StrutturaOspitanteBean strutturaOspitanteBean = null;
+    AttivitaTirocinioBean attivitaTirocinioBean = null;
+    
+    if (product.getClass().getName().equals(AttivitaTirocinioBean.class.getName())) {
+      attivitaTirocinioBean = (AttivitaTirocinioBean) product;
+    }
+    
+    try {
+      connection = (Connection) DriverManagerConnectionPool.getConnection();
+      ps = connection.prepareStatement(AttivitaTirocinioSQL.DO_RETRIEVE_STRUTTURA_OSPITANTE);
+      
+      ps.setInt(1, attivitaTirocinioBean.getStrutturaOspitanteID());
+      
+      rs = ps.executeQuery();
+      if (rs.next()) {
+        int id = rs.getInt("id");
+        String nome = rs.getString("nome");
+        String ambitoLavorativo = rs.getString("ambitoLavorativo");
+        String nazione = rs.getString("nazione");
+        String regione = rs.getString("regione");
+        String citta = rs.getString("citta");
+        String via = rs.getString("via");
+        int ncivico = rs.getInt("ncivico");
+        int ndipendenti = rs.getInt("ndipendenti");
+
+        strutturaOspitanteBean = new StrutturaOspitanteBean(id, nome, ambitoLavorativo, nazione, regione, citta, via, ncivico, ndipendenti);
+      } else {
+        Logger.getGlobal().log(Level.SEVERE, "Oggetto StrutturaOspitanteBean Non Trovato.");
+      }
+    } finally {
+      try {
+        if (ps != null)
+          ps.close();
+      } finally {
+        DriverManagerConnectionPool.releaseConnection(connection);
+      }
+    }
+    
+    return strutturaOspitanteBean;
+  }
 }
