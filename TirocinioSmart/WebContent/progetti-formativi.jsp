@@ -58,11 +58,10 @@
     if (progetti != null && progetti.size() > 0) {
       for (AbstractBean product: progetti) {
         ProgettoFormativoBean progettoFormativoBean = null;
-        if (product instanceof ProgettoFormativoBean) {
+        if (product.getClass().getName().equals(ProgettoFormativoBean.class.getName())) {
           progettoFormativoBean = (ProgettoFormativoBean) product;
         } else {
-          Logger.getGlobal().log(Level.INFO, "Prodotto che non risulta un progetto");
-          //redirect to an [error] page
+          response.sendRedirect(request.getContextPath() + "/500-page.jsp");
         }
         
         if (progettoFormativoBean != null) {
@@ -74,9 +73,7 @@
             <div>
               <p id="progetto-formativo-item-info" class="info">ID: <b id="id-prog"><%= progettoFormativoBean.getID() %></b></p>
             </div>
-            <div id="progetto-formativo-item-link">
-            
-            </div>
+            <div id="progetto-formativo-item-link" onclick="retrieveProgettoFormativo(<%= progettoFormativoBean.getID() %>);"></div>
           </div>
   <%
         }
@@ -89,23 +86,21 @@
       <%
     }
   %>
-  <script type="text/javascript">
-    function vaiProgetto() {
-      var idProg = $('#id-prog-input').val();
-      
-      $.ajax({
-        type : "POST",
-        url : "ProgettoFormativoServlet",
-        contenteType : "application/x-www-form-urlencoded",
-        datatype : "json",
-        data: "id="+idProg,
-        success: function(data) {
-        
-        },
-        error: function(error) {
-        
-        }
-      })
-    };
-  </script>
 </section>
+<script type="text/javascript">
+  function retrieveProgettoFormativo(id) {
+    $.ajax({
+      type : "POST",
+      url : "ProgettoFormativoServlet",
+      contenteType : "application/x-www-form-urlencoded",
+      datatype : "json",
+      data: "id="+id,
+      success: function(data) {
+      
+      },
+      error: function(error) {
+      
+      }
+    })
+  };
+</script>

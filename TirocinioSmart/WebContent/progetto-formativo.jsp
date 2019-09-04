@@ -19,8 +19,6 @@
   <%
     AbstractBean utenteBean = null;
     StudenteBean studenteBean = null;
-    String progettoFormativoID = (String) request.getParameter("id");
-    int id = -1;
     AbstractBean utenteProgetto = (AbstractBean) session.getAttribute("SessionUser");
     ProgettoFormativoBean progettoFormativoBean = (ProgettoFormativoBean) request.getAttribute("RequestProgettoFormativoBean");
     
@@ -40,36 +38,7 @@
     	    }
     	  } else if (utenteBean.getClass().getName().equals(TutorBean.class.getName()) ||
     	      utenteBean.getClass().getName().equals(TutorBean.class.getName())) {
-    	    try {
-    	      id = Integer.valueOf(progettoFormativoID);
-    	      if (id >= 0) {
-    	        try {
-    	          progettoFormativoBean = (ProgettoFormativoBean) ProgettoFormativoModelDM.INSTANCE.doRetrieveByKey(id);
-    	        } catch (SQLException e) {
-    	          Logger.getGlobal().log(Level.SEVERE, "Oggetto ProgettoFormativoBean Non Trovato.");
-    	          //redirect to an [error] page
-    	          //set the error message
-    	          RequestDispatcher view = request.getRequestDispatcher("404-page.jsp");
-    	          view.forward(request, response);
-    	        }
-    	      } else {
-    	        Logger.getGlobal().log(Level.SEVERE, "ID ProgettoFormativoBean Non Valido.");
-    	        //redirect to an [error] page
-    	        //set the error message
-    	        RequestDispatcher view = request.getRequestDispatcher("500-page.jsp");
-    	        view.forward(request, response);
-    	      }
-    	    } catch (NumberFormatException e) {
-    	      Logger.getGlobal().log(Level.SEVERE, e.getMessage());
-    	      //redirect to an [error] page
-    	      //set the error message
-    	      RequestDispatcher view = request.getRequestDispatcher("500-page.jsp");
-    	      view.forward(request, response);
-    	    }
-    	  } else {
-    	    RequestDispatcher view = request.getRequestDispatcher("login-page.jsp");
-    	    view.forward(request, response);
-    	  }
+    	    response.sendRedirect(request.getContextPath() + "/500-page.jsp");
     	} else {
     	  Logger.getGlobal().log(Level.SEVERE, "Oggetto HttpSession Non Trovato.");
     	  //redirect to an [login] page
@@ -188,19 +157,10 @@
           %>
           </b>
         </div>
-        <!--  
-        <div id="progetto-formativo-info-wrapper" class="wrapper">
-          <p id="progetto-formativo-info-heading" class="info-heading">UfficioID</p>
-          <p id="progetto-formativo-info" class="info"><%= progettoFormativoBean.getUfficioID() %></p>
-        </div>
-        -->
       </div>
   <%
     } else {
-      //redirect to an [error] page
-      //set del valore per SessionErrorMessage404
-      RequestDispatcher view = request.getRequestDispatcher("404-page.jsp");
-      view.forward(request, response);
+      response.sendRedirect(request.getContextPath() + "/500-page.jsp");
     }
   %>
   <div id="progetto-formativo-options-wrapper" class="wrapper">
@@ -218,108 +178,98 @@
             <input id="ts-button" class="button" name="approva-prog-formativo" type="button" value="Approva" onclick="approvaProgettoFormativoAziendale()"/>
     <%
           } else {
-            //redirect to an [error] page
-            //set del valore per SessionErrorMessage404
-            RequestDispatcher view = request.getRequestDispatcher("404-page.jsp");
+            //redirect to an error page
+            //set the 500 error message
+            RequestDispatcher view = request.getRequestDispatcher("500-page.jsp");
             view.forward(request, response);
           }
     	  }
       } else {
-    	  //redirect to an [error] page
-        //set del valore per SessionErrorMessage500
-        RequestDispatcher view = request.getRequestDispatcher("500-page.jsp");
-        view.forward(request, response);
-      }
-    %>
-  </div>
-  <div hidden=true>
-    <!-- Approvazione del tutor accademico -->
-    <p id="atutor-accademico"><%= progettoFormativoBean.isApprovazioneTutorAcc() %></p>
-    <p id="atutor-aziendale"><%= progettoFormativoBean.isApprovazioneTutorAz() %></p>
-  </div>
-  
-  <script type="text/javascript">
-    function visualizzaProgettoFormativoWrapper() {
-      var hidden = document.getElementById("progetto-formativo-info-container").hidden;
-      if (hidden == true) {
-    	  hidden = false;
-        document.getElementById("progetto-formativo-info-container").hidden = false;
-      } else {
-    	  hidden = true;
-        document.getElementById("progetto-formativo-info-container").hidden = true;
-      }
-    };
-    
-    function approvaProgettoFormativoAccademico() {
-      var approvazione = document.getElementById("atutor-accademico").innerHTML;
-      
-      if (approvazione == "true") {
-        console.log("Il Progetto Formativo Risulta Approvato");
-      } else {
-        var id = document.getElementById("prog-form-info-id").innerHTML.trim();
-        
-        $.ajax({
-          type : "POST",
-          url : "ApprovazioneProgettoFormativoAccademicoStudente",
-          contentType: "application/x-www-form-urlencoded",
-          datatype : "json", 
-          data: "id="+id,
-          success : function(data) {
-            if (data.approvazione == true) {
-            	console.log("Il Progetto Formativo E' Stato Approvato Con Successo Dal Tutor Accademico");
-              document.getElementById("atutor-accademico").innerHTML = "true";
-              document.getElementById("tf-atutor-accademico").src = "images/true.png";
-            } else {
-            	document.getElementById("atutor-accademico").innerHTML = "false";
-            	document.getElementById("tf-atutor-accademico").scr = "images/false.png";
-            }
-          },
-          error : function(error) {
-            console.log("Errore:" + error);
-            document.getElementById("atutor-accademico").innerHTML = "false";
-            document.getElementById("tf-atutor-accademico").src = "images/false.png";
-          }
-        })
-      }
-    };
-    
-    function approvaProgettoFormativoAziendale() {
-    	var approvazione = document.getElementById("atutor-aziendale").innerHTML.trim();
-    	
-    	if (approvazione == "true") {
-    		console.log("Il Progetto Formativo Risulta Approvato");
-    	} else {
-    		var id = document.getElementById("prog-form-info-id").innerHTML.trim();
-    		
-    		$.ajax({
-    			type : "POST",
-    			url : "ApprovazioneProgettoFormativoAziendaleStudente",
-    			contentType: "application/x-www-form-urlencoded",
-    			datatype : "json",
-    			data : "id="+id,
-    			success : function(data) {
-    				if (data.approvazione == true) {
-    					console.log("Il Progetto Formativo E' Stato Approvato Con Successo Dal Tutor Aziendale");
-    					document.getElementById("atutor-aziendale").innerHTML = "true";
-    					document.getElementById("tf-atutor-aziendale").src = "images/true.png";
-    				} else {
-              document.getElementById("atutor-aziendale").innerHTML = "false";
-              document.getElementById("tf-atutor-aziendale").src = "images/"
-    				}
-    			},
-    			error : function(error) {
-            console.log("Error:" + error);
-            document.getElementById("atutor-accademico").innerHTML = "false";
-            document.getElementById("tf-atutor-aziendale").src = "images/false.png";
-    			}
-    		})
-    	}
-    };
-    
-    if (typeof String.trim == "undefined") {
-      String.prototype.trim = function() {
-        return this.replace(/(^\s*)|(\s*$)/g, "");
+    	  response.sendRedirect(request.getContextPath() + "/login-page.jsp");
       }
     }
-  </script>
+    %>
+  </div>
 </section>
+<script type="text/javascript">
+  function visualizzaProgettoFormativoWrapper() {
+    var hidden = document.getElementById("progetto-formativo-info-container").hidden;
+    if (hidden == true) {
+      hidden = false;
+      document.getElementById("progetto-formativo-info-container").hidden = false;
+    } else {
+      hidden = true;
+      document.getElementById("progetto-formativo-info-container").hidden = true;
+    }
+  };
+  
+  function approvaProgettoFormativoAccademico() {
+    var approvazione = document.getElementById("atutor-accademico").innerHTML;
+    
+    if (approvazione == "false") {
+      var id = document.getElementById("prog-form-info-id").innerHTML.trim();
+      
+      $.ajax({
+        type : "POST",
+        url : "ApprovazioneProgettoFormativoAccademicoStudente",
+        contentType: "application/x-www-form-urlencoded",
+        datatype : "json", 
+        data: "id="+id,
+        success : function(data) {
+          if (data.approvazione == true) {
+            console.log("Il Progetto Formativo E' Stato Approvato Con Successo Dal Tutor Accademico");
+            document.getElementById("atutor-accademico").innerHTML = "true";
+            document.getElementById("tf-atutor-accademico").src = "images/true.png";
+          } else {
+            document.getElementById("atutor-accademico").innerHTML = "false";
+            document.getElementById("tf-atutor-accademico").scr = "images/false.png";
+          }
+        },
+        error : function(error) {
+          console.log("Errore:" + error);
+          document.getElementById("atutor-accademico").innerHTML = "false";
+          document.getElementById("tf-atutor-accademico").src = "images/false.png";
+        }
+      })
+    }
+  };
+  
+  function approvaProgettoFormativoAziendale() {
+    var approvazione = document.getElementById("atutor-aziendale").innerHTML.trim();
+    
+    if (approvazione == "true") {
+      console.log("Il Progetto Formativo Risulta Approvato");
+    } else {
+      var id = document.getElementById("prog-form-info-id").innerHTML.trim();
+      
+      $.ajax({
+        type : "POST",
+        url : "ApprovazioneProgettoFormativoAziendaleStudente",
+        contentType: "application/x-www-form-urlencoded",
+        datatype : "json",
+        data : "id="+id,
+        success : function(data) {
+          if (data.approvazione == true) {
+            console.log("Il Progetto Formativo E' Stato Approvato Con Successo Dal Tutor Aziendale");
+            document.getElementById("atutor-aziendale").innerHTML = "true";
+            document.getElementById("tf-atutor-aziendale").src = "images/true.png";
+          } else {
+            document.getElementById("atutor-aziendale").innerHTML = "false";
+            document.getElementById("tf-atutor-aziendale").src = "images/"
+          }
+        },
+        error : function(error) {
+          console.log("Error:" + error);
+          document.getElementById("atutor-accademico").innerHTML = "false";
+          document.getElementById("tf-atutor-aziendale").src = "images/false.png";
+        }
+      })
+    }
+  };
+  
+  if (typeof String.trim == "undefined") {
+    String.prototype.trim = function() {
+      return this.replace(/(^\s*)|(\s*$)/g, "");
+    }
+  }
+</script>

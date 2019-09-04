@@ -70,4 +70,9 @@ public class StudenteSQL {
     "SELECT " + QuestionarioSQL.TABLE_NAME + ".* " +
     "FROM " + QuestionarioSQL.TABLE_NAME + ", " + CompilaSQL.TABLE_NAME + " " +
     "WHERE " + QuestionarioSQL.TABLE_NAME + ".id = " + CompilaSQL.TABLE_NAME + ".questionarioID AND " + CompilaSQL.TABLE_NAME + ".utenteID = ?;";
+  
+  public static final String DO_RETRIEVE_REGISTRO =
+    "SELECT * " +
+    "FROM " + RegistroSQL.TABLE_NAME + " " +
+    "WHERE id = ?;";
 }

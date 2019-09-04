@@ -110,4 +110,9 @@ public class RegistroSQL {
     "SELECT * " +
     "FROM " + ProgettoFormativoSQL.TABLE_NAME + ", " + StudenteSQL.TABLE_NAME + ", " + TABLE_NAME + " " +
     "WHERE " + ProgettoFormativoSQL.TABLE_NAME + ".id = " + StudenteSQL.TABLE_NAME + ".progettoFormativoID AND " + StudenteSQL.TABLE_NAME + ".registroID = " + TABLE_NAME + ".id AND " + ProgettoFormativoSQL.TABLE_NAME + ".ufficioID = ? AND " + StudenteSQL.TABLE_NAME + ".registroID = ?;";
+  
+  public static final String DO_RETRIEVE_REGISTRO =
+    "SELECT * " +
+    "FROM " + RegistroSQL.TABLE_NAME + " " +
+    "WHERE id = ?;";
 }

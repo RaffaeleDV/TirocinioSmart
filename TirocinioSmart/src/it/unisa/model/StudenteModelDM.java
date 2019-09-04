@@ -1,6 +1,7 @@
 package it.unisa.model;
 
 import java.sql.Connection;
+import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -584,5 +585,49 @@ public class StudenteModelDM implements BeansModel {
       }
     }
     return questionari;
+  }
+  
+  public AbstractBean doRetrieveRegistro(AbstractBean product) throws SQLException {
+    Connection connection = null;
+    PreparedStatement ps = null;
+    ResultSet rs = null;
+    RegistroBean registroBean = null;
+    StudenteBean studenteBean = null;
+    
+    if (product.getClass().getName().equals(StudenteBean.class.getName())) {
+      studenteBean = (StudenteBean) product;
+    }
+    
+    try {
+      connection = (Connection) DriverManagerConnectionPool.getConnection();
+      ps = connection.prepareStatement(StudenteSQL.DO_RETRIEVE_REGISTRO);
+      
+      ps.setInt(1, studenteBean.getRegistroID());
+      
+      rs = ps.executeQuery();
+      if (rs.next()) {
+        int id = rs.getInt("id");
+        String nome = rs.getString("nome");
+        String descrizione = rs.getString("descrizione");
+        Date primaIstituzione = rs.getDate("primaIstituzione");
+        Date ultimoAgg = rs.getDate("ultimoAgg");
+        boolean consegna = rs.getBoolean("consegna");
+        boolean confermaTutorAcc = rs.getBoolean("confermaTutorAcc");
+        boolean confermaTutorAz = rs.getBoolean("confermaTutorAz");
+        boolean confermaUff = rs.getBoolean("confermaUff");
+        
+        registroBean = new RegistroBean(id, nome, descrizione, primaIstituzione, ultimoAgg, consegna, confermaTutorAcc, confermaTutorAz, confermaUff);
+      } else {
+        Logger.getGlobal().log(Level.SEVERE, "Oggetto RegistroBean Non Trovato.");
+      }
+    } finally {
+      try {
+        if (ps != null)
+          ps.close();
+      } finally {
+        DriverManagerConnectionPool.releaseConnection(connection);
+      }
+    }
+    return registroBean;
   }
 }

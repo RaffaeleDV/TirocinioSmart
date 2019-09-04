@@ -18,6 +18,7 @@ import it.unisa.model.ProgettoFormativoModelDM;
 import it.unisa.model.StudenteBean;
 import it.unisa.model.TutorBean;
 import it.unisa.model.AbstractBean;
+import it.unisa.model.UfficioBean;
 
 /**
  * Servlet implementation class ProgettoFormativoServlet
@@ -60,6 +61,7 @@ public class ProgettoFormativoServlet extends HttpServlet {
         studenteBean = (StudenteBean) utenteBean;
         try {
           progettoFormativoBean = (ProgettoFormativoBean) ProgettoFormativoModelDM.INSTANCE.doRetrieveByMatricola(studenteBean.getMatricola());
+          request.setAttribute("RequestProgettoFormativoBean", progettoFormativoBean);
         } catch (SQLException e) {
           Logger.getGlobal().log(Level.SEVERE, "Oggetto ProgettoFormativoBean Non Trovato.");
           //redirect to an error page
@@ -67,39 +69,36 @@ public class ProgettoFormativoServlet extends HttpServlet {
           RequestDispatcher view = request.getRequestDispatcher("404-page.jsp");
           view.forward(request, response);
         }
-        request.setAttribute("RequestProgettoFormativoBean", progettoFormativoBean);
       } else if (utenteBean.getClass().getName().equals(TutorBean.class.getName()) ||
-          utenteBean.getClass().getName().equals(TutorBean.class.getName())) {
+          utenteBean.getClass().getName().equals(UfficioBean.class.getName())) {
         try {
           id = Integer.valueOf(progettoFormativoID);
-          if (id >= 0) {
-            try {
-              progettoFormativoBean = (ProgettoFormativoBean) ProgettoFormativoModelDM.INSTANCE.doRetrieveByKey(id);
-              request.setAttribute("RequestProgettoFormativoBean", progettoFormativoBean);
-            } catch (SQLException e) {
-              Logger.getGlobal().log(Level.SEVERE, "Oggetto ProgettoFormativoBean Non Trovato.");
-              //redirect to an [error] page
-              //set the error message
-              RequestDispatcher view = request.getRequestDispatcher("404-page.jsp");
-              view.forward(request, response);
-            }
-          } else {
-    	    Logger.getGlobal().log(Level.SEVERE, "ID ProgettoFormativoBean Non Valido.");
+        } catch (NumberFormatException e) {
+          //redirect to an [error] page
+          //set the 500 error message
+          RequestDispatcher view = request.getRequestDispatcher("500-page.jsp");
+          view.forward(request, response);
+        }
+    	if (id >= 0) {
+          try {
+            progettoFormativoBean = (ProgettoFormativoBean) ProgettoFormativoModelDM.INSTANCE.doRetrieveByKey(id);
+            request.setAttribute("RequestProgettoFormativoBean", progettoFormativoBean);
+          } catch (SQLException e) {
+            Logger.getGlobal().log(Level.SEVERE, "Oggetto ProgettoFormativoBean Non Trovato.");
             //redirect to an [error] page
             //set the error message
-            RequestDispatcher view = request.getRequestDispatcher("500-page.jsp");
+            RequestDispatcher view = request.getRequestDispatcher("404-page.jsp");
             view.forward(request, response);
           }
-        } catch (NumberFormatException e) {
-          Logger.getGlobal().log(Level.SEVERE, e.getMessage());
+    	} else {
+    	  Logger.getGlobal().log(Level.SEVERE, "ID ProgettoFormativoBean Non Valido.");
           //redirect to an [error] page
           //set the error message
           RequestDispatcher view = request.getRequestDispatcher("500-page.jsp");
           view.forward(request, response);
         }
       } else {
-        RequestDispatcher view = request.getRequestDispatcher("login-page.jsp");
-        view.forward(request, response);
+        response.sendRedirect(request.getContextPath() + "/login-page.jsp");
       }
     } else {
       Logger.getGlobal().log(Level.SEVERE, "Oggetto HttpSession Non Trovato.");
@@ -107,10 +106,7 @@ public class ProgettoFormativoServlet extends HttpServlet {
       RequestDispatcher view = request.getRequestDispatcher("login-page.jsp");
       view.forward(request, response);
     }
-    /*
-     * RequestDispatcher view = request.getRequestDispatcher("progetto-formativo-page.jsp");
-     * view.forward(request, response);
-    */
-    response.sendRedirect(request.getContextPath() + "/progetto-formativo-page.jsp");
+    RequestDispatcher view = request.getRequestDispatcher("progetto-formativo-page.jsp");
+    view.forward(request, response);
   }
 }

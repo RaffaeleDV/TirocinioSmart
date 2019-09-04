@@ -30,91 +30,110 @@
       String registroID = request.getParameter("id");
       int idRegistro = -1;
       
-      try {
-    	  idRegistro = Integer.valueOf(registroID);
-      } catch (NumberFormatException e) {
-    	  Logger.getGlobal().log(Level.SEVERE, e.getMessage());
-    	  //redirect to an [error] page
+      if (registroID != null) {
+        try {
+    	    idRegistro = Integer.parseInt(registroID);
+        } catch (NumberFormatException e) {
+    	    Logger.getGlobal().log(Level.SEVERE, e.getMessage());
+    	    //redirect to an [error] page
+    	    //set the error message
+    	    RequestDispatcher view = request.getRequestDispatcher("500-page.jsp");
+    	    view.forward(request, response);
+        }
       }
       
       if (utenteRegistroBean != null) {
-        if (utenteRegistroBean instanceof StudenteBean) {
+        if (utenteRegistroBean.getClass().getName().equals(StudenteBean.class.getName())) {
           studenteRegistroBean = (StudenteBean) utenteRegistroBean;
-          registroBean = (RegistroBean) session.getAttribute("SessionRegistro");
+          registroBean = (RegistroBean) request.getAttribute("RequestRegistroBean");
           if (registroBean == null) {
             try {
               registroBean = (RegistroBean) RegistroModelDM.INSTANCE.doRetrieveByStudente(studenteRegistroBean.getID());
             } catch (SQLException e) {
               Logger.getGlobal().log(Level.SEVERE, e.getMessage());
               //redirect to an [error] page
+              //set the 404 error message
+              RequestDispatcher view = request.getRequestDispatcher("404-page.jsp");
+              view.forward(request, response);
             }
-          } else if (utenteRegistroBean instanceof TutorBean) {
-            if (idRegistro >= 0) {
-              try {
-            	  if (tutorRegistroBean.getTipo().equals("Accademico")) {
-                  if (RegistroModelDM.INSTANCE.isTutorAccRegistro(tutorRegistroBean.getID(), idRegistro)) {
-                    registroBean = (RegistroBean) RegistroModelDM.INSTANCE.doRetrieveByKey(idRegistro);
-                  } else {
-                	  Logger.getGlobal().log(Level.SEVERE, "Accesso Negato Al Registro: ID Registro Risulta Di Un' Altro Tutor");
-                	  //redirect to an [error] page
-                  }
-            	  } else if (tutorRegistroBean.getTipo().equals("Aziendale")) {
-            		  if (RegistroModelDM.INSTANCE.isTutorAzRegistro(tutorRegistroBean.getID(), idRegistro)) {
-            			  registroBean = (RegistroBean) RegistroModelDM.INSTANCE.doRetrieveByKey(idRegistro);
-            		  } else {
-            			  Logger.getGlobal().log(Level.SEVERE, "Accesso Negato Al Registro: ID Registro Risulta Di Un' Altro Tutor");
-            			  //redirect to an [error] page
-            		  }
-            	  } else {
-            		  Logger.getGlobal().log(Level.SEVERE, "Accesso Negato Al Registro: Istanza Di Tutor Non Valida");
-            		  //redirect to an [error] page
-            	  }
-              } catch (SQLException e) {
-                Logger.getGlobal().log(Level.SEVERE, e.getMessage());
-                //redirect to an [error] page
-              }
-            } else {
-              Logger.getGlobal().log(Level.SEVERE, "Accesso Negato Al Registro: ID Negativo");
-              //redirect to an [error] page
-            }
-          } else if (utenteRegistroBean instanceof UfficioBean) {
-            idRegistro = (int) session.getAttribute("SessionRegistroID");
-            if (idRegistro >= 0) {
-              try {
-            	  if (RegistroModelDM.INSTANCE.isUfficioRegistro(ufficioRegistroBean.getID(), idRegistro)) {
+          }
+        } else if (utenteRegistroBean.getClass().getName().equals(TutorBean.class.getName())) {
+          if (idRegistro >= 0) {
+            try {
+          	  if (tutorRegistroBean.getTipo().equals("Accademico")) {
+                if (RegistroModelDM.INSTANCE.isTutorAccRegistro(tutorRegistroBean.getID(), idRegistro)) {
                   registroBean = (RegistroBean) RegistroModelDM.INSTANCE.doRetrieveByKey(idRegistro);
-            	  } else {
-            		  Logger.getGlobal().log(Level.SEVERE, "Accesso Negato Al Registro: ID Registro Risulta Di Un' Altro Ufficio");
-            		  //redirect to an [error] page
-            	  }
-              } catch (SQLException e) {
-                Logger.getGlobal().log(Level.SEVERE, e.getMessage());
-                //redirect to an [error] page
-              }
-            } else {
-            	Logger.getGlobal().log(Level.SEVERE, "Accesso Negato Al Registro Con ID Negativo");
+                } else {
+              	  //redirect to an [error] page
+              	  //set the 404 error message
+              	  RequestDispatcher view = request.getRequestDispatcher("404-page.jsp");
+              	  view.forward(request, response);
+                }
+          	  } else if (tutorRegistroBean.getTipo().equals("Aziendale")) {
+          		  if (RegistroModelDM.INSTANCE.isTutorAzRegistro(tutorRegistroBean.getID(), idRegistro)) {
+          			  registroBean = (RegistroBean) RegistroModelDM.INSTANCE.doRetrieveByKey(idRegistro);
+          		  } else {
+          			  //redirect to an [error] page
+          			  //set the 404 error message
+          			  RequestDispatcher view = request.getRequestDispatcher("404-page.jsp");
+          			  view.forward(request, response);
+          		  }
+          	  } else {
+          		  RequestDispatcher view = request.getRequestDispatcher("login-page.jsp");
+          		  view.forward(request, response);
+          	  }
+            } catch (SQLException e) {
+              Logger.getGlobal().log(Level.SEVERE, e.getMessage());
               //redirect to an [error] page
+              //set the 500 error message
+              RequestDispatcher view = request.getRequestDispatcher("500-page.jsp");
+              view.forward(request, response);
             }
           } else {
-        	  Logger.getGlobal().log(Level.SEVERE, "Istanza Di Utente Non Valida");
             //redirect to an [error] page
+            //set the 500 error message
+            RequestDispatcher view = request.getRequestDispatcher("500-page.jsp");
+            view.forward(request, response);
+          }
+        } else if (utenteRegistroBean.getClass().getName().equals(UfficioBean.class.getName())) {
+          if (idRegistro >= 0) {
+            try {
+          	  if (RegistroModelDM.INSTANCE.isUfficioRegistro(ufficioRegistroBean.getID(), idRegistro)) {
+                registroBean = (RegistroBean) RegistroModelDM.INSTANCE.doRetrieveByKey(idRegistro);
+          	  } else {
+          		  //redirect to an [error] page
+          		  //set the 404 error message
+          		  RequestDispatcher view = request.getRequestDispatcher("404-page.jsp");
+          		  view.forward(request, response);
+          	  }
+            } catch (SQLException e) {
+              Logger.getGlobal().log(Level.SEVERE, e.getMessage());
+              //redirect to an [error] page
+              //set the 500 error message
+              RequestDispatcher view = request.getRequestDispatcher("500-page.jsp");
+              view.forward(request, response);
+            }
+          } else {
+          	//redirect to an [error] page
+          	//set the 404 error message
+          	RequestDispatcher view = request.getRequestDispatcher("404-page.jsp");
+          	view.forward(request, response);
           }
         } else {
-          //redirect to an [error] page
+      	  //redirect to an [error] page
+      	  //set the 404 error message
+      	  RequestDispatcher view = request.getRequestDispatcher("404-page.jsp");
+      	  view.forward(request, response);
         }
       } else {
-    	  Logger.getGlobal().log(Level.SEVERE, "Nessun Utente Registrato Al Login");
         RequestDispatcher view = request.getRequestDispatcher("login-page.jsp");
         view.forward(request, response);
       }
 
       if (registroBean != null) {
-        if (studenteRegistroBean instanceof StudenteBean) {
-          session.setAttribute("SessionRegistro", registroBean);
-        }
         try {
           attivitaTirocinioRegistro = (List<AbstractBean>) AttivitaTirocinioModelDM.INSTANCE.doRetrieveByRegistro(registroBean.getID());
-          session.setAttribute("SessionAttivitaTirocinioList", attivitaTirocinioRegistro);
+          request.setAttribute("RequestAttivitaTirocinioList", attivitaTirocinioRegistro);
         } catch (SQLException e) {
           Logger.getGlobal().log(Level.SEVERE, e.getMessage());
           //redirect to an [error] page

@@ -26,6 +26,7 @@
           } catch(SQLException e) {
             Logger.getGlobal().log(Level.SEVERE, e.getMessage());
             //redirect to an [error] page
+            response.sendRedirect(request.getContextPath() + "/500-page.jsp");
           }
         } else if (tutorBean.getTipo().equals("Accademico")) {
           try {
@@ -33,6 +34,7 @@
           } catch(SQLException e) {
             Logger.getGlobal().log(Level.SEVERE, e.getMessage());
             //redirect to an [error] page
+            response.sendRedirect(request.getContextPath() + "/500-page.jsp");
           }
         } else {
           //redirect to an [error] page
@@ -44,24 +46,22 @@
         } catch(SQLException e) {
           Logger.getGlobal().log(Level.SEVERE, e.getMessage());
           //redirect to an [error] page
+          response.sendRedirect(request.getContextPath() + "/500-page.jsp");
         }
       } else {
-  	    RequestDispatcher view = request.getRequestDispatcher("login-page.jsp");
-  	    view.forward(request, response);
+  	    response.sendRedirect(request.getContextPath() + "/login-page.jsp");
   	  }
   	} else {
-  	  RequestDispatcher view = request.getRequestDispatcher("login-page.jsp");
-  	  view.forward(request, response);
+  		response.sendRedirect(request.getContextPath() + "/login-page.jsp");
   	}
 
     if (regs != null && regs.size() > 0) {
       for (AbstractBean product: regs) {
         RegistroBean registroBean = null;
-        if (product instanceof RegistroBean) {
+        if (product.getClass().getName().equals(RegistroBean.class.getName())) {
           registroBean = (RegistroBean) product;
         } else {
-          Logger.getGlobal().log(Level.INFO, "Prodotto che non risulta un registro");
-          //redirect to an [error] page
+          response.sendRedirect(request.getContextPath() + "/500-page.jsp");
         }
         
         if (registroBean != null) {
@@ -74,9 +74,7 @@
               <p id="registro-item-info" class="info">ID: <b id="id-reg"><%= registroBean.getID() %></b></p>
               <p id="registro-item-info" class="info">Nome: <b id="nome-reg"><%= registroBean.getNome() %></b></p>
             </div>
-            <div id="registro-item-link" onclick="vaiRegistro($('#id-reg')).val()">
-              
-            </div>
+            <div id="registro-item-link" onclick="retrieveRegistro(<%= registroBean.getID() %>);"></div>
           </div>
           <%
         }
@@ -91,15 +89,14 @@
   %>
 </section>
 <script type="text/javascript">
-  function vaiRegistro(a) {
-    console.log("ID Registro: " + a.toString());
-    
+  function retrieveRegistro(id) {
+	  console.log("ID: " + id);
     $.ajax({
       type : "POST",
       url : "RegistroServlet",
       contentType: "application/x-www-form-urlencoded",
       datatype : "json",
-      data: "id="+a,
+      data: "id="+id,
       success: function(data) {
       
       },

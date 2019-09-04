@@ -17,7 +17,7 @@
     <h3 style="border-radius: 10px; margin: 100px; background-color: #05003F; border: 1px #ffffff solid; font-weight: xx-large; padding: 15px; font-size: 28px; color: white;" align="center">Attivita Del Registro</h3>
   </div>
   <%
-    List<AbstractBean> attivitaTirocinioList = (List<AbstractBean>) session.getAttribute("SessionAttivitaTirocinioList");
+    List<AbstractBean> attivitaTirocinioList = (List<AbstractBean>) request.getAttribute("RequestAttivitaTirocinioList");
     RegistroBean registroAttivita = null;
     StrutturaOspitanteBean strutturaAttivita = null;
   

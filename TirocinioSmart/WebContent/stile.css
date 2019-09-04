@@ -393,7 +393,7 @@ div > nav > ul > li > a {
 }
 
 #progetto-formativo-item-link {
-	
+	background-color: #0000ff;
 }
 
 #progetto-formativo-item-icon {
@@ -975,6 +975,7 @@ div > nav > ul > li > a {
 
 #attivita-head {
 	padding: 25px;
+	border-bottom: 1px #000000 solid;
 }
 
 #attivita-data {

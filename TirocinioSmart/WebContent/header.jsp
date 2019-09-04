@@ -11,8 +11,7 @@
     AbstractBean userBean = (AbstractBean) session.getAttribute("SessionUser");
       
     if (userBean == null) {
-      RequestDispatcher view = request.getRequestDispatcher("login-page.jsp");
-      view.forward(request, response);
+      response.sendRedirect(request.getContextPath() + "/login-page.jsp");
     }
   %>
   <div id="hlogo-wrapper" class="container">
@@ -25,25 +24,23 @@
           <a id="navbar-link" href="home-page.jsp">Home</a>
         </li>
         <%
-          if (userBean instanceof StudenteBean) {
+          if (userBean.getClass().getName().equals(StudenteBean.class.getName())) {
         %>
             <li><a id="navbar-link" href="registro-page.jsp">Registro Del Tirocinio(Studente)</a></li>
             <li><a id="navbar-link" href="progetto-formativo-page.jsp">Progetto Formativo(Studente)</a>
         <%
-          } else if (userBean instanceof TutorBean) {
+          } else if (userBean.getClass().getName().equals(TutorBean.class.getName())) {
         %>
             <li><a id="navbar-link" href="registri-page.jsp">Registri Del Tirocinio(Tutor)</a></li>
             <li><a id="navbar-link" href="progetti-formativi-page.jsp">Progetti Formativi(Tutor)</a>
         <%
-          } else if (userBean instanceof UfficioBean) {
+          } else if (userBean.getClass().getName().equals(UfficioBean.class.getName())) {
         %>
             <li><a id="navbar-link" href="registri-page.jsp">Registri Del Tirocinio(Ufficio)</a></li>
             <li><a id="navbar-link" href="progetti-formativi-page.jsp">Progetti Formativi(Ufficio)</a></li>
         <%
           } else {
-            //redirect to an [login] page
-            RequestDispatcher view = request.getRequestDispatcher("login-page.jsp");
-            view.forward(request, response);
+            response.sendRedirect(request.getContextPath() + "/login-page.jsp");
           }
         %>
       </ul>
