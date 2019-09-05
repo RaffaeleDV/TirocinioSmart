@@ -39,14 +39,16 @@
     	  } else if (utenteBean.getClass().getName().equals(TutorBean.class.getName()) ||
     	      utenteBean.getClass().getName().equals(TutorBean.class.getName())) {
     	    response.sendRedirect(request.getContextPath() + "/500-page.jsp");
-    	} else {
-    	  Logger.getGlobal().log(Level.SEVERE, "Oggetto HttpSession Non Trovato.");
-    	  //redirect to an [login] page
-    	  RequestDispatcher view = request.getRequestDispatcher("login-page.jsp");
-    	  view.forward(request, response);
-    	}
-    }
-    if (progettoFormativoBean != null) {
+    	  } else {
+    	    Logger.getGlobal().log(Level.SEVERE, "Oggetto HttpSession Non Trovato.");
+    	    //redirect to an [login] page
+    	    RequestDispatcher view = request.getRequestDispatcher("login-page.jsp");
+    	    view.forward(request, response);
+    	  }
+      } else {
+    	  response.sendRedirect(request.getContextPath() + "/login-page.jsp");
+      }
+    } else {
   %>
       <div id="progetto-formativo-info-container" class="wrapper" hidden=true>
         <div id="progetto-formativo-info-wrapper" class="wrapper">
@@ -159,8 +161,6 @@
         </div>
       </div>
   <%
-    } else {
-      response.sendRedirect(request.getContextPath() + "/500-page.jsp");
     }
   %>
   <div id="progetto-formativo-options-wrapper" class="wrapper">
@@ -187,7 +187,6 @@
       } else {
     	  response.sendRedirect(request.getContextPath() + "/login-page.jsp");
       }
-    }
     %>
   </div>
 </section>

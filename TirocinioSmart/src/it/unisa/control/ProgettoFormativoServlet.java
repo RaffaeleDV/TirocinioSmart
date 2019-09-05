@@ -72,7 +72,7 @@ public class ProgettoFormativoServlet extends HttpServlet {
       } else if (utenteBean.getClass().getName().equals(TutorBean.class.getName()) ||
           utenteBean.getClass().getName().equals(UfficioBean.class.getName())) {
         try {
-          id = Integer.valueOf(progettoFormativoID);
+          id = Integer.parseInt(progettoFormativoID);
         } catch (NumberFormatException e) {
           //redirect to an [error] page
           //set the 500 error message
@@ -106,7 +106,7 @@ public class ProgettoFormativoServlet extends HttpServlet {
       RequestDispatcher view = request.getRequestDispatcher("login-page.jsp");
       view.forward(request, response);
     }
-    RequestDispatcher view = request.getRequestDispatcher("progetto-formativo-page.jsp");
+    RequestDispatcher view = request.getRequestDispatcher("progetto-formativo.jsp");
     view.forward(request, response);
   }
 }

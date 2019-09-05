@@ -73,7 +73,7 @@
             <div>
               <p id="progetto-formativo-item-info" class="info">ID: <b id="id-prog"><%= progettoFormativoBean.getID() %></b></p>
             </div>
-            <div id="progetto-formativo-item-link" onclick="retrieveProgettoFormativo(<%= progettoFormativoBean.getID() %>);"></div>
+            <img id="list-item-selection" class="icon" src="images/list-selection.png" onclick="retrieveProgettoFormativo(<%= progettoFormativoBean.getID() %>);"/>
           </div>
   <%
         }
@@ -89,6 +89,7 @@
 </section>
 <script type="text/javascript">
   function retrieveProgettoFormativo(id) {
+	  console.log("ID: " + id);
     $.ajax({
       type : "POST",
       url : "ProgettoFormativoServlet",

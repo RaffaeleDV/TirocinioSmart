@@ -342,6 +342,14 @@ div > nav > ul > li > a {
 
 
 
+#list-item-selection {
+	display: inline;
+	margin: 10px;
+  width: 30px;
+  height: 30px;
+  padding-right: 15px;
+  cursor: pointer;
+}
 
 #registro-heading-wrapper {
 	margin-left: 40%;
@@ -397,8 +405,10 @@ div > nav > ul > li > a {
 }
 
 #progetto-formativo-item-icon {
-	width: 80px;
-	height: 80px;
+	margin: 20px;
+  width: 60px;
+  height: 60px;
+  padding-right: 30px;
 }
 
 #warning-wrapper {

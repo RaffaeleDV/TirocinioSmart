@@ -74,7 +74,7 @@
               <p id="registro-item-info" class="info">ID: <b id="id-reg"><%= registroBean.getID() %></b></p>
               <p id="registro-item-info" class="info">Nome: <b id="nome-reg"><%= registroBean.getNome() %></b></p>
             </div>
-            <div id="registro-item-link" onclick="retrieveRegistro(<%= registroBean.getID() %>);"></div>
+            <img id="list-item-selection" class="icon" src="images/list-selection.png" onclick="retrieveRegistro(<%= registroBean.getID() %>);"/>
           </div>
           <%
         }

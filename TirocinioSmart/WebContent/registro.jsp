@@ -21,7 +21,7 @@
     <h3 id="registro-heading" class="heading"></h3>
   </div>
     <%
-      RegistroBean registroBean = null;
+      RegistroBean registroBean = (RegistroBean) request.getAttribute("RequestRegistroBean");
       List<AbstractBean> attivitaTirocinioRegistro = null;
       AbstractBean utenteRegistroBean = (AbstractBean) session.getAttribute("SessionUser");
       StudenteBean studenteRegistroBean = null;
@@ -45,7 +45,6 @@
       if (utenteRegistroBean != null) {
         if (utenteRegistroBean.getClass().getName().equals(StudenteBean.class.getName())) {
           studenteRegistroBean = (StudenteBean) utenteRegistroBean;
-          registroBean = (RegistroBean) request.getAttribute("RequestRegistroBean");
           if (registroBean == null) {
             try {
               registroBean = (RegistroBean) RegistroModelDM.INSTANCE.doRetrieveByStudente(studenteRegistroBean.getID());
