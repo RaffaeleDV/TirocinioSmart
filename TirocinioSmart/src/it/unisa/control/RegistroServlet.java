@@ -5,14 +5,6 @@ import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
-import javax.servlet.RequestDispatcher;
-import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-
 import it.unisa.model.AbstractBean;
 import it.unisa.model.RegistroBean;
 import it.unisa.model.RegistroModelDM;
@@ -20,6 +12,13 @@ import it.unisa.model.StudenteBean;
 import it.unisa.model.StudenteModelDM;
 import it.unisa.model.TutorBean;
 import it.unisa.model.UfficioBean;
+import jakarta.servlet.RequestDispatcher;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
 
 /**
  * Servlet implementation class RegistroServlet

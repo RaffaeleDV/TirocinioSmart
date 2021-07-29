@@ -4,10 +4,11 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Collection;
-import java.util.logging.Logger;
-import java.util.logging.Level;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+
 import it.unisa.database.DriverManagerConnectionPool;
 import it.unisa.sql.UfficioSQL;
 

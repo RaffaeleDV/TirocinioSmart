@@ -1,8 +1,8 @@
 package it.unisa.model;
 
-import java.util.logging.Level;
 import java.io.Serializable;
 import java.sql.Date;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class AttivitaTirocinioBean extends AbstractBean implements Serializable, Cloneable {

@@ -2,19 +2,20 @@ package it.unisa.login;
 
 import java.io.IOException;
 import java.sql.SQLException;
-import javax.servlet.RequestDispatcher;
-import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import it.unisa.model.TutorBean;
-import it.unisa.model.TutorModelDM;
-import it.unisa.model.AbstractBean;
-import it.unisa.model.ConvenzioneModelDM;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import it.unisa.model.AbstractBean;
+import it.unisa.model.ConvenzioneModelDM;
+import it.unisa.model.TutorBean;
+import it.unisa.model.TutorModelDM;
+import jakarta.servlet.RequestDispatcher;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 /**
  * Servlet implementation class LoginServletTutor
@@ -58,15 +59,15 @@ public class LoginServletTutor extends HttpServlet {
       } catch (SQLException e) {
         e.printStackTrace();
       }
-      request.getSession().setAttribute("Loggato", new Boolean(true));
+      request.getSession().setAttribute("Loggato", Boolean.valueOf(true));
       request.getSession().setAttribute("SessionUser", tut);
       request.getSession().setAttribute("SessionConvenzioni", convenzioni);
-      request.getSession().setAttribute("ErroreLogin", new Boolean(false));
+      request.getSession().setAttribute("ErroreLogin", Boolean.valueOf(false));
       redirectPage = "/home-page.jsp";
 
     } else {
-      request.getSession().setAttribute("Loggato", new Boolean(false));
-      request.getSession().setAttribute("ErroreLogin", new Boolean(true));
+      request.getSession().setAttribute("Loggato", Boolean.valueOf(false));
+      request.getSession().setAttribute("ErroreLogin", Boolean.valueOf(true));
       redirectPage = "/login-page.jsp";
 
     }

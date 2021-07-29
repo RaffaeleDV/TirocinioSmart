@@ -1,8 +1,8 @@
 package it.unisa.model;
 
 import java.io.Serializable;
-import java.util.logging.Logger;
 import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class StudenteBean extends AbstractBean implements Serializable, Cloneable {
   private static final long serialVersionUID = -7363690702555462451L;

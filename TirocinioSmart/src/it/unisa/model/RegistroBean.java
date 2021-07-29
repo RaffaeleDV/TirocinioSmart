@@ -2,8 +2,8 @@ package it.unisa.model;
 
 import java.io.Serializable;
 import java.sql.Date;
-import java.util.logging.Logger;
 import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class RegistroBean extends AbstractBean implements Serializable, Cloneable {
   private static final long serialVersionUID = -2505094168799389057L;

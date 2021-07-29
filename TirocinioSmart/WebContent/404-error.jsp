@@ -2,7 +2,7 @@
     pageEncoding="UTF-8"%>
 <section id="error-wrapper">
   <div id="400-wrapper">
-    <h1 id="400" style="color: black;" align="center"></p>
+    <h1 id="400" style="color: black;" align="center"></h1>
     <h2 id="page-not-found">Page Not Found(400)</h2>
   </div>
   <%
